@@ -1,0 +1,11 @@
+.panel-heading {
+    color: #796f6f;
+    font-family: Assistant;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.01px;
+}
+
+.user-list-text {
+    margin-left: 50%;
+}

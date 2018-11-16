@@ -1,0 +1,42 @@
+.form-box {
+    height: 60vh;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.receipt-button {
+    color: #faf9f8;
+    font-family: Assistant;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 10px;
+    background-color: #d0cccc;
+    width: 116px;
+    height: 30px;
+}
+
+.buttons {
+    margin-left: 15%;
+}
+
+.input {
+    border-top-style: none;
+    border-left-style: none;
+    border-right-style: none;
+    box-shadow: none !important;
+    text-align: right;
+}
+
+.form-columns {
+    margin-top: 10%;
+}
+
+.receipt-button-success {
+    margin-left: -20%;
+}
