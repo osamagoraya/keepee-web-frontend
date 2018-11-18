@@ -9,3 +9,7 @@
 .user-list-text {
     margin-left: 50%;
 }
+
+.content-overflow {
+  overflow: auto;  
+}

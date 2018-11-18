@@ -5,8 +5,20 @@ import 'bulma/css/bulma.css'
 class ImageList extends Component {
 
     render() {
+        let imageList
+        if (this.props.imageList) {
+            imageList =
+                <ol>
+                    {
+                        this.props.renderImageListRow()
+                    }
+                </ol>
+
+        } else {
+            imageList = <div></div>
+        }
         return (
-            <div className="panel">
+            <div className="panel content-overflow">
                 <div className="panel-heading">
                     <div className="level">
                         <div className="level-left">
@@ -20,7 +32,7 @@ class ImageList extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="panel-block"></div>
+                {imageList}
             </div>
         );
     }
