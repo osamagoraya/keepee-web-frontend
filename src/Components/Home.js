@@ -15,21 +15,44 @@ class Home extends Component {
         this.state = {
             userList: null,
             selectedUserImagesList: null,
-            selectedUserID: null
+            selectedUserID: null,
+            selectedImageID: null,
         }
     }
     componentWillMount() {
         console.log("User", this.props.location.state)
-        this.getUsers(this.props.location.state)
+        if(this.props.location.state){
+            this.getUsers(this.props.location.state)
+        }else{
+            localStorage.clear()
+            this.props.history.push("/")
+        }
+        
     }
     getUsers = (user) => {
-        Axios.post('http://35.167.51.228:8085/getUsers', user).then(response => {
+        Axios.post('http://localhost:8085/getUsers', user).then(response => {
             console.log("Result", response.data)
             this.setState({ userList: JSON.parse(response.data.body) })
         }).catch(error => {
             console.log("Error", error)
         })
     }
+
+    saveImageData = (values,cb) => {
+        console.log("User",this.props.location.state)
+        Axios.post('http://localhost:8085/saveImageData',{values,userID:this.state.selectedUserID,accountantID:this.props.location.state.user.UserID}).then((response)=>{
+            console.log("Response",response)
+            if(response.data.statusCode === 200){
+                cb(true)
+            }else{
+                cb(false)                
+            }
+        }).catch(error=>{
+            console.log("Error",error)
+            cb(false)
+        })
+    }
+
     renderUserListRow = () => {
         console.log("Render User List Row", this.state.userList)
         const flags = new Set();
@@ -43,9 +66,9 @@ class Home extends Component {
         let userRow = []
         result.forEach(user => {
             userRow.push(
-                <li onClick={() => this.userSelected(user.UserID)} className={`panel-block is-active`} style={{ height: '25px', margin: '10px',cursor:'pointer' }}>
-                    <span class="panel-icon">
-                        <i class="fas fa-book" aria-hidden="true"></i>
+                <li onClick={() => this.userSelected(user.UserID)} className={`panel-block ${this.state.selectedUserID === user.UserID? 'is-active':''}`} style={{ height: '25px', margin: '10px',cursor:'pointer' }}>
+                    <span className="panel-icon">
+                        <i className="fas fa-book" aria-hidden="true"></i>
                     </span>
                     {user.Name}
                 </li>
@@ -54,18 +77,23 @@ class Home extends Component {
         return userRow
     }
 
+    imageSelected = (imageID) =>{
+        this.setState({selectedImageID: imageID})
+    }
+
     getImageName(imageName){
         let parts = imageName.split('/');
         let answer = parts[parts.length - 1];
         return Moment(`${answer}`,'x').format("MMM Do YY")
     }
+
     renderImageListRow = () => {
         console.log("Render Image List Row")
         let imageRow = []
         this.state.selectedUserImagesList.map(image => {
-            imageRow.push(<li className="panel-block" style={{ height: '25px', margin: '10px',cursor:'pointer' }}>
-                <span class="panel-icon">
-                    <i class="fas fa-book" aria-hidden="true"></i>
+            imageRow.push(<li onClick={()=>{this.imageSelected(image.ImageID)}} className={`panel-block ${this.state.selectedImageID === image.ImageID? 'is-active':''}`} style={{ height: '25px', margin: '10px',cursor:'pointer' }}>
+                <span className="panel-icon">
+                    <i className="fas fa-book" aria-hidden="true"></i>
                 </span>
                 {
                     this.getImageName(image.ImageID)
@@ -97,7 +125,7 @@ class Home extends Component {
                 </nav>
                 <div className="columns">
                     <div className="column is-three-fifths">
-                        <Form />
+                        <Form imageList={this.state.selectedUserImagesList} imageID={this.state.selectedImageID} saveImageData={this.saveImageData}/>
                     </div>
                     <div className="column is-one-fifth" style={{ width: '15%' }}>
                         <ImageList imageList={this.state.selectedUserImagesList} renderImageListRow={this.renderImageListRow} />

@@ -6,7 +6,7 @@ class Auth {
     }
 
     login(userData,cb){
-        Axios.post('http://35.167.51.228:8085/login',userData).then(response=>{
+        Axios.post('http://localhost:8085/login',userData).then(response=>{
             if(response.data.statusCode === 200){
                 this.isAuthenticated = true
                 localStorage.setItem('token',response.data.token)
