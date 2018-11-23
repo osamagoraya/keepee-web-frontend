@@ -12,7 +12,9 @@ class Form extends Component {
         this.state = {
             imageLoading: true,
             image: null,
-            buttonLoading: ''
+            buttonLoading: '',
+            retakeButtonLoading: '',
+            irrelevantButtonLoading: ''
         }
     }
     componentWillMount() {
@@ -25,8 +27,18 @@ class Form extends Component {
         }else{
             this.setState({buttonLoading: ''})
         }
-        
     }
+
+    irrelevantPicture = () =>{
+    this.setState({irrelevantButtonLoading: 'is-loading'})
+    this.props.irrelevantPicture(this.props.imageID,()=>this.setState({irrelevantButtonLoading: ''}))
+    }
+
+    retakePicture = () => {
+    this.setState({retakeButtonLoading: 'is-loading'})
+    this.props.retakePicture(this.props.imageID,()=>this.setState({retakeButtonLoading: ''}))
+    }
+ 
 
     render() {
         const validationSchema =
@@ -165,8 +177,8 @@ class Form extends Component {
                                 </div>
                                 <div className="column is-half">
                                     <div className="buttons">
-                                        <button type="button" className="button receipt-button receipt-button-left">לא רלוונטי</button>
-                                        <button type="button" className="button receipt-button receipt-button-right">לצילום מחד</button>
+                                        <button onClick={this.irrelevantPicture} type="button" className={`button receipt-button receipt-button-left ${this.state.irrelevantButtonLoading}`}>לא רלוונטי</button>
+                                        <button onClick={this.retakePicture} type="button" className={`button receipt-button receipt-button-right ${this.state.retakeButtonLoading}`}>לצילום מחד</button>
                                     </div>
                                 </div>
                             </div>

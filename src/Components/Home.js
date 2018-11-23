@@ -53,6 +53,42 @@ class Home extends Component {
         })
     }
 
+    irrelevantPicture = (imageID,cb) =>{
+        Axios.post("http://localhost:8085/irrelevantPicture",{imageID:imageID}).then((response)=>{
+            if(response.data.statusCode === 200){
+                cb(true)
+              let updatedImageList =  this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== imageID})
+              this.setState({selectedUserImagesList: updatedImageList,selectedImageID: null})
+            }else{
+                cb(false)
+            }
+        }).catch((error)=>{
+            cb(false)
+            console.log("Error",error)
+        })
+    }
+
+    retakePicture = (imageID,cb) => {
+        let data = {
+            imageID: imageID,
+            name: this.props.location.state.user.Name,
+            userEmail: this.props.location.state.user.Email
+        }
+        Axios.post("http://localhost:8085/retakePicture",data).then((response)=>{
+            if(response.data.statusCode === 200){
+                cb(true)
+                let updatedImageList = this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== imageID})
+                this.setState({selectedUserImagesList: updatedImageList,selectedImageID: null})
+
+            }else{
+                cb(false)
+            }
+        }).catch((error)=>{
+            cb(false)
+            console.log("Error",error)
+        })
+    }
+
     renderUserListRow = () => {
         console.log("Render User List Row", this.state.userList)
         const flags = new Set();
@@ -125,7 +161,7 @@ class Home extends Component {
                 </nav>
                 <div className="columns">
                     <div className="column is-three-fifths">
-                        <Form imageList={this.state.selectedUserImagesList} imageID={this.state.selectedImageID} saveImageData={this.saveImageData}/>
+                        <Form imageList={this.state.selectedUserImagesList} imageID={this.state.selectedImageID} saveImageData={this.saveImageData} irrelevantPicture={this.irrelevantPicture} retakePicture={this.retakePicture}/>
                     </div>
                     <div className="column is-one-fifth" style={{ width: '15%' }}>
                         <ImageList imageList={this.state.selectedUserImagesList} renderImageListRow={this.renderImageListRow} />
