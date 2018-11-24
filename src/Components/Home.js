@@ -43,7 +43,8 @@ class Home extends Component {
         Axios.post('http://35.167.51.228:8085/saveImageData',{values,userID:this.state.selectedUserID,accountantID:this.props.location.state.user.UserID}).then((response)=>{
             console.log("Response",response)
             if(response.data.statusCode === 200){
-                this.setState({selectedImageID: null})
+                let updatedImageList = this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== values.image});
+                this.setState({selectedImageID: null,selectedUserImagesList: updatedImageList})
                 cb(true)
             }else{
                 cb(false)                
