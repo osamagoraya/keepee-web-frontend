@@ -69,10 +69,11 @@ class Home extends Component {
     }
 
     retakePicture = (imageID,cb) => {
+        let user = this.state.userList.find(user=>{return user.ImageID === imageID})
         let data = {
             imageID: imageID,
-            name: this.props.location.state.user.Name,
-            userEmail: this.props.location.state.user.Email
+            name: user.Name,
+            userEmail: user.Email
         }
         Axios.post("http://localhost:8085/retakePicture",data).then((response)=>{
             if(response.data.statusCode === 200){

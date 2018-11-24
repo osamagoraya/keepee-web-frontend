@@ -40,3 +40,7 @@
 .receipt-button-success {
     margin-left: -20%;
 }
+
+.content-overflow {
+    overflow: auto;  
+  }

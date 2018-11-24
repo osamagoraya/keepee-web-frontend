@@ -3,6 +3,7 @@ import './Form.css';
 import 'bulma/css/bulma.css'
 import Axios from 'axios';
 import { Formik } from 'formik'
+import { Alert } from 'reactstrap'
 import * as Yup from 'yup'
 const emptyImage = require('../empty-image.png')
 
@@ -14,31 +15,40 @@ class Form extends Component {
             image: null,
             buttonLoading: '',
             retakeButtonLoading: '',
-            irrelevantButtonLoading: ''
+            irrelevantButtonLoading: '',
+            alertType: '',
+            visible: false,
+            alertMessage: ''
         }
     }
     componentWillMount() {
         console.log("image id", this.props.imageID)
     }
 
-    saveImageDataCallback = (response) =>{
-        if(response){
-            this.setState({buttonLoading: ''})
-        }else{
-            this.setState({buttonLoading: ''})
-        }
-    }
-
-    irrelevantPicture = () =>{
-    this.setState({irrelevantButtonLoading: 'is-loading'})
-    this.props.irrelevantPicture(this.props.imageID,()=>this.setState({irrelevantButtonLoading: ''}))
+    irrelevantPicture = () => {
+        this.setState({ irrelevantButtonLoading: 'is-loading' })
+        this.props.irrelevantPicture(this.props.imageID, this.showAlert)
     }
 
     retakePicture = () => {
-    this.setState({retakeButtonLoading: 'is-loading'})
-    this.props.retakePicture(this.props.imageID,()=>this.setState({retakeButtonLoading: ''}))
+        this.setState({ retakeButtonLoading: 'is-loading' })
+        this.props.retakePicture(this.props.imageID, this.showAlert)
     }
- 
+
+    showAlert = (response) => {
+        if (response) {
+            this.setState({ visible: true, alertType: 'is-success', buttonLoading: '', irrelevantButtonLoading: '', retakeButtonLoading: '', alertMessage: 'Request Completed Successfully' })
+        } else {
+            this.setState({ visible: true, alertType: 'is-danger', buttonLoading: '', irrelevantButtonLoading: '', retakeButtonLoading: '', alertMessage: 'Request Failed Completing. Please Try Again!' })
+        }
+        setTimeout(() => {
+            this.onDismiss()
+        }, 3000)
+    }
+
+    onDismiss() {
+        this.setState({ visible: false, alertType: '', alertMessage: '' });
+    }
 
     render() {
         const validationSchema =
@@ -47,146 +57,165 @@ class Form extends Component {
                 date: Yup.date().required("נדרש"),
                 detail: Yup.string().required("נדרש"),
                 category: Yup.string().required("נדרש"),
-                sum: Yup.string().required("נדרש"),
-                vat: Yup.string().required("נדרש"),
+                vendor: Yup.string().required("נדרש"),
+                sum: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
+                vat: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
                 image: Yup.string().required("נדרש")
             })
 
         return (
-            <Formik
-                initialValues={{ reference: '', date: '', detail: '', category: '', vat: '', sum: '', image: this.props.imageID || '' }}
-                onSubmit={(values, actions) => {
-                    this.setState({ buttonLoading: 'is-loading' })
-                    this.props.saveImageData(values,this.saveImageDataCallback)
-    
-                    console.log("HELOOOOO",values)
+            <div className="box content-overflow">
+                <div className="content">
+                    <Formik
+                        initialValues={{ reference: '', date: '', detail: '', category: '', vat: '', sum: '', image: this.props.imageID || '', vendor: '' }}
+                        onSubmit={(values, actions) => {
+                            this.setState({ buttonLoading: 'is-loading' })
+                            this.props.saveImageData(values, this.showAlert)
+                        }}
+                        enableReinitialize={true}
+                        validationSchema={validationSchema}
+                        render={({ values, touched, errors, handleSubmit, handleChange, handleBlur }) => (
+                            <form onSubmit={handleSubmit}>
+                                {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
+                                <Alert color='primary' isOpen={this.state.visible}>
+                                    {this.state.alertMessage}
+                                </Alert>
+                                <div className="columns">
 
-                }}
-                enableReinitialize ={true}
-                validationSchema={validationSchema}
-                render={({ values, touched, errors, handleSubmit, handleChange, handleBlur }) => (
-                    <form onSubmit={handleSubmit}>
-                        <div className="box">
-                            <div className="columns">
-                                <div className="column is-half">
-                                    <div className="columns form-columns">
-                                        <input
-                                            name="image"
-                                            type="hidden"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            value={this.props.imageID || ''}
-                                        />
-                                        <div className="column is-half">
-                                            <p className="control">
+                                    <div className="column is-half">
+                                        {this.props.imageID ?
+                                        <div>
+                                            <div className="columns form-columns">
                                                 <input
-                                                    className={`input is-small ${touched.reference && errors.reference ? 'is-danger' : ''}`}
-                                                    type="text"
-                                                    placeholder="Reference"
+                                                    name="image"
+                                                    type="hidden"
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    value={values.password}
-                                                    name="reference" />
-                                            </p>
-                                            {touched.reference && errors.reference && <p className="help is-danger">{errors.reference}</p>}
-                                        </div>
-                                        <div className="column is-half">
-                                            <p className="control">
-                                                <input className="input is-small"
-                                                    type="date"
-                                                    className={`input is-small ${touched.date && errors.date ? 'is-danger' : ''}`}
-                                                    placeholder="Date"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.password}
-                                                    name="date" />
-                                            </p>
-                                            {touched.date && errors.date && <p className="help is-danger">{errors.date}</p>}
-                                        </div>
-                                    </div>
+                                                    value={this.props.imageID || ''}
+                                                />
+                                                <div className="column is-half">
+                                                    <p className="control">
+                                                        <input
+                                                            className={`input is-small ${touched.reference && errors.reference ? 'is-danger' : ''}`}
+                                                            type="text"
+                                                            placeholder="Reference"
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            value={values.password}
+                                                            name="reference" />
+                                                    </p>
+                                                    {touched.reference && errors.reference && <p className="help is-danger">{errors.reference}</p>}
+                                                </div>
+                                                <div className="column is-half">
+                                                    <p className="control">
+                                                        <input className="input is-small"
+                                                            type="date"
+                                                            className={`input is-small ${touched.date && errors.date ? 'is-danger' : ''}`}
+                                                            placeholder="Date"
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            value={values.password}
+                                                            name="date" />
+                                                    </p>
+                                                    {touched.date && errors.date && <p className="help is-danger">{errors.date}</p>}
+                                                </div>
+                                            </div>
 
-                                    <div className="columns">
-                                        <div className="column is-half">
-                                            <p className="control">
-                                                <input className="input is-small" type="text"
-                                                    placeholder="Detail"
-                                                    className={`input is-small ${touched.detail && errors.detail ? 'is-danger' : ''}`}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.password}
-                                                    name="detail" />
-                                            </p>
-                                            {touched.detail && errors.detail && <p className="help is-danger">{errors.detail}</p>}
+                                            <div className="columns">
+                                                <div className="column is-half">
+                                                    <p className="control">
+                                                        <input className="input is-small" type="text"
+                                                            placeholder="Vendor"
+                                                            className={`input is-small ${touched.vendor && errors.vendor ? 'is-danger' : ''}`}
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            value={values.password}
+                                                            name="vendor" />
+                                                    </p>
+                                                    {touched.vendor && errors.vendor && <p className="help is-danger">{errors.vendor}</p>}
+                                                </div>
+                                                <div className="column is-half">
+                                                    <p className="control">
+                                                        <input className="input is-small" type="text"
+                                                            placeholder="Category"
+                                                            className={`input is-small ${touched.category && errors.category ? 'is-danger' : ''}`}
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            value={values.password}
+                                                            name="category" />
+                                                    </p>
+                                                    {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
+                                                </div>
+                                            </div>
+                                            <div className="columns">
+                                                <div className="column is-half">
+                                                    <p className="control">
+                                                        <input className="input is-small"
+                                                            type="text"
+                                                            className={`input is-small ${touched.vat && errors.vat ? 'is-danger' : ''}`}
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            value={values.password}
+                                                            name="vat"
+                                                            placeholder="מע״מ" />
+                                                    </p>
+                                                    {touched.vat && errors.vat && <p className="help is-danger">{errors.vat}</p>}
+                                                </div>
+                                                <div className="column is-half">
+                                                    <p className="control">
+                                                        <input className="input is-small"
+                                                            type="text"
+                                                            placeholder="Sum"
+                                                            className={`input is-small ${touched.sum && errors.sum ? 'is-danger' : ''}`}
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            value={values.password}
+                                                            name="sum" />
+                                                    </p>
+                                                    {touched.sum && errors.sum && <p className="help is-danger">{errors.sum}</p>}
+                                                </div>
+                                            </div>
+                                            <div className="column">
+                                                <p className="control">
+                                                    <input className="input is-small"
+                                                        type="text"
+                                                        placeholder="Detail"
+                                                        className={`input is-small ${touched.sum && errors.sum ? 'is-danger' : ''}`}
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        value={values.password}
+                                                        name="detail" />
+                                                </p>
+                                                {touched.detail && errors.detail && <p className="help is-danger">{errors.detail}</p>}
+                                            </div>
+                                        </div>: null}
+                                    </div>
+                                    <div className="column is-half">
+                                        {errors.image && values.image === '' ? <p className="help is-danger">{errors.image}</p> : <div />}
+                                        <div className="box form-box">
+                                            {this.props.imageID ?
+                                                <img className="image" src={this.props.imageID} alt="receipt" /> : <div>Select an Image</div>}
                                         </div>
-                                        <div className="column is-half">
-                                            <p className="control">
-                                                <input className="input is-small" type="text"
-                                                    placeholder="Category"
-                                                    className={`input is-small ${touched.category && errors.category ? 'is-danger' : ''}`}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.password}
-                                                    name="category" />
-                                            </p>
-                                            {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
+                                    </div>
+                                </div>
+                                <div className="columns">
+                                    <div className="column is-half">
+                                        <div className="buttons">
+                                            <button type="submit" onClick={() => { console.log("Values", values) }} className={`button receipt-button receipt-button-success is-info ${this.state.buttonLoading}`}>לא רלוונטי</button>
                                         </div>
                                     </div>
-                                    <div className="columns">
-                                        <div className="column is-half">
-                                            <p className="control">
-                                                <input className="input is-small"
-                                                    type="text"
-                                                    className={`input is-small ${touched.vat && errors.vat ? 'is-danger' : ''}`}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.password}
-                                                    name="vat"
-                                                    placeholder="מע״מ" />
-                                            </p>
-                                            {touched.vat && errors.vat && <p className="help is-danger">{errors.vat}</p>}
-                                        </div>
-                                        <div className="column is-half">
-                                            <p className="control">
-                                                <input className="input is-small"
-                                                    type="text"
-                                                    placeholder="Sum"
-                                                    className={`input is-small ${touched.sum && errors.sum ? 'is-danger' : ''}`}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.password}
-                                                    name="sum" />
-                                            </p>
-                                            {touched.sum && errors.sum && <p className="help is-danger">{errors.sum}</p>}
+                                    <div className="column is-half">
+                                        <div className="buttons">
+                                            <button onClick={this.irrelevantPicture} type="button" className={`button receipt-button receipt-button-left ${this.state.irrelevantButtonLoading}`}>לא רלוונטי</button>
+                                            <button onClick={this.retakePicture} type="button" className={`button receipt-button receipt-button-right ${this.state.retakeButtonLoading}`}>לצילום מחד</button>
                                         </div>
                                     </div>
-
                                 </div>
-                                <div className="column is-half">
-                                    {errors.image && values.image === ''? <p className="help is-danger">{errors.image}</p>:<div/>}
-                                    <div className="box form-box">
-                                        {this.props.imageID ? 
-                                        <img className="image" src={this.props.imageID} alt="receipt" /> : <div>Select an Image</div>}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="columns">
-                                <div className="column is-half">
-                                    <div className="buttons">
-                                        <button type="submit" onClick={()=>{ console.log("Values",values)}} className={`button receipt-button receipt-button-success is-info ${this.state.buttonLoading}`}>לא רלוונטי</button>
-                                    </div>
-                                </div>
-                                <div className="column is-half">
-                                    <div className="buttons">
-                                        <button onClick={this.irrelevantPicture} type="button" className={`button receipt-button receipt-button-left ${this.state.irrelevantButtonLoading}`}>לא רלוונטי</button>
-                                        <button onClick={this.retakePicture} type="button" className={`button receipt-button receipt-button-right ${this.state.retakeButtonLoading}`}>לצילום מחד</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                )}
-            />
-
+                            </form>
+                        )}
+                    />
+                </div>
+            </div>
         );
     }
 }
