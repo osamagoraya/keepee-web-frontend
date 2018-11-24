@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import './Form.css';
 import 'bulma/css/bulma.css'
-import Axios from 'axios';
 import { Formik } from 'formik'
-import { Alert } from 'reactstrap'
 import * as Yup from 'yup'
 const emptyImage = require('../empty-image.png')
 
@@ -26,13 +24,19 @@ class Form extends Component {
     }
 
     irrelevantPicture = () => {
-        this.setState({ irrelevantButtonLoading: 'is-loading' })
-        this.props.irrelevantPicture(this.props.imageID, this.showAlert)
+        if(this.props.imageID){
+            this.setState({ irrelevantButtonLoading: 'is-loading' })
+            this.props.irrelevantPicture(this.props.imageID, this.showAlert)
+        }
+      
     }
 
     retakePicture = () => {
-        this.setState({ retakeButtonLoading: 'is-loading' })
-        this.props.retakePicture(this.props.imageID, this.showAlert)
+        if(this.props.imageID){
+            this.setState({ retakeButtonLoading: 'is-loading' })
+            this.props.retakePicture(this.props.imageID, this.showAlert)
+        }
+       
     }
 
     showAlert = (response) => {
@@ -77,9 +81,6 @@ class Form extends Component {
                         render={({ values, touched, errors, handleSubmit, handleChange, handleBlur }) => (
                             <form onSubmit={handleSubmit}>
                                 {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
-                                <Alert color='primary' isOpen={this.state.visible}>
-                                    {this.state.alertMessage}
-                                </Alert>
                                 <div className="columns">
 
                                     <div className="column is-half">
