@@ -13,3 +13,7 @@
 .content-overflow {
   overflow: auto;  
 }
+
+.input-search-box{
+    background-color: white !important;
+}

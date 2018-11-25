@@ -7,9 +7,16 @@ class UserList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { Images: ['20-11-2018', '19-11-2018', '19-11-2018', '18-11-2018', '18-11-2018'] };
+        this.state = { 
+            searchTerm: '' 
+        };
     }
-   
+
+    onChangeText = (event)=>{
+        console.log("Value",event.target.value)
+        this.setState({searchTerm: event.target.value})
+        this.props.searchUsers(event.target.value)
+    }
 
     render() {
         let userList
@@ -28,13 +35,18 @@ class UserList extends Component {
             <div className="panel content-overflow">
                 <div className="panel-heading">
                     <div className="level">
-                        <div className="level-left user-list-text">
-                            <p>הלקוחות של</p>
-                        </div>
-                        <div className="level-right">
-                            <span className="icon has-text-white">
-                                <i className="fas fa-search"></i>
-                            </span>
+                        <div className="field" style={{ width: '100%' }}>
+                            <p className="control has-icons-right">
+                                <input 
+                                    className="input is-rounded input-search-box"
+                                    type="text"    
+                                    placeholder="לחפש"
+                                    onChange={this.onChangeText}
+                                    value={this.state.searchTerm} />
+                                <span className="icon is-small is-right">
+                                    <i className="fas fa-search"></i>
+                                </span>
+                            </p>
                         </div>
                     </div>
                 </div>

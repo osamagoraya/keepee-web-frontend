@@ -24,11 +24,11 @@ class ImageList extends Component {
                         <div className="level-left">
                             <span className="icon has-text-white">
                                 <i className="far fa-circle fa-2x"></i>
-                                <p className="total-images">12</p>
+                                <p className="total-images">{this.props.imageCount}</p>
                             </span>
                         </div>
                         <div className="level-right">
-                            <p>בני כהן</p>
+                            <p>{this.props.userName}</p>
                         </div>
                     </div>
                 </div>

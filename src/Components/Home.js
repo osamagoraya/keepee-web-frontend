@@ -15,8 +15,11 @@ class Home extends Component {
         this.state = {
             userList: null,
             selectedUserImagesList: null,
+            filteredUsers: null,
             selectedUserID: null,
             selectedImageID: null,
+            selectedUserName: null,
+            selectedUserImagesCount: null
         }
     }
     componentWillMount() {
@@ -32,7 +35,7 @@ class Home extends Component {
     getUsers = (user) => {
         Axios.post('http://35.167.51.228:8085/getUsers', user).then(response => {
             console.log("Result", response.data)
-            this.setState({ userList: JSON.parse(response.data.body) })
+            this.setState({ userList: JSON.parse(response.data.body), filteredUsers: JSON.parse(response.data.body)})
         }).catch(error => {
             console.log("Error", error)
         })
@@ -44,6 +47,7 @@ class Home extends Component {
             console.log("Response",response)
             if(response.data.statusCode === 200){
                 let updatedImageList = this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== values.image});
+                console.log("Old List  ", this.state.selectedUserImagesList,"\nNew List  ",updatedImageList)
                 this.setState({selectedImageID: null,selectedUserImagesList: updatedImageList})
                 cb(true)
             }else{
@@ -92,20 +96,24 @@ class Home extends Component {
         })
     }
 
-    renderUserListRow = () => {
-        console.log("Render User List Row", this.state.userList)
+    getUniqueUsers = (list) =>{
         const flags = new Set();
-        const result = this.state.userList.filter(entry => {
+        let result = list.filter(entry => {
             if (flags.has(entry.UserID)) {
                 return false;
             }
             flags.add(entry.UserID);
             return true;
         });
+        return result
+    }
+
+    renderUserListRow = () => {
+        let result = this.getUniqueUsers(this.state.filteredUsers)
         let userRow = []
         result.forEach(user => {
             userRow.push(
-                <li onClick={() => this.userSelected(user.UserID)} className={`panel-block ${this.state.selectedUserID === user.UserID? 'is-active':''}`} style={{ height: '25px', margin: '10px',cursor:'pointer' }}>
+                <li onClick={() => this.userSelected(user)} className={`panel-block ${this.state.selectedUserID === user.UserID? 'is-active':''}`} style={{ height: '25px', margin: '10px',cursor:'pointer' }}>
                     <span className="panel-icon">
                         <i className="fas fa-book" aria-hidden="true"></i>
                     </span>
@@ -142,10 +150,23 @@ class Home extends Component {
         return imageRow
     }
 
-    userSelected = (userID) => {
-        var selectedUserImages = this.state.userList.filter(user => { return user.UserID === userID })
+    userSelected = (user) => {
+        var selectedUserImages = this.state.userList.filter(userList => { return userList.UserID === user.UserID })
         console.log("Selected User Image", selectedUserImages)
-        this.setState({ selectedUserID: userID, selectedUserImagesList: selectedUserImages })
+        this.setState({ selectedUserID: user.UserID, selectedUserImagesList: selectedUserImages,selectedUserName: user.Name })
+    }
+
+    filterUsers = (searchTerm) =>{
+        searchTerm = searchTerm.trim(); //remove/ignore leading/trailing spaces
+        if(searchTerm){
+            let filteredUsers = this.state.userList.filter(user=> {return user.Name.toLowerCase().includes(searchTerm.toLowerCase()) })
+            let result = this.getUniqueUsers(filteredUsers)
+            this.setState({filteredUsers: result})
+        }else{
+           this.setState({filteredUsers: this.state.userList}) 
+        }
+        
+       
     }
     render() {
         return (
@@ -167,10 +188,10 @@ class Home extends Component {
                         <Form imageList={this.state.selectedUserImagesList} imageID={this.state.selectedImageID} saveImageData={this.saveImageData} irrelevantPicture={this.irrelevantPicture} retakePicture={this.retakePicture}/>
                     </div>
                     <div className="column is-one-fifth" style={{ width: '15%' }}>
-                        <ImageList imageList={this.state.selectedUserImagesList} renderImageListRow={this.renderImageListRow} />
+                        <ImageList imageList={this.state.selectedUserImagesList} renderImageListRow={this.renderImageListRow} imageCount={this.state.selectedUserImagesList?this.state.selectedUserImagesList.length:0} userName={this.state.selectedUserName}/>
                     </div>
                     <div className="column is-one-quarter">
-                        <UserList userList={this.state.userList} renderUserListRow={this.renderUserListRow} />
+                        <UserList userList={this.state.userList} renderUserListRow={this.renderUserListRow} searchUsers={this.filterUsers}/>
                     </div>
                 </div>
             </div>
