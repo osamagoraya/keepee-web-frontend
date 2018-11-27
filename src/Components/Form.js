@@ -282,7 +282,7 @@ class Form extends Component {
                                     </div>
                                     <div className="column is-half">
                                         {errors.image && values.image === '' ? <p className="help is-danger">{errors.image}</p> : <div />}
-                                        <div className="box form-box">
+                                        <div className="image-box form-box">
                                             {this.props.imageID ?
                                                 <img className="image" style={{ transform: `rotate(${this.state.imageAngle}deg)` }} src={this.props.imageID} alt="receipt" /> : <div>בחר תמונה</div>}
                                         </div>
