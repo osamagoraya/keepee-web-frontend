@@ -10,3 +10,11 @@
     margin-left: -22px;
     margin-top: 3px
 }
+.panel-heading{
+    border-bottom: 0px !important;
+    border-left: 0px !important;
+     border-right: 0px;
+}
+.panel-heading:first-child {
+    border-top: 0px 
+}

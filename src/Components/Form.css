@@ -14,16 +14,19 @@
 .receipt-button {
     color: #faf9f8;
     font-family: Assistant;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 700;
-    border-radius: 10px;
+    border-radius: 45px !important;
     background-color: #d0cccc;
     width: 116px;
-    height: 30px;
+    height: 25px;
+    padding: 0;
+    align-items: center
 }
 
 .buttons {
     margin-left: 15%;
+    
 }
 
 .input {
@@ -50,25 +53,19 @@
     transform: rotate(90deg);
 }
 
-.box::-webkit-scrollbar {
-    width: 0.8em;
-  }
-  
-.box::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-  }
-  
-.box::-webkit-scrollbar-thumb {
-  background-color: darkgrey;
-  outline: 1px solid slategrey;
-  }
-  .transform-button-icon-color{
-    color: white !important
-}
+
 .image-box {
     background-color: white;
-    border-radius: 6px;
+    border-radius: 5px;
     box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
     color: #4a4a4a;
     display: block;
+}
+.panel-heading{
+    border-bottom: 0px !important;
+    border-left: 0px !important;
+     border-right: 0px;
+}
+.panel-heading:first-child {
+    border-top: 0px 
 }

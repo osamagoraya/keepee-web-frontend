@@ -15,5 +15,16 @@
 }
 
 .input-search-box{
-    background-color: white !important;
+    color: white !important;
+    border: 0px solid #000000;
+    border-bottom-width: 0px;
+    background-color: transparent;
 }
+::placeholder{
+    color: white !important
+}
+
+.icon-color{
+    color: white !important
+}
+

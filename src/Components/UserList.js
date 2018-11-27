@@ -38,13 +38,13 @@ class UserList extends Component {
                         <div className="field" style={{ width: '100%' }}>
                             <p className="control has-icons-right">
                                 <input 
-                                    className="input is-rounded input-search-box"
+                                    className="input is input-search-box"
                                     type="text"    
                                     placeholder="לחפש"
                                     onChange={this.onChangeText}
                                     value={this.state.searchTerm} />
                                 <span className="icon is-small is-right">
-                                    <i className="fas fa-search"></i>
+                                    <i className="fas fa-search icon-color"></i>
                                 </span>
                             </p>
                         </div>

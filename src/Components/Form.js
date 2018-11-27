@@ -291,7 +291,7 @@ class Form extends Component {
                                 <div className="columns">
                                     <div className="column is-half">
                                         <div className="buttons">
-                                            <button type="submit" onClick={() => { console.log("Values", values) }} className={`button receipt-button receipt-button-success is-info ${this.state.buttonLoading}`}>לא רלוונטי</button>
+                                            <button type="submit" onClick={() => { console.log("Values", values) }} className={`button is-success receipt-button receipt-button-success is-info ${this.state.buttonLoading}`}>המשך</button>
                                         </div>
                                     </div>
                                     <div className="column is-half">

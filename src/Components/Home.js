@@ -113,11 +113,13 @@ class Home extends Component {
         let userRow = []
         result.forEach(user => {
             userRow.push(
-                <li onClick={() => this.userSelected(user)} className={`panel-block ${this.state.selectedUserID === user.UserID? 'is-active active-list-item':''}`} style={{ height: '25px', margin: '10px',cursor:'pointer' }}>
-                    <span className="panel-icon">
-                        <i className="fas fa-book" aria-hidden="true"></i>
-                    </span>
+                <li onClick={() => this.userSelected(user)} className={`panel-block list-item-container ${this.state.selectedUserID === user.UserID? 'is-active active-list-item':''}`} style={{ height: '45px',cursor:'pointer' }}>
+                    <div className="panel-icon list-item-icon">
+                        <i className="fas fa-chevron-left" aria-hidden="true"></i>
+                    </div>
+                    <div className="list-item-text">
                     {user.Name}
+                    </div>
                 </li>
             )
         })
@@ -138,13 +140,15 @@ class Home extends Component {
         console.log("Render Image List Row")
         let imageRow = []
         this.state.selectedUserImagesList.map(image => {
-            imageRow.push(<li onClick={()=>{this.imageSelected(image.ImageID)}} className={`panel-block ${this.state.selectedImageID === image.ImageID? 'is-active active-list-item':''}`} style={{ height: '25px', margin: '10px',cursor:'pointer' }}>
-                <span className="panel-icon">
-                    <i className="fas fa-book" aria-hidden="true"></i>
+            imageRow.push(<li onClick={()=>{this.imageSelected(image.ImageID)}} className={`panel-block list-item-container ${this.state.selectedImageID === image.ImageID? 'is-active active-list-item':''}`} style={{ height: '45px',cursor:'pointer' }}>
+                <span className="panel-icon list-item-icon">
+                    <i className="fas fa-chevron-left" aria-hidden="true"></i>
                 </span>
+                <div className="list-item-text">
                 {
                     this.getImageName(image.ImageID)
                 }
+                </div>
             </li>)
         })
         return imageRow

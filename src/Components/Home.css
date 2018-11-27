@@ -27,7 +27,7 @@
 .panel {
     height: 75vh;
     background: white;
-    border-radius: 6px;
+    border-radius: 5px;
 }
 
 .panel-heading {
@@ -45,5 +45,31 @@
 .active-list-item {
     background-color:  #f1f1f1
 }
+.list-item-container{
+    margin-left: 15px;
+    margin-right: 15px;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 0.2px solid cornflowerblue !important ;
+}
+.list-item-container:hover{
+    background-color: #f3f3f3
+}
+.list-item-icon{
+  justify-self: flex-start;
+  flex:1
+}
+.list-item-text{
+    text-align: right;
+    flex:4;
+}
 
+.panel-heading {
+    border-bottom: 0px !important;
+    border-left: 0px !important;
+     border-right: 0px;
+}
+.panel-heading:first-child {
+    border-top: 0px 
+}
 
