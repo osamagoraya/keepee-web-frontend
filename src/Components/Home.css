@@ -41,3 +41,9 @@
     height: 71.5vh;
     border: transparent !important;
 }
+
+.active-list-item {
+    background-color:  #f1f1f1
+}
+
+

@@ -61,3 +61,6 @@
   background-color: darkgrey;
   outline: 1px solid slategrey;
   }
+  .transform-button-icon-color{
+    color: white !important
+}

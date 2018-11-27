@@ -113,7 +113,7 @@ class Home extends Component {
         let userRow = []
         result.forEach(user => {
             userRow.push(
-                <li onClick={() => this.userSelected(user)} className={`panel-block ${this.state.selectedUserID === user.UserID? 'is-active':''}`} style={{ height: '25px', margin: '10px',cursor:'pointer' }}>
+                <li onClick={() => this.userSelected(user)} className={`panel-block ${this.state.selectedUserID === user.UserID? 'is-active active-list-item':''}`} style={{ height: '25px', margin: '10px',cursor:'pointer' }}>
                     <span className="panel-icon">
                         <i className="fas fa-book" aria-hidden="true"></i>
                     </span>
@@ -138,7 +138,7 @@ class Home extends Component {
         console.log("Render Image List Row")
         let imageRow = []
         this.state.selectedUserImagesList.map(image => {
-            imageRow.push(<li onClick={()=>{this.imageSelected(image.ImageID)}} className={`panel-block ${this.state.selectedImageID === image.ImageID? 'is-active':''}`} style={{ height: '25px', margin: '10px',cursor:'pointer' }}>
+            imageRow.push(<li onClick={()=>{this.imageSelected(image.ImageID)}} className={`panel-block ${this.state.selectedImageID === image.ImageID? 'is-active active-list-item':''}`} style={{ height: '25px', margin: '10px',cursor:'pointer' }}>
                 <span className="panel-icon">
                     <i className="fas fa-book" aria-hidden="true"></i>
                 </span>

@@ -16,7 +16,7 @@ const categories = [
     { type: 'Other shopping', vat: 100 },
     { type: 'Pro tasks', vat: 75 },
     { type: 'Development task', vat: 85 },
-    { type: 'Custom', vat: 0}
+    { type: 'Custom', vat: 0 }
 
 ]
 
@@ -92,7 +92,7 @@ class Form extends Component {
         })
 
         if (result) {
-            if(result.type === 'Custom'){
+            if (result.type === 'Custom') {
                 return values.vat
             }
             console.log(result.vat)
@@ -200,23 +200,23 @@ class Form extends Component {
                                                         </p>
                                                         {touched.vendor && errors.vendor && <p className="help is-danger">{errors.vendor}</p>}
                                                     </div>
+                                                    <div className="column is-half">
+                                                        <div className="select">
+                                                            <select name="category"
+                                                                onChange={handleChange}
+                                                                onBlur={handleBlur}
+                                                                value={values.category} >
+                                                                <option value={null}> בחר קטגוריה</option>
+                                                                {categories.map(category => {
+                                                                    return (<option value={category.type}>{category.type}            </option>)
+                                                                })}
 
-                                                </div>
-                                                <div className="column">
-                                                    <div className="select">
-                                                        <select name="category"
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            value={values.category} >
-                                                            <option value={null}> בחר קטגוריה</option>
-                                                            {categories.map(category => {
-                                                                return (<option value={category.type}>{category.type}            </option>)
-                                                            })}
-
-                                                        </select>
+                                                            </select>
+                                                        </div>
+                                                        {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
                                                     </div>
-                                                    {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
                                                 </div>
+
 
                                                 <div className="columns">
                                                     <div className="column is-half">
@@ -229,7 +229,7 @@ class Form extends Component {
                                                                 value={this.getVat(values, values.category)}
                                                                 name="vat"
                                                                 placeholder="מע״מ"
-                                                                
+
                                                             />
                                                             <span class="icon is-small is-left">
                                                                 <i class="fas fa-percentage"></i>
@@ -298,9 +298,9 @@ class Form extends Component {
                                         <div className="buttons">
                                             <button onClick={this.irrelevantPicture} type="button" className={`button receipt-button receipt-button-left ${this.state.irrelevantButtonLoading}`}>לא רלוונטי</button>
                                             <button onClick={this.retakePicture} type="button" className={`button receipt-button receipt-button-right ${this.state.retakeButtonLoading}`}>לצילום מחד</button>
-                                            <a onClick={this.transformImage} class="button">
+                                            <a onClick={this.transformImage} class="button transform-button-icon-color" style={{ borderRadius: 40, backgroundColor: '#87cefa' }}>
                                                 <span class="icon is-small">
-                                                    <i class="fas fa-sync-alt"></i>
+                                                    <i class="fas fa-undo"></i>
                                                 </span>
                                             </a>
                                         </div>
