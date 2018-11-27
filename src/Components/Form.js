@@ -280,7 +280,7 @@ class Form extends Component {
                                                 </div>
                                             </div> : null}
                                     </div>
-                                    <div className="column is-half imageBox">
+                                    <div className="column is-half">
                                         {errors.image && values.image === '' ? <p className="help is-danger">{errors.image}</p> : <div />}
                                         <div className="box form-box">
                                             {this.props.imageID ?
