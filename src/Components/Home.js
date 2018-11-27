@@ -133,7 +133,7 @@ class Home extends Component {
     getImageName(imageName){
         let parts = imageName.split('/');
         let answer = parts[parts.length - 1];
-        return Moment(`${answer}`,'x').format("MMM Do YY")
+        return Moment(`${answer}`,'x').format("MM.DD.YY")
     }
 
     renderImageListRow = () => {
