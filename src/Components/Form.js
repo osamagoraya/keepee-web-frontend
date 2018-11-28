@@ -3,21 +3,19 @@ import './Form.css';
 import 'bulma/css/bulma.css'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
+import Select from 'react-select';
 
 
 const categories = [
-    { type: 'VAT deals', vat: 0 },
-    { type: 'VAT effords', vat: 0 },
-    { type: 'VAT equipment effords', vat: 0 },
-    { type: 'Sales', vat: 100 },
-    { type: 'Content suppliers', vat: 66.66 },
-    { type: 'Income w/o taxes', vat: 0 },
-    { type: 'Shopping', vat: 100 },
-    { type: 'Other shopping', vat: 100 },
-    { type: 'Pro tasks', vat: 75 },
-    { type: 'Development task', vat: 85 },
-    { type: 'Custom', vat: 0 }
-
+    { label: '-101 VAT effords',             value: 0     , vat: 0     , type: '-101 VAT effords',            },
+    { label: '-102 VAT equipment effords',   value: 0     , vat: 0     , type: '-102 VAT equipment effords',  },
+    { label: '-100 VAT deals',               value: 0     , vat: 0     , type: '-100 VAT deals',              },
+    { label: '101001 Sales',                 value: 100   , vat: 100   , type: '101001 Sales',                },
+    { label: '701002 Content suppliers',     value: 66.66 , vat: 66.66 , type: '701002 Content suppliers',    },
+    { label: '102001 incomes without taxes', value: 0     , vat: 0     , type: '102001 incomes without taxes' },
+    { label: '201001 shoping',               value: 100   , vat: 100   , type: '201001 shoping',              },
+    { label: '201002 other shopping',        value: 100   , vat: 100   , type: '201002 other shopping',       },
+    { label: '201003 Pro tasks',             value: 75    , vat: 75    , type: '201003 Pro tasks',            }
 ]
 
 class Form extends Component {
@@ -201,18 +199,13 @@ class Form extends Component {
                                                         {touched.vendor && errors.vendor && <p className="help is-danger">{errors.vendor}</p>}
                                                     </div>
                                                     <div className="column is-half">
-                                                        <div className="select">
-                                                            <select name="category"
+                                                            <Select  name="category"
+                                                                options={categories}
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
-                                                                value={values.category} >
-                                                                <option value={null}> בחר קטגוריה</option>
-                                                                {categories.map(category => {
-                                                                    return (<option value={category.type}>{category.type}            </option>)
-                                                                })}
-
-                                                            </select>
-                                                        </div>
+                                                                value={values.category}
+                                                                isSearchable
+                                                                 />
                                                         {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
                                                     </div>
                                                 </div>
