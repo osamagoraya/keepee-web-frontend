@@ -35,18 +35,22 @@ class UserList extends Component {
             <div className="panel content-overflow">
                 <div className="panel-heading">
                     <div className="level" style={{ height: '4vh'}}>
-                        <div className="field" style={{ width: '100%' }}>
-                            <p className="control has-icons-right">
-                                <input 
-                                    className="input is input-search-box"
-                                    type="text"    
-                                    placeholder="לחפש"
-                                    onChange={this.onChangeText}
-                                    value={this.state.searchTerm} />
-                                <span className="icon is-small is-right">
-                                    <i className="fal fa-search fa-1x icon-color"></i>
+                        <div className="level-left" style={{ marginLeft: '-3%'}}>
+                            <div className="field" style={{ width: '100%' }}>
+                                <p className="control has-icons-right">
+                                    <input
+                                        className="input is input-search-box"
+                                        type="text"
+                                        placeholder="לחפש"
+                                        onChange={this.onChangeText}
+                                        value={this.state.searchTerm} />
+                                </p>
+                            </div>
+                        </div>
+                        <div className="level-right">
+                            <span className="icon is-small is-right">
+                                    <i className="fal fa-search fa-2x icon-color"></i>
                                 </span>
-                            </p>
                         </div>
                     </div>
                 </div>

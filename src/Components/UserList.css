@@ -28,3 +28,7 @@
     color: white !important
 }
 
+.control.has-icons-right .input {
+    padding-right: 0em !important;
+}
+
