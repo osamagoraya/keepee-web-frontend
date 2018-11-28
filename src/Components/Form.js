@@ -7,15 +7,15 @@ import Select from 'react-select';
 
 
 const categories = [
-    { label: '-101 VAT effords',             value: 0     , vat: 0     , type: '-101 VAT effords',            },
-    { label: '-102 VAT equipment effords',   value: 0     , vat: 0     , type: '-102 VAT equipment effords',  },
-    { label: '-100 VAT deals',               value: 0     , vat: 0     , type: '-100 VAT deals',              },
-    { label: '101001 Sales',                 value: 100   , vat: 100   , type: '101001 Sales',                },
-    { label: '701002 Content suppliers',     value: 66.66 , vat: 66.66 , type: '701002 Content suppliers',    },
-    { label: '102001 incomes without taxes', value: 0     , vat: 0     , type: '102001 incomes without taxes' },
-    { label: '201001 shoping',               value: 100   , vat: 100   , type: '201001 shoping',              },
-    { label: '201002 other shopping',        value: 100   , vat: 100   , type: '201002 other shopping',       },
-    { label: '201003 Pro tasks',             value: 75    , vat: 75    , type: '201003 Pro tasks',            }
+    { label: '-101 VAT effords', value: 0, vat: 0, type: '-101 VAT effords', },
+    { label: '-102 VAT equipment effords', value: 0, vat: 0, type: '-102 VAT equipment effords', },
+    { label: '-100 VAT deals', value: 0, vat: 0, type: '-100 VAT deals', },
+    { label: '101001 Sales', value: 100, vat: 100, type: '101001 Sales', },
+    { label: '701002 Content suppliers', value: 66.66, vat: 66.66, type: '701002 Content suppliers', },
+    { label: '102001 incomes without taxes', value: 0, vat: 0, type: '102001 incomes without taxes' },
+    { label: '201001 shoping', value: 100, vat: 100, type: '201001 shoping', },
+    { label: '201002 other shopping', value: 100, vat: 100, type: '201002 other shopping', },
+    { label: '201003 Pro tasks', value: 75, vat: 75, type: '201003 Pro tasks', }
 ]
 
 class Form extends Component {
@@ -32,6 +32,7 @@ class Form extends Component {
             alertMessage: '',
             dropdownState: '',
             imageAngle: 90,
+            reactSelectedOption: ''
         }
     }
     componentWillMount() {
@@ -103,18 +104,17 @@ class Form extends Component {
     }
 
     getPercentageSum(vat, sum, values) {
-
         let percentage = (parseInt(vat) / 100) * parseInt(sum ? sum : 0)
         let result = (parseInt(percentage) + parseInt(sum ? sum : 0))
         values.sum = result
         return result
-
     }
-    categoryChanged = (handleChange, _vat, _category) => {
-        handleChange()
-        this.getVat(_vat, _category)
 
+    handleReactSelectChange = (selectedOption, setFieldValue) => {
+        this.setState({ reactSelectedOption: selectedOption })
+        setFieldValue('category', selectedOption.type)
     }
+
 
     render() {
         const validationSchema =
@@ -141,7 +141,7 @@ class Form extends Component {
                         }}
                         enableReinitialize={true}
                         validationSchema={validationSchema}
-                        render={({ values, touched, errors, handleSubmit, handleChange, handleBlur }) => (
+                        render={({ values, touched, errors, handleSubmit, handleChange, handleBlur, setFieldValue }) => (
                             <form onSubmit={handleSubmit}>
                                 {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
                                 <div className="columns">
@@ -199,17 +199,27 @@ class Form extends Component {
                                                         {touched.vendor && errors.vendor && <p className="help is-danger">{errors.vendor}</p>}
                                                     </div>
                                                     <div className="column is-half">
-                                                            <Select  name="category"
-                                                                options={categories}
+                                                        <div className="select">
+                                                            <select name="category"
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
-                                                                value={values.category}
+                                                                value={values.category} >
+                                                                <option value={null}> בחר קטגוריה</option>
+                                                                {categories.map(category => {
+                                                                    return (<option value={category.type}>{category.type}            </option>)
+                                                                })}
+
+                                                            </select>
+                                                        </div>
+                                                        {/* <Select 
+                                                                options={categories}
+                                                                onChange={(selectedOption)=>this.handleReactSelectChange(selectedOption,setFieldValue)}
+                                                                value={this.state.reactSelectedOption}
                                                                 isSearchable
-                                                                 />
+                                                                 />  */}
                                                         {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
                                                     </div>
                                                 </div>
-
 
                                                 <div className="columns">
                                                     <div className="column is-half">
@@ -244,20 +254,7 @@ class Form extends Component {
                                                         {touched.sum && errors.sum && <p className="help is-danger">{errors.sum}</p>}
                                                     </div>
                                                 </div>
-                                                {/* <div className="column">
-                                                    <p className="control">
-                                                        <input className="input is-small"
-                                                            type="text"
-                                                            placeholder="סכום"
-                                                            className={`input is-small ${touched.sum && errors.sum ? 'is-danger' : ''}`}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            value={this.getPercentageSum(values.vat, values.amount, values)}
-                                                            name="sum"
-                                                            disabled />
-                                                    </p>
-                                                    {touched.detail && errors.detail && <p className="help is-danger">{errors.detail}</p>}
-                                                </div> */}
+
                                                 <div className="column">
                                                     <p className="control">
                                                         <input className="input is-small"
