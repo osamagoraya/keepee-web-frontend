@@ -34,7 +34,7 @@ class UserList extends Component {
         return (
             <div className="panel content-overflow">
                 <div className="panel-heading">
-                    <div className="level">
+                    <div className="level" style={{ height: '4vh'}}>
                         <div className="field" style={{ width: '100%' }}>
                             <p className="control has-icons-right">
                                 <input 
@@ -44,7 +44,7 @@ class UserList extends Component {
                                     onChange={this.onChangeText}
                                     value={this.state.searchTerm} />
                                 <span className="icon is-small is-right">
-                                    <i className="fas fa-search icon-color"></i>
+                                    <i className="fal fa-search fa-1x icon-color"></i>
                                 </span>
                             </p>
                         </div>
