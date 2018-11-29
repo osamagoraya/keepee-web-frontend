@@ -288,7 +288,7 @@ class Form extends Component {
                                         <div className="buttons">
                                             <button onClick={this.irrelevantPicture} type="button" className={`button receipt-button receipt-button-left ${this.state.irrelevantButtonLoading}`}>לא רלוונטי</button>
                                             <button onClick={this.retakePicture} type="button" className={`button receipt-button receipt-button-right ${this.state.retakeButtonLoading}`}>לצילום מחד</button>
-                                            <a onClick={this.transformImage} class="button transform-button-icon-color" style={{ borderRadius: 40, backgroundColor: '#87cefa' }}>
+                                            <a onClick={this.transformImage} class="button is-small transform-button-icon-color" style={{ borderRadius: '50%', backgroundColor: '#87cefa' }}>
                                                 <span class="icon is-small">
                                                     <i class="fas fa-undo"></i>
                                                 </span>

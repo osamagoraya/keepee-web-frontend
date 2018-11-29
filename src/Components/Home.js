@@ -120,6 +120,7 @@ class Home extends Component {
                     <div className="list-item-text">
                     {user.Name}
                     </div>
+                    <i className={` ${this.state.selectedUserID === user.UserID ? 'fas fa-caret-right fa-4x fa-caret-right-user is-active active-list-item':''}`}></i>
                 </li>
             )
         })
@@ -149,6 +150,7 @@ class Home extends Component {
                     this.getImageName(image.ImageID)
                 }
                 </div>
+                <i className={` ${this.state.selectedImageID === image.ImageID ? 'fas fa-caret-right fa-4x fa-caret-right-image is-active active-list-item':''}`}></i>
             </li>)
         })
         return imageRow

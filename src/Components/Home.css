@@ -73,3 +73,16 @@
     border-top: 0px 
 }
 
+.fa-caret-right-user {
+    background: transparent !important;
+    color: #F1EEEE;
+    position: absolute;
+    margin-left: 20.8%;
+}
+
+.fa-caret-right-image {
+    background: transparent !important;
+    color: #F1EEEE;
+    position: absolute;
+    margin-left: 11%;
+}
