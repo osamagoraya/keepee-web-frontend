@@ -35,6 +35,7 @@
     border-right-style: none;
     box-shadow: none !important;
     text-align: right;
+    border-color: #dbdbdb !important
 }
 
 .form-columns {
