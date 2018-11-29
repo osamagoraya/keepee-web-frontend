@@ -49,7 +49,6 @@ class Form extends Component {
             alertMessage: '',
             dropdownState: '',
             imageAngle: 90,
-            reactSelectedOption: ''
         }
     }
     componentWillMount() {
@@ -142,13 +141,11 @@ class Form extends Component {
                 category: Yup.string().required("נדרש"),
                 vendor: Yup.string().required("נדרש"),
                 sum: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
-                amount: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
                 vat: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
                 image: Yup.string().required("נדרש")
             })
 
         const { selectedOption } = this.state;
-
         return (
             <div className="box content-overflow" style={{ direction: 'rtl'}}>
                 <div className="content" style={{ direction: 'ltr'}}>
@@ -164,7 +161,6 @@ class Form extends Component {
                             <form onSubmit={handleSubmit}>
                                 {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
                                 <div className="columns">
-
                                     <div className="column is-half">
                                         {this.props.imageID ?
                                             <div>
@@ -231,9 +227,10 @@ class Form extends Component {
                                                             {/*</select>*/}
                                                         {/*</div>*/}
                                                         {/* <Select 
+                                                                name="category"
                                                                 options={categories}
                                                                 onChange={(selectedOption)=>this.handleReactSelectChange(selectedOption,setFieldValue)}
-                                                                value={this.state.reactSelectedOption}
+                                                                value={values.category}
                                                                 isSearchable
                                                                  />  */}
                                                         <Select
@@ -308,7 +305,7 @@ class Form extends Component {
                                 <div className="columns">
                                     <div className="column is-half">
                                         <div className="buttons">
-                                            <button type="submit" onClick={() => { console.log("Values", values) }} className={`button is-success receipt-button receipt-button-success is-info ${this.state.buttonLoading}`}>המשך</button>
+                                            <button type="submit" onClick={()=>console.log("Errors",errors)} className={`button is-success receipt-button receipt-button-success is-info ${this.state.buttonLoading}`}>המשך</button>
                                         </div>
                                     </div>
                                     <div className="column is-half">
