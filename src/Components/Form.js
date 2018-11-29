@@ -32,7 +32,6 @@ class Form extends Component {
             alertMessage: '',
             dropdownState: '',
             imageAngle: 90,
-            reactSelectedOption: ''
         }
     }
     componentWillMount() {
@@ -111,7 +110,6 @@ class Form extends Component {
     }
 
     handleReactSelectChange = (selectedOption, setFieldValue) => {
-        this.setState({ reactSelectedOption: selectedOption })
         setFieldValue('category', selectedOption.type)
     }
 
@@ -125,11 +123,10 @@ class Form extends Component {
                 category: Yup.string().required("נדרש"),
                 vendor: Yup.string().required("נדרש"),
                 sum: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
-                amount: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
                 vat: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
                 image: Yup.string().required("נדרש")
             })
-
+        
         return (
             <div className="box content-overflow">
                 <div className="content">
@@ -145,7 +142,6 @@ class Form extends Component {
                             <form onSubmit={handleSubmit}>
                                 {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
                                 <div className="columns">
-
                                     <div className="column is-half">
                                         {this.props.imageID ?
                                             <div>
@@ -206,15 +202,16 @@ class Form extends Component {
                                                                 value={values.category} >
                                                                 <option value={null}> בחר קטגוריה</option>
                                                                 {categories.map(category => {
-                                                                    return (<option value={category.type}>{category.type}            </option>)
+                                                                    return (<option value={category.type}>{category.type}</option>)
                                                                 })}
 
                                                             </select>
                                                         </div>
                                                         {/* <Select 
+                                                                name="category"
                                                                 options={categories}
                                                                 onChange={(selectedOption)=>this.handleReactSelectChange(selectedOption,setFieldValue)}
-                                                                value={this.state.reactSelectedOption}
+                                                                value={values.category}
                                                                 isSearchable
                                                                  />  */}
                                                         {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
@@ -281,7 +278,7 @@ class Form extends Component {
                                 <div className="columns">
                                     <div className="column is-half">
                                         <div className="buttons">
-                                            <button type="submit" onClick={() => { console.log("Values", values) }} className={`button is-success receipt-button receipt-button-success is-info ${this.state.buttonLoading}`}>המשך</button>
+                                            <button type="submit" onClick={()=>console.log("Errors",errors)} className={`button is-success receipt-button receipt-button-success is-info ${this.state.buttonLoading}`}>המשך</button>
                                         </div>
                                     </div>
                                     <div className="column is-half">
