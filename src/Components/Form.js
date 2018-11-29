@@ -7,13 +7,13 @@ import Select from 'react-select';
 
 
 const categories = [
-    { label: '-101 VAT effords', value: 0, vat: 0, type: '-101 VAT effords', },
-    { label: '-102 VAT equipment effords', value: 0, vat: 0, type: '-102 VAT equipment effords', },
-    { label: '-100 VAT deals', value: 0, vat: 0, type: '-100 VAT deals', },
-    { label: ' 101001 Sales', value: 100, vat: 100, type: '101001 Sales', },
+    { label: '-101 VAT effords', value: 0.1, vat: 0, type: '-101 VAT effords', },
+    { label: '-102 VAT equipment effords', value: 0.2, vat: 0, type: '-102 VAT equipment effords', },
+    { label: '-100 VAT deals', value: 0.3, vat: 0, type: '-100 VAT deals', },
+    { label: ' 101001 Sales', value: 100.1, vat: 100, type: '101001 Sales', },
     { label: ' 701002 Content suppliers', value: 66.66, vat: 66.66, type: '701002 Content suppliers', },
-    { label: ' 102001 incomes without taxes', value: 0, vat: 0, type: '102001 incomes without taxes' },
-    { label: ' 201001 shoping', value: 100, vat: 100, type: '201001 shoping', },
+    { label: ' 102001 incomes without taxes', value: 0.4, vat: 0, type: '102001 incomes without taxes' },
+    { label: ' 201001 shoping', value: 100.2, vat: 100, type: '201001 shoping', },
     { label: ' 201002 other shopping', value: 100, vat: 100, type: '201002 other shopping', },
     { label: ' 201003 Pro tasks', value: 75, vat: 75, type: '201003 Pro tasks', }
 ]
@@ -25,7 +25,7 @@ const options = [
 ];
 
 const customStyles = {
-    option: (provided, {isSelected}) => ({
+    option: (provided, { isSelected }) => ({
         ...provided,
         fontSize: '5px'
     }),
@@ -49,6 +49,7 @@ class Form extends Component {
             alertMessage: '',
             dropdownState: '',
             imageAngle: 90,
+            customPercentage: false
         }
     }
     componentWillMount() {
@@ -126,12 +127,6 @@ class Form extends Component {
         return result
     }
 
-    handleReactSelectChange = (selectedOption, setFieldValue) => {
-        this.setState({ reactSelectedOption: selectedOption })
-        setFieldValue('category', selectedOption.value)
-    }
-
-
     render() {
         const validationSchema =
             Yup.object().shape({
@@ -147,8 +142,8 @@ class Form extends Component {
 
         const { selectedOption } = this.state;
         return (
-            <div className="box content-overflow" style={{ direction: 'rtl'}}>
-                <div className="content" style={{ direction: 'ltr'}}>
+            <div className="box content-overflow" style={{ direction: 'rtl' }}>
+                <div className="content" style={{ direction: 'ltr' }}>
                     <Formik
                         initialValues={{ reference: '', date: '', detail: '', category: '', vat: '', sum: '', image: this.props.imageID || '', vendor: '' }}
                         onSubmit={(values, actions) => {
@@ -214,31 +209,14 @@ class Form extends Component {
                                                         {touched.vendor && errors.vendor && <p className="help is-danger">{errors.vendor}</p>}
                                                     </div>
                                                     <div className="column is-half">
-                                                        {/*<div className="select">*/}
-                                                            {/*<select name="category"*/}
-                                                                {/*onChange={handleChange}*/}
-                                                                {/*onBlur={handleBlur}*/}
-                                                                {/*value={values.category} >*/}
-                                                                {/*<option value={null}> בחר קטגוריה</option>*/}
-                                                                {/*{categories.map(category => {*/}
-                                                                    {/*return (<option value={category.type}>{category.type}            </option>)*/}
-                                                                {/*})}*/}
-
-                                                            {/*</select>*/}
-                                                        {/*</div>*/}
-                                                        {/* <Select 
-                                                                name="category"
-                                                                options={categories}
-                                                                onChange={(selectedOption)=>this.handleReactSelectChange(selectedOption,setFieldValue)}
-                                                                value={values.category}
-                                                                isSearchable
-                                                                 />  */}
                                                         <Select
-                                                            styles={customStyles}
-                                                            value={this.state.reactSelectedOption}
-                                                            onChange={(selectedOption)=>this.handleReactSelectChange(selectedOption,setFieldValue)}
+                                                            value={categories.filter(category => category.type === values.category)}
+                                                            onChange={(selectedOption) => { 
+                                                                setFieldValue('category', selectedOption.type)
+                                                                setFieldValue('vat', selectedOption.vat)
+                                                             }}
                                                             options={categories}
-                                                            isRtl={true}
+                                                            getOptionLabel={option => option.type}
                                                             isMulti={false}
                                                         />
                                                         {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
@@ -253,13 +231,12 @@ class Form extends Component {
                                                                 className={`input is-small ${touched.vat && errors.vat ? 'is-danger' : ''}`}
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
-                                                                value={this.getVat(values, values.category)}
+                                                                value={values.vat}
                                                                 name="vat"
                                                                 placeholder="מע״מ"
-
                                                             />
-                                                            <span class="icon is-small is-left">
-                                                                <i class="fas fa-percent"></i>
+                                                            <span className="icon is-small is-left" >
+                                                                <i className="fal fa-percent"></i>
                                                             </span>
                                                         </p>
                                                         {touched.vat && errors.vat && <p className="help is-danger">{errors.vat}</p>}
@@ -305,7 +282,7 @@ class Form extends Component {
                                 <div className="columns">
                                     <div className="column is-half">
                                         <div className="buttons">
-                                            <button type="submit" onClick={()=>console.log("Errors",errors)} className={`button is-success receipt-button receipt-button-success is-info ${this.state.buttonLoading}`}>המשך</button>
+                                            <button type="submit" onClick={() => console.log("Errors", errors)} className={`button is-success receipt-button receipt-button-success is-info ${this.state.buttonLoading}`}>המשך</button>
                                         </div>
                                     </div>
                                     <div className="column is-half">
