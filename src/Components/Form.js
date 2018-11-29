@@ -235,7 +235,7 @@ class Form extends Component {
 
                                                             />
                                                             <span class="icon is-small is-left">
-                                                                <i class="fas fa-percentage"></i>
+                                                                <i class="fas fa-percent"></i>
                                                             </span>
                                                         </p>
                                                         {touched.vat && errors.vat && <p className="help is-danger">{errors.vat}</p>}
