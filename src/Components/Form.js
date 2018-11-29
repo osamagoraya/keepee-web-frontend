@@ -10,13 +10,30 @@ const categories = [
     { label: '-101 VAT effords', value: 0, vat: 0, type: '-101 VAT effords', },
     { label: '-102 VAT equipment effords', value: 0, vat: 0, type: '-102 VAT equipment effords', },
     { label: '-100 VAT deals', value: 0, vat: 0, type: '-100 VAT deals', },
-    { label: '101001 Sales', value: 100, vat: 100, type: '101001 Sales', },
-    { label: '701002 Content suppliers', value: 66.66, vat: 66.66, type: '701002 Content suppliers', },
-    { label: '102001 incomes without taxes', value: 0, vat: 0, type: '102001 incomes without taxes' },
-    { label: '201001 shoping', value: 100, vat: 100, type: '201001 shoping', },
-    { label: '201002 other shopping', value: 100, vat: 100, type: '201002 other shopping', },
-    { label: '201003 Pro tasks', value: 75, vat: 75, type: '201003 Pro tasks', }
+    { label: ' 101001 Sales', value: 100, vat: 100, type: '101001 Sales', },
+    { label: ' 701002 Content suppliers', value: 66.66, vat: 66.66, type: '701002 Content suppliers', },
+    { label: ' 102001 incomes without taxes', value: 0, vat: 0, type: '102001 incomes without taxes' },
+    { label: ' 201001 shoping', value: 100, vat: 100, type: '201001 shoping', },
+    { label: ' 201002 other shopping', value: 100, vat: 100, type: '201002 other shopping', },
+    { label: ' 201003 Pro tasks', value: 75, vat: 75, type: '201003 Pro tasks', }
 ]
+
+const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+];
+
+const customStyles = {
+    option: (provided, {isSelected}) => ({
+        ...provided,
+        fontSize: '5px'
+    }),
+    input: () => ({
+        fontSize: '5px',
+        marginTop: '-2px'
+    })
+}
 
 class Form extends Component {
     constructor(props) {
@@ -112,7 +129,7 @@ class Form extends Component {
 
     handleReactSelectChange = (selectedOption, setFieldValue) => {
         this.setState({ reactSelectedOption: selectedOption })
-        setFieldValue('category', selectedOption.type)
+        setFieldValue('category', selectedOption.value)
     }
 
 
@@ -130,9 +147,11 @@ class Form extends Component {
                 image: Yup.string().required("נדרש")
             })
 
+        const { selectedOption } = this.state;
+
         return (
-            <div className="box content-overflow">
-                <div className="content">
+            <div className="box content-overflow" style={{ direction: 'rtl'}}>
+                <div className="content" style={{ direction: 'ltr'}}>
                     <Formik
                         initialValues={{ reference: '', date: '', detail: '', category: '', vat: '', sum: '', image: this.props.imageID || '', vendor: '' }}
                         onSubmit={(values, actions) => {
@@ -199,24 +218,32 @@ class Form extends Component {
                                                         {touched.vendor && errors.vendor && <p className="help is-danger">{errors.vendor}</p>}
                                                     </div>
                                                     <div className="column is-half">
-                                                        <div className="select">
-                                                            <select name="category"
-                                                                onChange={handleChange}
-                                                                onBlur={handleBlur}
-                                                                value={values.category} >
-                                                                <option value={null}> בחר קטגוריה</option>
-                                                                {categories.map(category => {
-                                                                    return (<option value={category.type}>{category.type}            </option>)
-                                                                })}
+                                                        {/*<div className="select">*/}
+                                                            {/*<select name="category"*/}
+                                                                {/*onChange={handleChange}*/}
+                                                                {/*onBlur={handleBlur}*/}
+                                                                {/*value={values.category} >*/}
+                                                                {/*<option value={null}> בחר קטגוריה</option>*/}
+                                                                {/*{categories.map(category => {*/}
+                                                                    {/*return (<option value={category.type}>{category.type}            </option>)*/}
+                                                                {/*})}*/}
 
-                                                            </select>
-                                                        </div>
+                                                            {/*</select>*/}
+                                                        {/*</div>*/}
                                                         {/* <Select 
                                                                 options={categories}
                                                                 onChange={(selectedOption)=>this.handleReactSelectChange(selectedOption,setFieldValue)}
                                                                 value={this.state.reactSelectedOption}
                                                                 isSearchable
                                                                  />  */}
+                                                        <Select
+                                                            styles={customStyles}
+                                                            value={this.state.reactSelectedOption}
+                                                            onChange={(selectedOption)=>this.handleReactSelectChange(selectedOption,setFieldValue)}
+                                                            options={categories}
+                                                            isRtl={true}
+                                                            isMulti={false}
+                                                        />
                                                         {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
                                                     </div>
                                                 </div>
