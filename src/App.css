@@ -48,3 +48,7 @@ border-radius: 5px
 .transform-button-icon-color{
   color: white !important
 }
+
+::placeholder {
+  color: #808080 !important;
+}

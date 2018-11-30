@@ -31,7 +31,10 @@ const customStyles = {
     }),
     input: () => ({
         fontSize: '5px',
-        marginTop: '-2px'
+        marginTop: '-2px',
+        borderTopStyle: 'none',
+        borderLeftStyle: 'none',
+        borderRightStyle: 'none'
     })
 }
 
@@ -142,7 +145,7 @@ class Form extends Component {
 
         const { selectedOption } = this.state;
         return (
-            <div className="box content-overflow" style={{ direction: 'rtl' }}>
+            <div className="box content-overflow" style={{ direction: 'rtl', overflow: 'hidden' }}>
                 <div className="content" style={{ direction: 'ltr' }}>
                     <Formik
                         initialValues={{ reference: '', date: '', detail: '', category: '', vat: '', sum: '', image: this.props.imageID || '', vendor: '' }}
@@ -218,6 +221,8 @@ class Form extends Component {
                                                             options={categories}
                                                             getOptionLabel={option => option.type}
                                                             isMulti={false}
+                                                            placeholder="קטגוריה"
+                                                            isRtl={true}
                                                         />
                                                         {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
                                                     </div>
