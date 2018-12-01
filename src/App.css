@@ -50,5 +50,10 @@ border-radius: 5px
 }
 
 ::placeholder {
-  color: #808080 !important;
+  color: rgba(128, 128, 128, 0.51) !important;
+  font-family: Assistant;
+}
+
+body {
+  font-family: Assistant;
 }

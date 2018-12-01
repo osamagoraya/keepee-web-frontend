@@ -18,26 +18,6 @@ const categories = [
     { label: ' 201003 Pro tasks', value: 75, vat: 75, type: '201003 Pro tasks', }
 ]
 
-const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-];
-
-const customStyles = {
-    option: (provided, { isSelected }) => ({
-        ...provided,
-        fontSize: '5px'
-    }),
-    input: () => ({
-        fontSize: '5px',
-        marginTop: '-2px',
-        borderTopStyle: 'none',
-        borderLeftStyle: 'none',
-        borderRightStyle: 'none'
-    })
-}
-
 class Form extends Component {
     constructor(props) {
         super(props)
@@ -223,6 +203,7 @@ class Form extends Component {
                                                             isMulti={false}
                                                             placeholder="קטגוריה"
                                                             isRtl={true}
+                                                            className="is-small"
                                                         />
                                                         {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
                                                     </div>

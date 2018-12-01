@@ -35,7 +35,8 @@
     border-right-style: none;
     box-shadow: none !important;
     text-align: right;
-    border-color: #dbdbdb !important
+    border-color: #dbdbdb !important;
+    font-family: Assistant !important;
 }
 
 .form-columns {
@@ -80,6 +81,10 @@
     border-left-style: none !important;
     border-right-style: none !important;
     margin-top: -6%;
+    border-radius: 2px !important;
+    border-color: #dbdbdb !important;
+    font-size: 0.75rem;
+    padding: 0px !important;
 }
 
 .css-19bqh2r {
@@ -89,3 +94,89 @@
 .css-1wy0on6 {
     display: none !important;
 }
+
+.css-1492t68 {
+    color: #808080 !important;
+    font-size: 0.75rem;
+    border-radius: 2px ;
+}
+
+.css-2o5izw:hover {
+    border-top-style: none !important;
+    border-left-style: none !important;
+    border-right-style: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    color: #363636 !important;
+    -webkit-appearance: none !important;
+    align-items: center !important;
+    margin-top: -6% !important;
+    box-shadow: none !important;
+    border-color: #dbdbdb !important;
+    border-radius: 2px !important;
+    font-size: 0.75rem;
+}
+
+.css-2o5izw:focus {
+    border-top-style: none !important;
+    border-left-style: none !important;
+    border-right-style: none !important;
+    border-color: #dbdbdb !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    color: #363636 !important;
+    -webkit-appearance: none !important;
+    align-items: center !important;
+    margin-top: -6% !important;
+    box-shadow: none !important;
+    border-color: #dbdbdb !important;
+    border-radius: 2px !important;
+    font-size: 0.75rem !important;
+}
+
+.css-2o5izw {
+    border-top-style: none !important;
+    border-left-style: none !important;
+    border-right-style: none !important;
+    border-color: #dbdbdb !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    color: #363636 !important;
+    -webkit-appearance: none !important;
+    align-items: center !important;
+    margin-top: -6% !important;
+    box-shadow: none !important;
+    border-radius: 2px !important;
+    font-size: 0.75rem;
+}
+
+
+.css-1492t68 {
+    position: absolute;
+    top: 60% !important;
+    color: rgba(128, 128, 128, 0.5) !important;
+    right: 2%;
+}
+
+.css-1g6gooi {
+    margin-top: 2%;
+}
+
+.css-1hwfws3 {
+    margin-top: 2% !important;
+}
+
+.css-xp4uvy {
+    margin-top: 4.5px !important;
+    right: 2% !important;
+}
+
+.css-15k3avv {
+    font-size: 0.75rem !important;
+}
+
+.css-bl6clz {
+    position: absolute;
+    top: 2% !important;
+}
+
