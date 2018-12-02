@@ -41,7 +41,7 @@
     text-align: right;
     border-color: #dbdbdb !important;
     font-family: 'Assistant' !important;
-    font-size: 16px !important;
+  
 }
 
 .form-columns {
@@ -55,8 +55,11 @@
 
 .content-overflow {
     overflow: auto;  
-    padding-right: 10%;
-    padding-left: 10%
+  }
+
+  .content-overflow-form {
+    overflow: auto;  
+   
   }
 
 .image-transform-90{
