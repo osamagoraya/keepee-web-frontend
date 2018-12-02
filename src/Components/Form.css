@@ -13,8 +13,8 @@
 
 .receipt-button {
     color: rgba(248, 247, 247, 1);
-    font-family: Assistant;
-    font-size: 17px;
+    font-family: 'Assistant' !important;
+    font-size: 15px !important;
     font-weight: bold;
     border-radius: 45px !important;
     background-color: #d0cccc;
@@ -27,6 +27,11 @@
 .buttons {
     margin-left: 15%;
 }
+.buttons-three {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+}
 
 .input {
     border-top-style: none;
@@ -35,7 +40,8 @@
     box-shadow: none !important;
     text-align: right;
     border-color: #dbdbdb !important;
-    font-family: Assistant !important;
+    font-family: 'Assistant' !important;
+    font-size: 16px !important;
 }
 
 .form-columns {
@@ -49,6 +55,8 @@
 
 .content-overflow {
     overflow: auto;  
+    padding-right: 10%;
+    padding-left: 10%
   }
 
 .image-transform-90{

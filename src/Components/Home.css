@@ -60,9 +60,12 @@
   justify-self: flex-start;
   flex:1
 }
+
 .list-item-text{
     text-align: right;
     flex:4;
+    font-size: 17px !important;
+    font-family: 'Assistant' !important
 }
 
 .list-item:hover {

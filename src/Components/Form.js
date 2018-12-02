@@ -194,10 +194,10 @@ class Form extends Component {
                                                     <div className="column is-half">
                                                         <Select
                                                             value={categories.filter(category => category.type === values.category)}
-                                                            onChange={(selectedOption) => { 
+                                                            onChange={(selectedOption) => {
                                                                 setFieldValue('category', selectedOption.type)
                                                                 setFieldValue('vat', selectedOption.vat)
-                                                             }}
+                                                            }}
                                                             options={categories}
                                                             getOptionLabel={option => option.type}
                                                             isMulti={false}
@@ -272,18 +272,23 @@ class Form extends Component {
                                             <button type="submit" onClick={() => console.log("Errors", errors)} className={`button receipt-button receipt-button-success ${this.state.buttonLoading}`}>המשך</button>
                                         </div>
                                     </div>
-                                    <div className="column is-half">
-                                        <div className="buttons">
-                                            <button onClick={this.irrelevantPicture} type="button" className={`button receipt-button receipt-button-left ${this.state.irrelevantButtonLoading}`}>לא רלוונטי</button>
-                                            <button onClick={this.retakePicture} type="button" className={`button receipt-button receipt-button-right ${this.state.retakeButtonLoading}`}>לצילום מחד</button>
-                                            <a onClick={this.transformImage} class="button is-small transform-button-icon-color" style={{ borderRadius: '50%', backgroundColor: 'rgba(148, 211, 210, 1)' }}>
-                                                <span class="icon is-small">
-                                                    <i class="fal fa-undo"></i>
-                                                </span>
-                                            </a>
-                                        </div>
+                                    <div className="column is-half buttons-three">
+
+                                        <button onClick={this.irrelevantPicture} type="button" className={`button receipt-button receipt-button-left ${this.state.irrelevantButtonLoading}`}>לא רלוונטי</button>
+
+
+                                        <button onClick={this.retakePicture} type="button" className={`button receipt-button receipt-button-right ${this.state.retakeButtonLoading}`}>לצילום מחד</button>
+
+
+                                        <a onClick={this.transformImage} class="button is-small transform-button-icon-color" style={{ borderRadius: '50%', backgroundColor: 'rgba(148, 211, 210, 1)' }}>
+                                            <span class="icon is-small">
+                                                <i class="fal fa-undo"></i>
+                                            </span>
+                                        </a>
+
                                     </div>
                                 </div>
+
                             </form>
                         )}
                     />
