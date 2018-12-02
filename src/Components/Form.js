@@ -139,7 +139,7 @@ class Form extends Component {
                             <form onSubmit={handleSubmit}>
                                 {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
                                 <div className="columns">
-                                    <div className="column is-half">
+                                    <div className="column is-half form-inputs-column">
                                         {this.props.imageID ?
                                             <div>
                                                 <div className="columns form-columns">
@@ -258,7 +258,7 @@ class Form extends Component {
                                                 </div>
                                             </div> : null}
                                     </div>
-                                    <div className="column is-half">
+                                    <div className="column is-half form-inputs-column">
                                         {errors.image && values.image === '' ? <p className="help is-danger">{errors.image}</p> : <div />}
                                         <div className="image-box form-box">
                                             {this.props.imageID ?
