@@ -113,15 +113,17 @@ class Home extends Component {
         let userRow = []
         result.forEach(user => {
             userRow.push(
+                <div className="list-item">
                 <li onClick={() => this.userSelected(user)} className={`panel-block list-item-container ${this.state.selectedUserID === user.UserID? 'is-active active-list-item':''}`} style={{ height: '45px',cursor:'pointer' }}>
                     <div className="panel-icon list-item-icon">
                         <i className="fas fa-chevron-left" aria-hidden="true"></i>
                     </div>
-                    <div className="list-item-text">
+                    <div className="list-item-text" style={{ color: 'rgba(121, 111, 111, 1)' }}>
                     {user.Name}
                     </div>
                     <i className={` ${this.state.selectedUserID === user.UserID ? 'fas fa-caret-right fa-4x fa-caret-right-user is-active active-list-item':''}`}></i>
                 </li>
+                </div>
             )
         })
         return userRow
@@ -141,17 +143,21 @@ class Home extends Component {
         console.log("Render Image List Row")
         let imageRow = []
         this.state.selectedUserImagesList.map(image => {
-            imageRow.push(<li onClick={()=>{this.imageSelected(image.ImageID)}} className={`panel-block list-item-container ${this.state.selectedImageID === image.ImageID? 'is-active active-list-item':''}`} style={{ height: '45px',cursor:'pointer' }}>
-                <span className="panel-icon list-item-icon">
-                    <i className="fas fa-chevron-left" aria-hidden="true"></i>
-                </span>
-                <div className="list-item-text">
-                {
-                    this.getImageName(image.ImageID)
-                }
+            imageRow.push(
+                <div className="list-item">
+                    <li onClick={()=>{this.imageSelected(image.ImageID)}} className={`panel-block list-item-container ${this.state.selectedImageID === image.ImageID? 'is-active active-list-item':''}`} style={{ height: '45px',cursor:'pointer' }}>
+                        <span className="panel-icon list-item-icon">
+                            <i className="fas fa-chevron-left" aria-hidden="true"></i>
+                        </span>
+                        <div className="list-item-text" style={{ color: 'rgba(121, 111, 111, 1)' }}>
+                        {
+                                this.getImageName(image.ImageID)
+                        }
+                        </div>
+                        <i className={` ${this.state.selectedImageID === image.ImageID ? 'fas fa-caret-right fa-4x fa-caret-right-image is-active active-list-item':''}`}></i>
+                    </li>
                 </div>
-                <i className={` ${this.state.selectedImageID === image.ImageID ? 'fas fa-caret-right fa-4x fa-caret-right-image is-active active-list-item':''}`}></i>
-            </li>)
+             )
         })
         return imageRow
     }

@@ -23,11 +23,11 @@ class ImageList extends Component {
                     <div className="level">
                         <div className="level-left">
                             <span className="icon has-text-white">
-                                <i className="fal fa-circle fa-2x"></i>
+                                <i className="fal fa-circle" style={{ fontSize: '25.53px'}}></i>
                                 <p className="total-images">{this.props.imageCount}</p>
                             </span>
                         </div>
-                        <div className="level-right has-text-white">
+                        <div className="level-right" style={{ color: 'rgba(121, 111, 111, 1)' }}>
                             <p>{this.props.userName}</p>
                         </div>
                     </div>

@@ -155,7 +155,7 @@ class Form extends Component {
                                                             <input
                                                                 className={`input is-small ${touched.reference && errors.reference ? 'is-danger' : ''}`}
                                                                 type="text"
-                                                                placeholder="התייחסות"
+                                                                placeholder="אסמכתא"
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
                                                                 value={values.reference}
@@ -201,7 +201,7 @@ class Form extends Component {
                                                             options={categories}
                                                             getOptionLabel={option => option.type}
                                                             isMulti={false}
-                                                            placeholder="קטגוריה"
+                                                            placeholder="חשבון"
                                                             isRtl={true}
                                                             className="is-small"
                                                         />
@@ -241,19 +241,20 @@ class Form extends Component {
                                                         {touched.sum && errors.sum && <p className="help is-danger">{errors.sum}</p>}
                                                     </div>
                                                 </div>
-
-                                                <div className="column">
-                                                    <p className="control">
-                                                        <input className="input is-small"
-                                                            type="text"
-                                                            placeholder="Detail"
-                                                            className={`input is-small ${touched.detail && errors.detail ? 'is-danger' : ''}`}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            value={values.detail}
-                                                            name="detail" />
-                                                    </p>
-                                                    {touched.detail && errors.detail && <p className="help is-danger">{errors.detail}</p>}
+                                                <div className="columns">
+                                                    <div className="column">
+                                                        <p className="control">
+                                                            <input className="input is-small"
+                                                                type="text"
+                                                                placeholder="פירוט"
+                                                                className={`input is-small ${touched.detail && errors.detail ? 'is-danger' : ''}`}
+                                                                onChange={handleChange}
+                                                                onBlur={handleBlur}
+                                                                value={values.detail}
+                                                                name="detail" />
+                                                        </p>
+                                                        {touched.detail && errors.detail && <p className="help is-danger">{errors.detail}</p>}
+                                                    </div>
                                                 </div>
                                             </div> : null}
                                     </div>
@@ -268,16 +269,16 @@ class Form extends Component {
                                 <div className="columns">
                                     <div className="column is-half">
                                         <div className="buttons">
-                                            <button type="submit" onClick={() => console.log("Errors", errors)} className={`button is-success receipt-button receipt-button-success is-info ${this.state.buttonLoading}`}>המשך</button>
+                                            <button type="submit" onClick={() => console.log("Errors", errors)} className={`button receipt-button receipt-button-success ${this.state.buttonLoading}`}>המשך</button>
                                         </div>
                                     </div>
                                     <div className="column is-half">
                                         <div className="buttons">
                                             <button onClick={this.irrelevantPicture} type="button" className={`button receipt-button receipt-button-left ${this.state.irrelevantButtonLoading}`}>לא רלוונטי</button>
                                             <button onClick={this.retakePicture} type="button" className={`button receipt-button receipt-button-right ${this.state.retakeButtonLoading}`}>לצילום מחד</button>
-                                            <a onClick={this.transformImage} class="button is-small transform-button-icon-color" style={{ borderRadius: '50%', backgroundColor: '#87cefa' }}>
+                                            <a onClick={this.transformImage} class="button is-small transform-button-icon-color" style={{ borderRadius: '50%', backgroundColor: 'rgba(148, 211, 210, 1)' }}>
                                                 <span class="icon is-small">
-                                                    <i class="fas fa-undo"></i>
+                                                    <i class="fal fa-undo"></i>
                                                 </span>
                                             </a>
                                         </div>

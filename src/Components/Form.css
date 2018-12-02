@@ -12,21 +12,20 @@
 }
 
 .receipt-button {
-    color: #faf9f8;
+    color: rgba(248, 247, 247, 1);
     font-family: Assistant;
     font-size: 17px;
-    font-weight: 700;
+    font-weight: bold;
     border-radius: 45px !important;
     background-color: #d0cccc;
     width: 116px;
     height: 25px;
     padding: 0;
-    align-items: center
+    align-items: center;
 }
 
 .buttons {
     margin-left: 15%;
-    
 }
 
 .input {
@@ -45,6 +44,7 @@
 
 .receipt-button-success {
     margin-left: -20%;
+    background-color: rgba(118, 193, 196, 1) !important;
 }
 
 .content-overflow {

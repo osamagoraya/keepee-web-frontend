@@ -35,7 +35,7 @@ class UserList extends Component {
             <div className="panel content-overflow">
                 <div className="panel-heading">
                     <div className="level" style={{ height: '4vh'}}>
-                        <div className="level-left" style={{ marginLeft: '-3%'}}>
+                        <div className="level-left" id="level-left-user" style={{ position: 'absolute' , left: '80.65%'}}>
                             <div className="field" style={{ width: '100%' }}>
                                 <p className="control has-icons-right">
                                     <input
@@ -49,7 +49,7 @@ class UserList extends Component {
                         </div>
                         <div className="level-right">
                             <span className="icon is-small is-right">
-                                    <i className="fal fa-search fa-2x icon-color"></i>
+                                    <i className="fal fa-search icon-color" style={{ position: 'absolute' , left: '96.5%' , fontSize: '13.85px'}}></i>
                                 </span>
                         </div>
                     </div>

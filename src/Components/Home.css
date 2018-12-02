@@ -31,7 +31,7 @@
 }
 
 .panel-heading {
-    background: #82d5d9 !important;
+    background: rgba(175, 228, 230, 1) !important;
     opacity: 0.63;
 }
 
@@ -46,11 +46,12 @@
     background-color:  #f1f1f1
 }
 .list-item-container{
-    margin-left: 15px;
-    margin-right: 15px;
     flex-direction: row;
     align-items: center;
-    border-bottom: 0.2px solid cornflowerblue !important ;
+    background-color: transparent;
+    border-bottom-style: solid !important;
+    border-bottom-color: #82D5D9 !important;
+    border-bottom-width: 0.2px !important;
 }
 .list-item-container:hover{
     background-color: #f3f3f3
@@ -64,25 +65,44 @@
     flex:4;
 }
 
+.list-item:hover {
+    background-color: #f3f3f3
+}
+
+.list-item {
+    border-bottom-style: none !important;
+    border-top-style: none !important;
+    border-left-style: none !important;
+    border-right-style: none !important;
+    padding-bottom: 0px !important;
+}
+
 .panel-heading {
-    border-bottom: 0px !important;
-    border-left: 0px !important;
-     border-right: 0px;
+    border-bottom: 0 !important;
+    border-left: 0 !important;
+     border-right: 0;
 }
 .panel-heading:first-child {
-    border-top: 0px 
+    border-top: 0
 }
 
 .fa-caret-right-user {
     background: transparent !important;
     color: #F1EEEE;
     position: absolute;
-    margin-left: 20.8%;
+    right: 0;
+    margin-top: -0.4%;
 }
 
 .fa-caret-right-image {
     background: transparent !important;
     color: #F1EEEE;
     position: absolute;
-    margin-left: 11%;
+    right: 24.57%;
+    margin-top: -0.4%;
 }
+
+.panel-icon {
+    color:rgba(112, 112, 112, 1) !important;
+}
+
