@@ -47,8 +47,9 @@ class Home extends Component {
             console.log("Response",response)
             if(response.data.statusCode === 200){
                 let updatedImageList = this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== values.image});
+                let updatedUsersList = this.state.userList.filter(user=> user.ImageID !== values.image)
                 console.log("Old List  ", this.state.selectedUserImagesList,"\nNew List  ",updatedImageList)
-                this.setState({selectedImageID: null,selectedUserImagesList: updatedImageList})
+                this.setState({selectedImageID: null,selectedUserImagesList: updatedImageList,userList:updatedUsersList})
                 cb(true)
             }else{
                 cb(false)                
@@ -64,7 +65,8 @@ class Home extends Component {
             if(response.data.statusCode === 200){
                 cb(true)
               let updatedImageList =  this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== imageID})
-              this.setState({selectedUserImagesList: updatedImageList,selectedImageID: null})
+              let updatedUsersList = this.state.userList.filter(user=> user.ImageID !== imageID)
+              this.setState({selectedUserImagesList: updatedImageList,selectedImageID: null,userList:updatedUsersList})
             }else{
                 cb(false)
             }
@@ -85,7 +87,8 @@ class Home extends Component {
             if(response.data.statusCode === 200){
                 cb(true)
                 let updatedImageList = this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== imageID})
-                this.setState({selectedUserImagesList: updatedImageList,selectedImageID: null})
+                let updatedUsersList = this.state.userList.filter(user=> user.ImageID !== imageID)
+                this.setState({selectedUserImagesList: updatedImageList,selectedImageID: null,userList:updatedUsersList})
 
             }else{
                 cb(false)
