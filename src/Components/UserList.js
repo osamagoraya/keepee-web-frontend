@@ -35,7 +35,7 @@ class UserList extends Component {
             <div className="panel content-overflow">
                 <div className="panel-heading">
                     <div className="level" style={{ height: '4vh'}}>
-                        <div className="level-left" id="level-left-user" style={{ position: 'absolute' , left: '80.65%'}}>
+                        <div className="level-left" id="level-left-user" style={{ position: 'absolute' , left: '80.65%' , marginLeft: '1.5%'}}>
                             <div className="field" style={{ width: '100%' }}>
                                 <p className="control has-icons-right">
                                     <input

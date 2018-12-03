@@ -125,7 +125,7 @@ class Form extends Component {
 
         const { selectedOption } = this.state;
         return (
-            <div className="box content-overflow-form" style={{ direction: 'rtl', overflow: 'hidden' }}>
+            <div className="box content-overflow-form" style={{ direction: 'rtl' }}>
                 <div className="content" style={{ direction: 'ltr' }}>
                     <Formik
                         initialValues={{ reference: '', date: '', detail: '', category: '', vat: '', sum: '', image: this.props.imageID || '', vendor: '' }}
@@ -182,7 +182,7 @@ class Form extends Component {
                                                     <div className="column is-half">
                                                         <p className="control">
                                                             <input className="input is-small" type="text"
-                                                                placeholder="ספק"
+                                                                placeholder="מע״מ"
                                                                 className={`input is-small ${touched.vendor && errors.vendor ? 'is-danger' : ''}`}
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}

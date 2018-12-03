@@ -56,7 +56,7 @@
 }
 
 .receipt-button-success {
-    margin-left: -20%;
+    margin-left: -10%;
     background-color: rgba(118, 193, 196, 1) !important;
 }
 
@@ -128,7 +128,7 @@
     color: #363636 !important;
     -webkit-appearance: none !important;
     align-items: center !important;
-    margin-top: -6% !important;
+    margin-top: -8% !important;
     box-shadow: none !important;
     border-color: #dbdbdb !important;
     border-radius: 2px !important;
@@ -145,7 +145,7 @@
     color: #363636 !important;
     -webkit-appearance: none !important;
     align-items: center !important;
-    margin-top: -6% !important;
+    margin-top: -8% !important;
     box-shadow: none !important;
     border-color: #dbdbdb !important;
     border-radius: 2px !important;
@@ -162,7 +162,7 @@
     color: #363636 !important;
     -webkit-appearance: none !important;
     align-items: center !important;
-    margin-top: -6% !important;
+    margin-top: -8% !important;
     box-shadow: none !important;
     border-radius: 2px !important;
     font-size: 0.75rem;
@@ -172,8 +172,12 @@
 .css-1492t68 {
     position: absolute;
     top: 60% !important;
-    color: rgba(128, 128, 128, 0.5) !important;
     right: 2%;
+    color: rgba(190, 185, 185, 0.51) !important;
+    font-family: Assistant !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.16px !important;
 }
 
 .css-1g6gooi {

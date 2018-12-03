@@ -1,5 +1,5 @@
 .section {
-    background-image: linear-gradient(180deg, #eb896b 0%, #b5b7d8 100%, #ff342c 100%);
+    background-image: linear-gradient(180deg, rgba(235, 137, 107, 0.64) 0%, rgba(181, 183, 216, 0.64) 100%, rgba(255, 52, 44, 0.64) 100%);
     opacity: 1;
     height: 100vh;
 }
@@ -20,12 +20,12 @@
 }
 
 .box {
-    height: 75vh;
+    height: 100%;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
 }
 
 .panel {
-    height: 75vh;
+    height: 100%;
     background: white;
     border-radius: 5px;
 }
@@ -93,7 +93,7 @@
     background: transparent !important;
     color: #F1EEEE;
     position: absolute;
-    right: 0;
+    right: 24.56%;
     margin-top: -0.4%;
 }
 
@@ -101,7 +101,7 @@
     background: transparent !important;
     color: #F1EEEE;
     position: absolute;
-    right: 24.57%;
+    right: 39.28%;
     margin-top: -0.4%;
 }
 
