@@ -59,8 +59,8 @@
 .user-list-item-icon{
   justify-self: flex-start;
   flex:1;
-    position: absolute;
-    right: 21.9%;
+    position: relative;
+    right: 12.9%;
 }
 
 .user-list-item-text{
@@ -68,15 +68,15 @@
     flex:4;
     font-size: 17px !important;
     font-family: 'Assistant' !important;
-    position: absolute;
-    right: 2.98%;
+    position: relative;
+    right: -5.02%;
 }
 
 .image-list-item-icon{
     justify-self: flex-start;
     flex: 1;
-    position: absolute;
-    right: 36.69%;
+    position: relative;
+    right: 16.69%;
 }
 
 .image-list-item-text{
@@ -84,8 +84,8 @@
     flex:4;
     font-size: 17px !important;
     font-family: 'Assistant' !important;
-    position: absolute;
-    right: 27.5%;
+    position: relative;
+    right: -10.5%;
 }
 
 .list-item:hover {

@@ -182,7 +182,7 @@ class Form extends Component {
                                                     <div className="column is-half">
                                                         <p className="control">
                                                             <input className="input is-small" type="text"
-                                                                placeholder="מע״מ"
+                                                                placeholder="ספק"
                                                                 className={`input is-small ${touched.vendor && errors.vendor ? 'is-danger' : ''}`}
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
@@ -277,7 +277,7 @@ class Form extends Component {
                                         <button onClick={this.irrelevantPicture} type="button" className={`button receipt-button receipt-button-left ${this.state.irrelevantButtonLoading}`}>לא רלוונטי</button>
 
 
-                                        <button onClick={this.retakePicture} type="button" className={`button receipt-button receipt-button-right ${this.state.retakeButtonLoading}`}>לצילום מחד</button>
+                                        <button onClick={this.retakePicture} type="button" className={`button receipt-button receipt-button-right ${this.state.retakeButtonLoading}`}>לצילום מחדש</button>
 
 
                                         <a onClick={this.transformImage} class="button is-small transform-button-icon-color" style={{ borderRadius: '50%', backgroundColor: 'rgba(148, 211, 210, 1)' }}>
