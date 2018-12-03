@@ -56,16 +56,36 @@
 .list-item-container:hover{
     background-color: #f3f3f3
 }
-.list-item-icon{
+.user-list-item-icon{
   justify-self: flex-start;
-  flex:1
+  flex:1;
+    position: absolute;
+    right: 21.9%;
 }
 
-.list-item-text{
+.user-list-item-text{
     text-align: right;
     flex:4;
     font-size: 17px !important;
-    font-family: 'Assistant' !important
+    font-family: 'Assistant' !important;
+    position: absolute;
+    right: 2.98%;
+}
+
+.image-list-item-icon{
+    justify-self: flex-start;
+    flex: 1;
+    position: absolute;
+    right: 36.69%;
+}
+
+.image-list-item-text{
+    text-align: right;
+    flex:4;
+    font-size: 17px !important;
+    font-family: 'Assistant' !important;
+    position: absolute;
+    right: 27.5%;
 }
 
 .list-item:hover {
@@ -83,7 +103,8 @@
 .panel-heading {
     border-bottom: 0 !important;
     border-left: 0 !important;
-     border-right: 0;
+    border-right: 0;
+    height: 47px;
 }
 .panel-heading:first-child {
     border-top: 0

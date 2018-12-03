@@ -16,12 +16,12 @@
     font-family: 'Assistant' !important;
     font-size: 15px !important;
     font-weight: bold;
-    border-radius: 45px !important;
     background-color: #d0cccc;
     width: 116px;
-    height: 25px;
     padding: 0;
     align-items: center;
+    height: 30px;
+    border-radius: 10px !important;
 }
 
 .buttons {
@@ -58,6 +58,8 @@
 .receipt-button-success {
     margin-left: -10%;
     background-color: rgba(118, 193, 196, 1) !important;
+    height: 30px;
+    border-radius: 10px;
 }
 
 .content-overflow {

@@ -34,27 +34,21 @@ class UserList extends Component {
         return (
             <div className="panel content-overflow">
                 <div className="panel-heading">
-                    <div className="level" style={{ height: '4vh'}}>
-                        <div className="level-left" id="level-left-user" style={{ position: 'absolute' , left: '80.65%' , marginLeft: '1.5%'}}>
-                            <div className="field" style={{ width: '100%' }}>
-                                <p className="control has-icons-right">
-                                    <input
-                                        className="input is input-search-box"
-                                        type="text"
-                                        placeholder="לחפש"
-                                        onChange={this.onChangeText}
-                                        value={this.state.searchTerm} />
-                                </p>
-                            </div>
-                        </div>
-                        <div className="level-right">
+                    <div className="field" style={{ width: '100%', position: 'relative' , right: '-3%' }}>
+                        <p className="control has-icons-right">
+                            <input className="input input-search-box"
+                                   type="text"
+                                   placeholder="לחפש"
+                                   onChange={this.onChangeText}
+                                   value={this.state.searchTerm}
+                            />
                             <span className="icon is-small is-right">
-                                    <i className="fal fa-search icon-color" style={{ position: 'absolute' , left: '96.5%' , fontSize: '13.85px'}}></i>
-                                </span>
-                        </div>
+                              <i className="fal fa-search icon-color" style={{ fontSize: '13.85px'}}></i>
+                            </span>
+                        </p>
                     </div>
                 </div>
-                {userList}
+             {userList}
             </div>
         );
     }

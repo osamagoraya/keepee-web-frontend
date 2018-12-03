@@ -118,10 +118,10 @@ class Home extends Component {
             userRow.push(
                 <div className="list-item">
                 <li onClick={() => this.userSelected(user)} className={`panel-block list-item-container ${this.state.selectedUserID === user.UserID? 'is-active active-list-item':''}`} style={{ height: '45px',cursor:'pointer' }}>
-                    <div className="panel-icon list-item-icon">
+                    <div className="panel-icon user-list-item-icon">
                         <i className="fas fa-chevron-left" aria-hidden="true"></i>
                     </div>
-                    <div className="list-item-text" style={{ color: 'rgba(121, 111, 111, 1)' }}>
+                    <div className="user-list-item-text" style={{ color: 'rgba(121, 111, 111, 1)' }}>
                     {user.Name}
                     </div>
                     <i className={` ${this.state.selectedUserID === user.UserID ? 'fas fa-caret-right fa-4x fa-caret-right-user is-active active-list-item':''}`}></i>
@@ -149,10 +149,10 @@ class Home extends Component {
             imageRow.push(
                 <div className="list-item">
                     <li onClick={()=>{this.imageSelected(image.ImageID)}} className={`panel-block list-item-container ${this.state.selectedImageID === image.ImageID? 'is-active active-list-item':''}`} style={{ height: '45px',cursor:'pointer' }}>
-                        <span className="panel-icon list-item-icon">
+                        <span className="panel-icon image-list-item-icon">
                             <i className="fas fa-chevron-left" aria-hidden="true"></i>
                         </span>
-                        <div className="list-item-text" style={{ color: 'rgba(121, 111, 111, 1)' }}>
+                        <div className="image-list-item-text" style={{ color: 'rgba(121, 111, 111, 1)' }}>
                         {
                                 this.getImageName(image.ImageID)
                         }

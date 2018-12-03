@@ -20,16 +20,18 @@ class ImageList extends Component {
         return (
             <div className="panel content-overflow">
                 <div className="panel-heading">
-                    <div className="level">
-                        <div className="level-left">
-                            <span className="icon has-text-white">
-                                <i className="fal fa-circle" style={{ fontSize: '25.53px'}}></i>
+                    <div className="field" style={{ width: '100%' , position: 'relative' , right: '-4.5%' }}>
+                        <p className="control has-icons-left">
+                            <input className="input input-search-box"
+                                readonly
+                                style={{ color: 'rgba(121, 111, 111, 1)' }}
+                                value={this.props.userName}
+                            />
+                            <span className="icon is-small has-text-white" style={{ left: '-10%' }}>
+                               <i className="fal fa-circle" style={{ fontSize: '25.53px'}}></i>
                                 <p className="total-images">{this.props.imageCount}</p>
                             </span>
-                        </div>
-                        <div className="level-right" style={{ color: 'rgba(121, 111, 111, 1)' }}>
-                            <p>{this.props.userName}</p>
-                        </div>
+                        </p>
                     </div>
                 </div>
                 {imageList}

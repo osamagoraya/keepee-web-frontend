@@ -8,7 +8,6 @@
 
 .total-images {
     margin-left: -17px;
-    margin-top: 2px;
 }
 .panel-heading{
     border-bottom: 0px !important;
@@ -16,5 +15,5 @@
      border-right: 0px;
 }
 .panel-heading:first-child {
-    border-top: 0px 
+    border-top: 0px
 }
