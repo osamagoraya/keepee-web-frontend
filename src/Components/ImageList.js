@@ -34,7 +34,11 @@ class ImageList extends Component {
                         </p>
                     </div>
                 </div>
-                {imageList}
+                <div style={{ direction: 'ltr'}}>
+                    <div style={{ direction: 'rtl'}}>
+                        {imageList}
+                    </div>
+                </div>
             </div>
         );
     }
