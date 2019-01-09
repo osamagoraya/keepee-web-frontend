@@ -4,7 +4,8 @@ import 'bulma/css/bulma.css'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import Select from 'react-select';
-
+import PDFViewer from './PDFViewer'
+import Modal from 'react-awesome-modal';
 
 const categories = [
     { label: 'מע"מ עסקאות 100-', value: 0.1, vat: 0, type: 'מע"מ עסקאות 100-', },
@@ -93,7 +94,8 @@ class Form extends Component {
             alertMessage: '',
             dropdownState: '',
             imageAngle: 90,
-            customPercentage: false
+            customPercentage: false,
+            modalVisible: false
         }
     }
     componentWillMount() {
@@ -169,6 +171,18 @@ class Form extends Component {
         let result = (parseInt(percentage) + parseInt(sum ? sum : 0))
         values.sum = result
         return result
+    }
+
+    openModal = () => {
+        this.setState({
+            modalVisible : true
+        });
+    }
+
+    closeModal = () => {
+        this.setState({
+            modalVisible : false
+        });
     }
 
     render() {
@@ -322,8 +336,17 @@ class Form extends Component {
                                     <div className="column is-half form-inputs-column">
                                         {errors.image && values.image === '' ? <p className="help is-danger">{errors.image}</p> : <div />}
                                         <div className="image-box form-box">
-                                            {this.props.imageID ?
-                                                <img className="image" style={{ transform: `rotate(${this.state.imageAngle}deg)` }} src={this.props.imageID} alt="receipt" /> : <div>בחר תמונה</div>}
+                                            {   (this.props.imageID && this.props.fileType == "image") ?
+                                                    <img
+                                                        className="image"
+                                                        style={{ transform: `rotate(${this.state.imageAngle}deg)` }}
+                                                        src={this.props.imageID}
+                                                        onClick={this.openModal}
+                                                        alt="receipt" /> :
+                                                ( this.props.imageID && this.props.fileType == "pdf" ) ?
+                                                    <PDFViewer fileUrl={this.props.imageID }/> :
+                                                    <div>בחר תמונה</div>
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -354,6 +377,16 @@ class Form extends Component {
                         )}
                     />
                 </div>
+                <Modal
+                    visible={this.state.modalVisible}
+                    effect="fadeInDown"
+                    width="800"
+                    onClickAway={() => this.closeModal()}
+                >
+                    <div style={{ direction: 'ltr', overflowX: 'auto', position: 'relative'}}>
+                        <img className="image" src={this.props.imageID} />
+                    </div>
+                </Modal>
             </div>
         );
     }

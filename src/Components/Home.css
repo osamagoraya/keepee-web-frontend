@@ -6,6 +6,7 @@
 
 .navbar {
     background-color: transparent;
+    margin-bottom: 12px !important;
 }
 
 .avatar {

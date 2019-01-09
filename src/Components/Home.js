@@ -18,6 +18,7 @@ class Home extends Component {
             filteredUsers: null,
             selectedUserID: null,
             selectedImageID: null,
+            selectedFileType: null,
             selectedUserName: null,
             selectedUserImagesCount: null
         }
@@ -132,8 +133,8 @@ class Home extends Component {
         return userRow
     }
 
-    imageSelected = (imageID) =>{
-        this.setState({selectedImageID: imageID})
+    imageSelected = (imageID,fileType) =>{
+        this.setState({selectedImageID: imageID , selectedFileType: fileType})
     }
 
     getImageName(imageName){
@@ -148,7 +149,7 @@ class Home extends Component {
         this.state.selectedUserImagesList.map(image => {
             imageRow.push(
                 <div className="list-item">
-                    <li onClick={()=>{this.imageSelected(image.ImageID)}} className={`panel-block list-item-container ${this.state.selectedImageID === image.ImageID? 'is-active active-list-item':''}`} style={{ height: '45px',cursor:'pointer' }}>
+                    <li onClick={()=>{this.imageSelected(image.ImageID,image.FileType)}} className={`panel-block list-item-container ${this.state.selectedImageID === image.ImageID? 'is-active active-list-item':''}`} style={{ height: '45px',cursor:'pointer' }}>
                         <span className="panel-icon image-list-item-icon">
                             <i className="fas fa-chevron-left" aria-hidden="true"></i>
                         </span>
@@ -200,7 +201,7 @@ class Home extends Component {
                 </nav>
                 <div className="columns">
                     <div className="column is-three-fifths">
-                        <Form imageList={this.state.selectedUserImagesList} imageID={this.state.selectedImageID} saveImageData={this.saveImageData} irrelevantPicture={this.irrelevantPicture} retakePicture={this.retakePicture}/>
+                        <Form imageList={this.state.selectedUserImagesList} imageID={this.state.selectedImageID} fileType={this.state.selectedFileType} saveImageData={this.saveImageData} irrelevantPicture={this.irrelevantPicture} retakePicture={this.retakePicture}/>
                     </div>
                     <div className="column is-one-fifth" style={{ width: '15%' }}>
                         <ImageList imageList={this.state.selectedUserImagesList} renderImageListRow={this.renderImageListRow} imageCount={this.state.selectedUserImagesList?this.state.selectedUserImagesList.length:0} userName={this.state.selectedUserName}/>
