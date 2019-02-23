@@ -18,6 +18,7 @@ class Home extends Component {
             filteredUsers: null,
             selectedUserID: null,
             selectedImageID: null,
+            selectedFileType: null,
             selectedUserName: null,
             selectedUserImagesCount: null
         }
@@ -34,7 +35,7 @@ class Home extends Component {
     }
 
     getUsers = (user) => {
-        Axios.post('http://35.167.51.228:8085/getUsers', user).then(response => {
+        Axios.post('http://54.245.6.3:8085/getUsers', user).then(response => {
             console.log("Result", response.data)
             this.setState({ userList: JSON.parse(response.data.body), filteredUsers: JSON.parse(response.data.body)})
         }).catch(error => {
@@ -44,7 +45,7 @@ class Home extends Component {
 
     saveImageData = (values,cb) => {
         console.log("User",this.props.location.state)
-        Axios.post('http://35.167.51.228:8085/saveImageData',{values,userID:this.state.selectedUserID,accountantID:this.props.location.state.user.UserID}).then((response)=>{
+        Axios.post('http://54.245.6.3:8085/saveImageData',{values,userID:this.state.selectedUserID,accountantID:this.props.location.state.user.UserID}).then((response)=>{
             console.log("Response",response)
             if(response.data.statusCode === 200){
                 let updatedImageList = this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== values.image});
@@ -62,7 +63,7 @@ class Home extends Component {
     }
 
     irrelevantPicture = (imageID,cb) =>{
-        Axios.post("http://35.167.51.228:8085/irrelevantPicture",{imageID:imageID}).then((response)=>{
+        Axios.post("http://54.245.6.3:8085/irrelevantPicture",{imageID:imageID}).then((response)=>{
             if(response.data.statusCode === 200){
                 cb(true)
               let updatedImageList =  this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== imageID})
@@ -84,7 +85,7 @@ class Home extends Component {
             name: user.Name,
             userEmail: user.Email
         }
-        Axios.post("http://35.167.51.228:8085/retakePicture",data).then((response)=>{
+        Axios.post("http://54.245.6.3:8085/retakePicture",data).then((response)=>{
             if(response.data.statusCode === 200){
                 cb(true)
                 let updatedImageList = this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== imageID})
@@ -133,8 +134,8 @@ class Home extends Component {
         return userRow
     }
 
-    imageSelected = (imageID) =>{
-        this.setState({selectedImageID: imageID})
+    imageSelected = (imageID,fileType) =>{
+        this.setState({selectedImageID: imageID , selectedFileType: fileType})
     }
 
     getImageName(imageName){
@@ -149,7 +150,7 @@ class Home extends Component {
         this.state.selectedUserImagesList.map(image => {
             imageRow.push(
                 <div className="list-item">
-                    <li onClick={()=>{this.imageSelected(image.ImageID)}} className={`panel-block list-item-container ${this.state.selectedImageID === image.ImageID? 'is-active active-list-item':''}`} style={{ height: '45px',cursor:'pointer' }}>
+                    <li onClick={()=>{this.imageSelected(image.ImageID,image.FileType)}} className={`panel-block list-item-container ${this.state.selectedImageID === image.ImageID? 'is-active active-list-item':''}`} style={{ height: '45px',cursor:'pointer' }}>
                         <span className="panel-icon image-list-item-icon">
                             <i className="fas fa-chevron-left" aria-hidden="true"></i>
                         </span>
@@ -201,7 +202,7 @@ class Home extends Component {
                 </nav>
                 <div className="columns">
                     <div className="column is-three-fifths">
-                        <Form imageList={this.state.selectedUserImagesList} imageID={this.state.selectedImageID} saveImageData={this.saveImageData} irrelevantPicture={this.irrelevantPicture} retakePicture={this.retakePicture}/>
+                        <Form imageList={this.state.selectedUserImagesList} imageID={this.state.selectedImageID} fileType={this.state.selectedFileType} saveImageData={this.saveImageData} irrelevantPicture={this.irrelevantPicture} retakePicture={this.retakePicture}/>
                     </div>
                     <div className="column is-one-fifth" style={{ width: '15%' }}>
                         <ImageList imageList={this.state.selectedUserImagesList} renderImageListRow={this.renderImageListRow} imageCount={this.state.selectedUserImagesList?this.state.selectedUserImagesList.length:0} userName={this.state.selectedUserName}/>

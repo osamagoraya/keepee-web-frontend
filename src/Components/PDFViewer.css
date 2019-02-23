@@ -1,0 +1,12 @@
+.PDFDoc .react-pdf__Page__canvas {
+    width: -webkit-fill-available !important;
+    height: 60vh !important;
+    width: -moz-available !important;
+}
+
+.modalDiv .react-pdf__Page__canvas{
+    position: relative;
+    margin-top: -40%;
+    margin-left: -25%;
+    height: 90vh !important;
+}

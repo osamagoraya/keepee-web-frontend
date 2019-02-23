@@ -48,7 +48,11 @@ class UserList extends Component {
                         </p>
                     </div>
                 </div>
-             {userList}
+                <div style={{ direction: 'ltr'}}>
+                    <div style={{ direction: 'rtl'}}>
+                        {userList}
+                    </div>
+                </div>
             </div>
         );
     }
