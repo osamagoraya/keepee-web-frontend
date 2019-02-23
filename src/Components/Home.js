@@ -32,6 +32,7 @@ class Home extends Component {
         }
         
     }
+
     getUsers = (user) => {
         Axios.post('http://35.167.51.228:8085/getUsers', user).then(response => {
             console.log("Result", response.data)

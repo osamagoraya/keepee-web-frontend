@@ -76,7 +76,7 @@ const categories = [
     { label: 'שיפורים במושכר 950004', value: 100, vat: 100, type: 'שיפורים במושכר 950004', },
     { label: 'רכוש אחר 950005', value: 100, vat: 100, type: 'רכוש אחר 950005', },
     { label: 'כלי רכב 950006', value: 0, vat: 0, type: 'כלי רכב 950006', },
-    { label: 'אופנוע/קטנוע 950007', value: 100, vat: 100, type: 'אופנוע/קטנוע 950007', },
+    { label: 'אופנוע/קטנוע 950007', value: 100, vat: 100, type: 'אופנוע/קטנוע 950007', }
 ]
 
 class Form extends Component {
