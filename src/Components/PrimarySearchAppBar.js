@@ -10,7 +10,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ReactSelect from "./ReactSelect";
 import Avatar from '@material-ui/core/Avatar';
-import {ProfileImage} from '../kk.jpg'
+import {ProfileImage} from '../Assets/Images/kk.jpg'
 
 
 const styles = theme => ({

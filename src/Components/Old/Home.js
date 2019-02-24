@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Home.css';
-import logo from '../logo.png';
-import avatar from '../kk.jpg'
+import logo from '../Assets/Images/logo.png';
+import avatar from '../Assets/Images/kk.jpg';
 import 'bulma/css/bulma.css'
 import Form from "./Form";
 import ImageList from "./ImageList";

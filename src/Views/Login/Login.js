@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Formik } from 'formik'
 import  * as Yup from 'yup'
-import Auth from '../Auth'
+import Auth from '../../Services/Auth'
 import './Login.css';
-import logo from '../logo.png';
+import logo from '../../Assets/Images/logo.png';
 import 'bulma/css/bulma.css'
 
 class Login extends React.PureComponent {
