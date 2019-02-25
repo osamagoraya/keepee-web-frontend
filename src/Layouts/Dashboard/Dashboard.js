@@ -8,19 +8,17 @@ import Topbar from '../../Components/Dashboard/Topbar';
 class Dashboard extends Component {
     render() {
         return (
-            <div>
-                <Grid container direction="row" justify="flex-start" style={{ minHeight: '100vh'}}>
-                    <Grid container item  sm={3}> 
+            <Grid container justify="flex-start" style={{ minHeight: '100vh'}}>
+                    <Grid container item  sm={3}>
                         <Navbar />
                         <Menubar />
                     </Grid>
-                    <Grid container item sm={9}> 
+                    <Grid container item sm={9} wrap="nowrap" direction="column">
                         <Topbar />
-                        <Grid item sm={12} style={{ height: '90vh'}}>
+                        <Grid item sm={12}>
                         </Grid>
                     </Grid>
-                </Grid>
-            </div>
+            </Grid>
         );
     }
 }
