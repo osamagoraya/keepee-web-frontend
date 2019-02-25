@@ -5,7 +5,7 @@ import PrimarySearchAppBar from '../PrimarySearchAppBar';
 class Topbar extends React.Component {
   render(){
     return (
-      <Grid item sm={12} style={{ flexBasis: '20%'}}>
+      <Grid item sm={12} style={{ flexBasis: '15%', paddingTop: '20px'}}>
           <PrimarySearchAppBar />
       </Grid >
     );
