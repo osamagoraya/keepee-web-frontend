@@ -34,7 +34,7 @@ class Dashboard extends Component {
               placeholder="Search User"/>
           </div>
           <div style={canvas}>
-
+              Canvas in Heebo Font
           </div>
 
         
@@ -51,7 +51,8 @@ const canvas = {
   boxShadow: '0 3 6 rgba(0, 0, 0, 0.04)',
   borderRadius: 3,
   backgroundColor: '#f8f8f8',
-  marginLeft: "6.87%"
+  marginLeft: "6.87%",
+  fontFamily: "'Heebo', sans-serif"
 }
 
 const topbar = {
