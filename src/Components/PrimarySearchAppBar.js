@@ -15,9 +15,12 @@ import {ProfileImage} from '../Assets/Images/kk.jpg'
 
 const styles = theme => ({
     root: {
-        width: 'inherit',
         boxShadow: 'none',
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        height: '80%',
+        width: '95%',
+        marginLeft: '3%',
+        marginTop: '4%'
     },
     grow: {
         flexGrow: 1,
@@ -29,8 +32,8 @@ const styles = theme => ({
         marginRight: theme.spacing.unit * 2,
         marginLeft: 0,
         display: 'flex',
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
+        width: '70%',
+        [theme.breakpoints.up('sm')]: {
             display: 'flex',
         },
     },
@@ -60,6 +63,7 @@ const styles = theme => ({
     },
     sectionDesktop: {
         display: 'none',
+        marginLeft: '2%',
         [theme.breakpoints.up('md')]: {
             display: 'flex',
         },
@@ -81,7 +85,7 @@ class PrimarySearchAppBar extends React.Component {
                 <AppBar position="static" className={classes.root}>
                     <Toolbar>
                         <IconButton color="inherit" aria-label="Open drawer">
-                            <SearchIcon />
+                            <SearchIcon style={{ fontSize: '40px'}}/>
                         </IconButton>
                         <div className={classes.search}>
                             <ReactSelect />

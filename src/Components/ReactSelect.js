@@ -70,6 +70,7 @@ const styles = theme => ({
     },
     chip: {
         margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
+        display: 'none'
     },
     chipFocused: {
         backgroundColor: emphasize(
@@ -81,12 +82,22 @@ const styles = theme => ({
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
     },
     singleValue: {
-        fontSize: 16,
+        width: '134px',
+        height: '40px',
+        color: '#ffffff',
+        fontFamily: "Source Sans Pro",
+        fontSize: '30px',
+        fontWeight: 400,
+        lineHeight: '40px'
     },
     placeholder: {
-        position: 'absolute',
-        left: 2,
-        fontSize: 16,
+        width: '134px',
+        height: '40px',
+        color: '#ffffff',
+        fontFamily: "Source Sans Pro",
+        fontSize: '30px',
+        fontWeight: 400,
+        lineHeight: '40px'
     },
     paper: {
         position: 'absolute',
@@ -97,6 +108,7 @@ const styles = theme => ({
     },
     divider: {
         height: theme.spacing.unit * 2,
+        display: 'none'
     },
 });
 
@@ -242,8 +254,7 @@ class ReactSelect extends React.Component {
                         components={components}
                         value={this.state.single}
                         onChange={this.handleChange('single')}
-                        placeholder="Search a country (start with a)"
-                        isClearable
+                        placeholder="Select User"
                     />
                     <div className={classes.divider} />
                 </NoSsr>
