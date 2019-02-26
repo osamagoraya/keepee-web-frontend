@@ -20,7 +20,7 @@ const styles = theme => ({
         height: '80%',
         width: '95%',
         marginLeft: '3%',
-        marginTop: '4%'
+        marginTop: '2%'
     },
     grow: {
         flexGrow: 1,
