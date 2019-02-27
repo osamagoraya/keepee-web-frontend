@@ -15,7 +15,7 @@ class Dashboard extends Component {
     return (
       <span >
         <div style={navbar} className="full-height">
-
+            <Navbar />
         </div>
         <div style={menubar} className="full-height">
 
@@ -84,17 +84,17 @@ class OldDashboard extends Component {
       <Grid container style={{ minHeight: '100vh'}}>
         <Grid container item  sm={2}>
           <Navbar />
-          <Menubar />           
+          <Menubar />
         </Grid>
         <Grid container item sm={10} wrap="nowrap" direction="column">
             <Topbar />
             <Grid item sm={12} >
-              <div  
-                style={{ 
-                  borderRadius: '3px', 
-                  boxShadow: '0 3px 6px rgba(0, 0, 0, 0.04)', 
-                  backgroundColor: '#f8f8f8', 
-                  height: '78vh', 
+              <div
+                style={{
+                  borderRadius: '3px',
+                  boxShadow: '0 3px 6px rgba(0, 0, 0, 0.04)',
+                  backgroundColor: '#f8f8f8',
+                  height: '78vh',
                   marginLeft: '8%',
                   width: '78%'
 
