@@ -1,0 +1,48 @@
+.containerMain {
+    width: inherit;
+    height: inherit;
+}
+
+.invoiceSubmitBtn {
+    /* Style for "Rectangle" */
+    width: 148px;
+    height: 35%;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    border-radius: 3px;
+    background-image: linear-gradient(180deg, #ef7474 0%, #b0b5bf 0%, #87dfef 100%, #f7b3a9 100%);
+    opacity: 0.67;
+}
+
+.inputFields {
+    /* Style for "Rectangle" */
+    width: 80%;
+    height: 14.9%;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04);
+    border-radius: 3px;
+    background-color: #ffffff;
+    opacity: 0.48;
+    direction: rtl;
+}
+
+.invoiceImageBox {
+    /* Style for "XMLID_1_" */
+    width: 80%;
+    height: 43.9%;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    background-color: #ffffff;
+    opacity: 0.49;
+    border-radius: 5px;
+}
+
+.invoicesImageBoxBtn {
+    height: 25px;
+    border-radius: 3px;
+    background-color: #d0cccc !important;
+}
+
+.invoicesImageBoxBtnText {
+    color: #f8f7f7;
+    font-family: Heebo;
+    font-size: 13px;
+    font-weight: 700;
+}

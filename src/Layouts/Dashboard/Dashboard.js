@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import InputBase from '@material-ui/core/InputBase';
 
 import SearchIcon from '../../Assets/Images/Icons/search_topbar.png';
+import Invoices from "../../Components/Invoices/Invoices";
 
 class Dashboard extends Component {
 
@@ -34,7 +35,7 @@ class Dashboard extends Component {
               placeholder="Search User"/>
           </div>
           <div style={canvas}>
-              Canvas in Heebo Font
+              <Invoices />
           </div>
 
         
