@@ -1,20 +1,26 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {Grid} from '@material-ui/core';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import logoReport from '../../Assets/Images/Path_899.svg';
-import logoCalender from '../../Assets/Images/Path_900.svg';
+import logoReport from '../../Assets/Images/Path_900.svg';
+import logoCalender from '../../Assets/Images/Path_899.svg';
 import logoDocument from '../../Assets/Images/Path_901.svg';
 import logoUser from '../../Assets/Images/Path_902.svg';
 import logoSettings from '../../Assets/Images/Path_1054.svg'
 
 
-class Navbar extends React.Component {
+class Navbar extends Component {
 
+    constructor(props){
+        super(props);
+        this.state = {
+            selectedUserID: this.props.users,
+        }
+    }
 
     handleReportClick = () => {
-        console.log('Report Clicked');
+        console.log(this.state.selectedUserID)
     }
 
     handleSettingClick = () => {
@@ -35,6 +41,18 @@ class Navbar extends React.Component {
 
 
   render(){
+      let userList
+      if (this.props.userList) {
+          userList =
+              <ol>
+                  {
+                      this.props.renderUserListRow()
+                  }
+              </ol>
+
+      } else {
+          userList = "Loading"
+      }
     return (
       <Grid item sm={12} style={{ backgroundColor : '#3794a5'}}>  {/* nav bar */}
         <MenuList style={{ marginTop: '165%'}}>
@@ -48,7 +66,7 @@ class Navbar extends React.Component {
                     <img src={logoCalender} alt="Not Found"/>
                 </ListItemIcon>
             </MenuItem>
-           <MenuItem onClick={this.handleDocClick()}>
+           <MenuItem onClick={this.handleDocClick}>
                <ListItemIcon>
                    <img src={logoDocument} alt="Not Found"/>
                </ListItemIcon>

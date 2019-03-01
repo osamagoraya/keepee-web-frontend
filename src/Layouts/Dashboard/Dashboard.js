@@ -1,22 +1,73 @@
 import React, { Component } from 'react';
 import './Dashboard.css';
 import Navbar from '../../Components/Dashboard/Navbar';
-import Menubar from '../../Components/Dashboard/Menubar';
-import Topbar from '../../Components/Dashboard/Topbar';
-
-import Grid from '@material-ui/core/Grid';
+// import Menubar from '../../Components/Dashboard/Menubar';
+// import Topbar from '../../Components/Dashboard/Topbar';
+//
+// import Grid from '@material-ui/core/Grid';
 import InputBase from '@material-ui/core/InputBase';
 
 import SearchIcon from '../../Assets/Images/Icons/search_topbar.png';
 import Invoices from "../../Components/Invoices/Invoices";
+import Axios from "axios";
+
+
+
+
 
 class Dashboard extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            userList: null,
+            selectedUserImagesList: null,
+            filteredUsers: null,
+            selectedUserID: null,
+            selectedImageID: null,
+            selectedFileType: null,
+            selectedUserName: null,
+            selectedUserImagesCount: null
+        }
+    }
+
+    componentWillMount() {
+        console.log("User", this.props.location.state)
+        if(this.props.location.state){
+            this.getUsers(this.props.location.state)
+        }else{
+            localStorage.clear()
+            this.props.history.push("/")
+        }
+
+    }
+
+    getUsers = (user) => {
+        Axios.post('http://54.245.6.3:8085/getUsers', user).then(response => {
+            console.log("Result", response.data)
+            this.setState({ userList: JSON.parse(response.data.body)})
+        }).catch(error => {
+            console.log("Error", error)
+        })
+    }
+
+    getUniqueUsers = (list) =>{
+        const flags = new Set();
+        let result = list.filter(entry => {
+            if (flags.has(entry.UserID)) {
+                return false;
+            }
+            flags.add(entry.UserID);
+            return true;
+        });
+        return result
+    }
+
 
   render () {
     return (
       <span >
         <div style={navbar} className="full-height">
-            <Navbar />
+            <Navbar users={this.state.userList} renderUserListRow={this.renderUserListRow}/>
         </div>
         <div style={menubar} className="full-height">
 
@@ -26,19 +77,19 @@ class Dashboard extends Component {
             <div className="left-floater search-icon">
               <img src={SearchIcon} alt="search icon"/>
             </div>
-            
-            <InputBase 
+
+            <InputBase
               inputProps={{
                 className: "topbar-search-input",
-              }}  
-              className="topbar-search" 
+              }}
+              className="topbar-search"
               placeholder="Search User"/>
           </div>
           <div style={canvas}>
               <Invoices />
           </div>
 
-        
+
         </div>
 
       </span>
@@ -79,36 +130,36 @@ const content = {
 
 
 
-class OldDashboard extends Component {
-  render() {
-    return (
-      <Grid container style={{ minHeight: '100vh'}}>
-        <Grid container item  sm={2}>
-          <Navbar />
-          <Menubar />
-        </Grid>
-        <Grid container item sm={10} wrap="nowrap" direction="column">
-            <Topbar />
-            <Grid item sm={12} >
-              <div
-                style={{
-                  borderRadius: '3px',
-                  boxShadow: '0 3px 6px rgba(0, 0, 0, 0.04)',
-                  backgroundColor: '#f8f8f8',
-                  height: '78vh',
-                  marginLeft: '8%',
-                  width: '78%'
-
-                }}>
-                <div>
-                    content
-                </div>
-              </div>
-            </Grid>
-        </Grid>
-      </Grid>
-    );
-  }
-}
+// class OldDashboard extends Component {
+//   render() {
+//     return (
+//       <Grid container style={{ minHeight: '100vh'}}>
+//         <Grid container item  sm={2}>
+//           <Navbar />
+//           <Menubar />
+//         </Grid>
+//         <Grid container item sm={10} wrap="nowrap" direction="column">
+//             <Topbar />
+//             <Grid item sm={12} >
+//               <div
+//                 style={{
+//                   borderRadius: '3px',
+//                   boxShadow: '0 3px 6px rgba(0, 0, 0, 0.04)',
+//                   backgroundColor: '#f8f8f8',
+//                   height: '78vh',
+//                   marginLeft: '8%',
+//                   width: '78%'
+//
+//                 }}>
+//                 <div>
+//                     content
+//                 </div>
+//               </div>
+//             </Grid>
+//         </Grid>
+//       </Grid>
+//     );
+//   }
+// }
 
 export default Dashboard;

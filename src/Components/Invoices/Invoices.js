@@ -76,7 +76,7 @@ class Invoices extends Component {
                                 <p className="invoicesImageBoxBtnText">New picture</p>
                             </Button>
                             <IconButton size="small" className="invoicesImageBoxBtn" aria-label="Delete" style={{ backgroundColor: '#d0cccc', width:'9%'}}>
-                                <img src={logoReport}/>
+                                <img src={logoReport} alt="Not Found"/>
                             </IconButton>
                         </Grid>
                     </Grid>

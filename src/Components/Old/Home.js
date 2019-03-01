@@ -31,7 +31,6 @@ class Home extends Component {
             localStorage.clear()
             this.props.history.push("/")
         }
-        
     }
 
     getUsers = (user) => {
