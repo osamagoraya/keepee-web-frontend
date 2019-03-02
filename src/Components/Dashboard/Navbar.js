@@ -12,12 +12,6 @@ import logoSettings from '../../Assets/Images/Path_1054.svg'
 
 class Navbar extends Component {
 
-    constructor(props){
-        super(props);
-        this.state = {
-            selectedUserID: this.props.users,
-        }
-    }
 
     handleReportClick = () => {
         console.log(this.state.selectedUserID)
@@ -41,18 +35,7 @@ class Navbar extends Component {
 
 
   render(){
-      let userList
-      if (this.props.userList) {
-          userList =
-              <ol>
-                  {
-                      this.props.renderUserListRow()
-                  }
-              </ol>
 
-      } else {
-          userList = "Loading"
-      }
     return (
       <Grid item sm={12} style={{ backgroundColor : '#3794a5'}}>  {/* nav bar */}
         <MenuList style={{ marginTop: '165%'}}>

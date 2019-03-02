@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import './Dashboard.css';
 import Navbar from '../../Components/Dashboard/Navbar';
-// import Menubar from '../../Components/Dashboard/Menubar';
-// import Topbar from '../../Components/Dashboard/Topbar';
-//
-// import Grid from '@material-ui/core/Grid';
 import InputBase from '@material-ui/core/InputBase';
 
 import SearchIcon from '../../Assets/Images/Icons/search_topbar.png';
 import Invoices from "../../Components/Invoices/Invoices";
 import Axios from "axios";
+import Select from 'react-select';
+import Menubar from '../../Components/Dashboard/Menubar';
 
 
 
@@ -20,6 +18,7 @@ class Dashboard extends Component {
         super(props)
         this.state = {
             userList: null,
+            uniqueUserList: [{ value: "",label:""}],
             selectedUserImagesList: null,
             filteredUsers: null,
             selectedUserID: null,
@@ -42,9 +41,10 @@ class Dashboard extends Component {
     }
 
     getUsers = (user) => {
-        Axios.post('http://54.245.6.3:8085/getUsers', user).then(response => {
+        Axios.post('http://localhost:8085/getUsers', user).then(response => {
             console.log("Result", response.data)
             this.setState({ userList: JSON.parse(response.data.body)})
+            this.setState({ uniqueUserList: this.getUniqueUsers(this.state.userList)});
         }).catch(error => {
             console.log("Error", error)
         })
@@ -62,15 +62,37 @@ class Dashboard extends Component {
         return result
     }
 
+    filterUsersForSelect = (list) => {
+      if(list){
+           const optionUsers = list.map(userRow => {
+               return {
+                   value: userRow.UserID,
+                   label: userRow.Name
+               }
+           });
+            console.log("users",optionUsers);
+           return optionUsers;
+      }
+      else {
+          return {
+            value: 1,
+            label: "Loading.."
+          }
+      }
+    }
+
+    handleSelect = (selectedOption) => {
+      this.setState({ selectedUserID: selectedOption.value});
+    }
 
   render () {
     return (
       <span >
         <div style={navbar} className="full-height">
-            <Navbar users={this.state.userList} renderUserListRow={this.renderUserListRow}/>
+            <Navbar/>
         </div>
         <div style={menubar} className="full-height">
-
+            <Menubar selectedUserID={this.state.selectedUserID}/>
         </div>
         <div style={content} className="full-height">
           <div style={topbar}>
@@ -78,12 +100,17 @@ class Dashboard extends Component {
               <img src={SearchIcon} alt="search icon"/>
             </div>
 
-            <InputBase
-              inputProps={{
-                className: "topbar-search-input",
-              }}
-              className="topbar-search"
-              placeholder="Search User"/>
+              <Select
+                  className="basic-single topbar-search-input topbar-search"
+                  defaultValue="Select User"
+                  isDisabled={false}
+                  isClearable={false}
+                  isSearchable={true}
+                  isMulti={false}
+                  onChange={(selectedOption) => this.handleSelect(selectedOption)}
+                  name="color"
+                  options={this.filterUsersForSelect(this.state.uniqueUserList)}
+              />
           </div>
           <div style={canvas}>
               <Invoices />
