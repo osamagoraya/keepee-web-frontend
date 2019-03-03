@@ -5,21 +5,30 @@ import Button from "@material-ui/core/es/Button/Button";
 import Input from "@material-ui/core/es/Input/Input";
 import logoReport from '../../Assets/Images/Path_981.svg';
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
+import Card from '@material-ui/core/Card';
+
+const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
+
+
 
 class Invoices extends Component {
+    
     constructor(props){
         super(props);
         this.state = {
-          selectedImageID: this.props.imageID,
-          selectedImageFileType: this.props.fileType,
+          selectedImageID: BASE_URL + this.props.match.params.imageId,
+          selectedImageFileType: this.props.match.params.imageType,
           imageAngle: 90,
         }
     }
   
     componentWillReceiveProps(nextProps,nextContext) {
-        const { selectedImageID , selectedImageFileType } = this.state;
-        if( selectedImageID !== nextProps.imageID || selectedImageFileType !== nextProps.selectedImageFileType)
-          this.setState({  selectedImageID: nextProps.imageID,selectedImageFileType: nextProps.fileType});
+        const { imageId , imageType }      = this.props.match.params;
+        const { newImageId, newImageType } = nextProps.match.params;
+        if( imageId !== newImageId || imageType !== newImageType)
+          this.setState({  selectedImageID: newImageId,selectedImageFileType:newImageType});
     }
 
 
@@ -41,7 +50,7 @@ class Invoices extends Component {
                     </Grid>
                 </Grid>
                 <Grid container item  style={{ flexBasis: '30%', flexDirection:"column", justifyContent: 'center'}}>
-                    <Grid  container item style={{ flexBasis: '50%', justifyContent: 'space-evenly'}}>
+                    <Grid  container item style={{ flexBasis: '50%', justifyContent: 'space-evenly', marginTop: '-15%'}}>
                         <Input
                             placeholder="Date"
                             inputProps={{
@@ -87,13 +96,18 @@ class Invoices extends Component {
                     </Grid>
                 </Grid>
                 <Grid container item  style={{ flexBasis: '50%' , flexDirection:"column", justifyContent: 'center'}}>
-                    <Grid item style={{ flexBasis: '60%'}} className="invoiceImageBox">
+                    <Grid item style={{ flexBasis: '70%'}} className="invoiceImageBox">
                     {   (selectedImageID && selectedImageFileType === "image") ?
-                            <img
-                                className="image"
-                                style={{ transform: `rotate(${this.state.imageAngle}deg)` }}
-                                src={selectedImageID}
-                                alt="Not Found" /> :
+                            <Card style={{ height: '100%'}}>
+                                <CardActionArea style={{ height: '100%'}}>
+                                    <CardMedia style={{ transform: `rotate(${this.state.imageAngle}deg)`}}
+                                        component="img"
+                                        alt="Unable to load"
+                                        height="inherit"
+                                        image={selectedImageID}
+                                    />
+                                </CardActionArea>
+                            </Card> :
                         ( selectedImageID && selectedImageFileType === "pdf" ) ?
                             <div>A PDF FILE</div> :
                             <div>בחר תמונה</div>

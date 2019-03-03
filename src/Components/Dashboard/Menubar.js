@@ -82,9 +82,13 @@ const invoiceListItemFormatter = (localPath) => (data) => {
 
 class Menubar extends Component {
   state = {
-    expanded: this.props.location.pathname, //TODO: fix this
+    selectedMenuItem: this.props.location.pathname, //TODO: fix this
     selectedUserId: this.props.selectedUserId
   };
+
+  isSelected(path) {
+    return this.state.selectedMenuItem.indexOf(path) !== -1;
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.state.selectedUserId !== nextProps.selectedUserId)
@@ -93,7 +97,7 @@ class Menubar extends Component {
 
   handleChange = (localPath) => (event, expanded) => {
     this.setState({
-      expanded: expanded ? localPath : "/",
+      selectedMenuItem: expanded ? localPath : "/",
     });
     if (expanded)
       this.props.history.push(localPath);
@@ -102,7 +106,7 @@ class Menubar extends Component {
   };
 
   render() {
-    const { expanded, selectedUserId } = this.state;
+    const { selectedUserId } = this.state;
     console.log("menubar", this.state);
     return (
       <div style={{ marginTop: '45%', width: "100%"}}>
@@ -111,7 +115,7 @@ class Menubar extends Component {
           <ExpansionPanel
             key={idx}
             square
-            expanded={expanded.indexOf(item.localBasePath) !== -1}
+            expanded={this.isSelected(item.localBasePath)}
             onChange={this.handleChange(item.localBasePath)}
           >
             <ExpansionPanelSummary>
@@ -120,7 +124,7 @@ class Menubar extends Component {
             <ExpansionPanelDetails>
               {
                 item.isSubsectionList
-                ? expanded.indexOf(item.localBasePath) !== -1
+                ? this.isSelected(item.localBasePath)
                   ? (item.isSelectedUserIdRequired && selectedUserId) || !item.isSelectedUserIdRequired
                     ? <MenuSubSectionList 
                       remotePath={item.remotePath}
