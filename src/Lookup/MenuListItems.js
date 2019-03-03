@@ -1,6 +1,3 @@
-// remote data path
-// local base path
-// 
 
 const items = [
   {

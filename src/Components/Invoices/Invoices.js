@@ -7,7 +7,30 @@ import logoReport from '../../Assets/Images/Path_981.svg';
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
 
 class Invoices extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+          selectedImageID: this.props.imageID,
+          selectedImageFileType: this.props.fileType,
+          imageAngle: 90,
+        }
+    }
+  
+    componentWillReceiveProps(nextProps,nextContext) {
+        const { selectedImageID , selectedImageFileType } = this.state;
+        if( selectedImageID !== nextProps.imageID || selectedImageFileType !== nextProps.selectedImageFileType)
+          this.setState({  selectedImageID: nextProps.imageID,selectedImageFileType: nextProps.fileType});
+    }
+
+
+    transformImage = () => {
+        let angle = this.state.imageAngle
+        angle = parseInt(angle) + 90
+        this.setState({ imageAngle: angle })
+    }
+
     render(){
+        const { selectedImageID , selectedImageFileType} = this.state;
         return (
             <Grid container className="containerMain">
                 <Grid container item  style={{ flexBasis: '20%', alignItems: 'flex-end',justifyContent: 'space-evenly'}}>
@@ -65,7 +88,16 @@ class Invoices extends Component {
                 </Grid>
                 <Grid container item  style={{ flexBasis: '50%' , flexDirection:"column", justifyContent: 'center'}}>
                     <Grid item style={{ flexBasis: '60%'}} className="invoiceImageBox">
-                            <img src="" alt="coming soon"/>
+                    {   (selectedImageID && selectedImageFileType === "image") ?
+                            <img
+                                className="image"
+                                style={{ transform: `rotate(${this.state.imageAngle}deg)` }}
+                                src={selectedImageID}
+                                alt="Not Found" /> :
+                        ( selectedImageID && selectedImageFileType === "pdf" ) ?
+                            <div>A PDF FILE</div> :
+                            <div>בחר תמונה</div>
+                    }
                     </Grid>
                     <Grid container item style={{ flexBasis: '15%', width: '80%' , alignContent: 'center', justifyContent: 'space-around'}}>
                         <Grid item container style={{ flexBasis: '80%', alignContent: 'center', justifyContent: 'space-around'}}>
@@ -75,7 +107,7 @@ class Invoices extends Component {
                             <Button size="small" className="invoicesImageBoxBtn">
                                 <p className="invoicesImageBoxBtnText">New picture</p>
                             </Button>
-                            <IconButton size="small" className="invoicesImageBoxBtn" aria-label="Delete" style={{ backgroundColor: '#d0cccc', width:'9%'}}>
+                            <IconButton onClick={this.transformImage} size="small" className="invoicesImageBoxBtn" aria-label="Delete" style={{ backgroundColor: '#d0cccc', width:'9%'}}>
                                 <img src={logoReport} alt="Not Found"/>
                             </IconButton>
                         </Grid>

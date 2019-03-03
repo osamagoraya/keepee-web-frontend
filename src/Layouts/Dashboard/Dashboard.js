@@ -6,7 +6,12 @@ import Invoices from "../../Components/Invoices/Invoices";
 import Menubar from '../../Components/Dashboard/Menubar';
 import Topbar from '../../Components/Dashboard/Topbar';
 
+import {Switch, Route} from 'react-router-dom';
+
+import MenuListItems from '../../Lookup/MenuListItems';
+
 import Auth from '../../Services/Auth';
+
 
 class Dashboard extends Component {
 
@@ -17,6 +22,7 @@ class Dashboard extends Component {
 
   render () {
     const {selectedUserId, loggedInUser} = this.state;
+
 
     return (
       <span >
@@ -30,7 +36,9 @@ class Dashboard extends Component {
           {/* TODO: remove user from state and store in redux */}
           <Topbar onUserChange={(selectedUserId) => this.setState({selectedUserId})} loggedInUser={loggedInUser}/>
           <div style={canvas}>
-            <Invoices />
+            <Switch>
+              <Route path="/invoice/:imageId" component={Invoices} exact/>
+            </Switch>
           </div>
         </div>
       </span>
