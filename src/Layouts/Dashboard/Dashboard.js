@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './Dashboard.css';
 import Navbar from '../../Components/Dashboard/Navbar';
-import InputBase from '@material-ui/core/InputBase';
 
 import SearchIcon from '../../Assets/Images/Icons/search_topbar.png';
 import Invoices from "../../Components/Invoices/Invoices";
@@ -9,28 +8,16 @@ import Axios from "axios";
 import Select from 'react-select';
 import Menubar from '../../Components/Dashboard/Menubar';
 
-
-
-
-
 class Dashboard extends Component {
     constructor(props) {
         super(props)
         this.state = {
             userList: null,
-            uniqueUserList: [{ value: "",label:""}],
-            selectedUserImagesList: null,
-            filteredUsers: null,
             selectedUserID: null,
-            selectedImageID: null,
-            selectedFileType: null,
-            selectedUserName: null,
-            selectedUserImagesCount: null
+            isLoadingUsers: true
         }
     }
-
     componentWillMount() {
-        console.log("User", this.props.location.state)
         if(this.props.location.state){
             this.getUsers(this.props.location.state)
         }else{
@@ -42,57 +29,44 @@ class Dashboard extends Component {
 
     getUsers = (user) => {
         Axios.post('http://localhost:8085/getUsers', user).then(response => {
-            console.log("Result", response.data)
-            this.setState({ userList: JSON.parse(response.data.body)})
-            this.setState({ uniqueUserList: this.getUniqueUsers(this.state.userList)});
+            this.setState({ userList: JSON.parse(response.data.body), isLoadingUsers: false})
         }).catch(error => {
             console.log("Error", error)
         })
     }
 
-    getUniqueUsers = (list) =>{
-        const flags = new Set();
-        let result = list.filter(entry => {
-            if (flags.has(entry.UserID)) {
-                return false;
-            }
-            flags.add(entry.UserID);
-            return true;
-        });
-        return result
-    }
-
     filterUsersForSelect = (list) => {
-      if(list){
-           const optionUsers = list.map(userRow => {
-               return {
-                   value: userRow.UserID,
-                   label: userRow.Name
-               }
-           });
-            console.log("users",optionUsers);
-           return optionUsers;
-      }
-      else {
-          return {
-            value: 1,
-            label: "Loading.."
-          }
-      }
+      if(!list)
+        return;
+
+      const optionUsers = list.map(userRow => {
+        return {
+            value: userRow.UserID,
+            label: userRow.Name
+        }
+    });
+    return optionUsers;
     }
 
     handleSelect = (selectedOption) => {
-      this.setState({ selectedUserID: selectedOption.value});
+      console.log("handle select",selectedOption);
+      if(selectedOption.value)
+        this.setState({ selectedUserID: selectedOption.value});
+    }
+
+    imageSelected = (imageID,fileType) => {
+        console.log("wapsi",imageID);
     }
 
   render () {
+    const { selectedUserID , userList}  = this.state;
     return (
       <span >
         <div style={navbar} className="full-height">
             <Navbar/>
         </div>
         <div style={menubar} className="full-height">
-            <Menubar selectedUserID={this.state.selectedUserID}/>
+            <Menubar selectedUserID={selectedUserID} imageSelected={this.imageSelected.bind(this)}/>
         </div>
         <div style={content} className="full-height">
           <div style={topbar}>
@@ -103,22 +77,18 @@ class Dashboard extends Component {
               <Select
                   className="basic-single topbar-search-input topbar-search"
                   defaultValue="Select User"
-                  isDisabled={false}
-                  isClearable={false}
                   isSearchable={true}
                   isMulti={false}
+                  isLoading={this.state.isLoadingUsers}
                   onChange={(selectedOption) => this.handleSelect(selectedOption)}
                   name="color"
-                  options={this.filterUsersForSelect(this.state.uniqueUserList)}
+                  options={this.filterUsersForSelect(userList)}
               />
           </div>
           <div style={canvas}>
               <Invoices />
           </div>
-
-
         </div>
-
       </span>
     );
   }
