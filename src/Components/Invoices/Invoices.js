@@ -50,7 +50,7 @@ class Invoices extends Component {
                     </Grid>
                 </Grid>
                 <Grid container item  style={{ flexBasis: '30%', flexDirection:"column", justifyContent: 'center'}}>
-                    <Grid  container item style={{ flexBasis: '50%', justifyContent: 'space-evenly'}}>
+                    <Grid  container item style={{ flexBasis: '50%', justifyContent: 'space-evenly', marginTop: '-15%'}}>
                         <Input
                             placeholder="Date"
                             inputProps={{
@@ -96,7 +96,7 @@ class Invoices extends Component {
                     </Grid>
                 </Grid>
                 <Grid container item  style={{ flexBasis: '50%' , flexDirection:"column", justifyContent: 'center'}}>
-                    <Grid item style={{ flexBasis: '60%'}} className="invoiceImageBox">
+                    <Grid item style={{ flexBasis: '70%'}} className="invoiceImageBox">
                     {   (selectedImageID && selectedImageFileType === "image") ?
                             <Card style={{ height: '100%'}}>
                                 <CardActionArea style={{ height: '100%'}}>
