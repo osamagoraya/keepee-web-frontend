@@ -58,27 +58,22 @@ class MenuSubSectionList extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.remotePath){
-      console.log("fetching list items", this.props);
-      this.fetchListData();
-    } else {
-      console.log("not fetching list items", this.props);
-    }
+    this.fetchListData(nextProps.remotePath);
   }
 
   componentDidMount() {
-    if (this.props.remotePath){
-      console.log("fetching list items", this.props);
-      this.fetchListData();
-    } else {
-      console.log("not fetching list items", this.props);
-    }
+    this.fetchListData(this.props.remotePath);
   }
 
-  fetchListData() {
+  fetchListData(remotePath) {
+    if (!remotePath){
+      console.log("not fetching list items", remotePath);
+    } else {
+      console.log("fetching list items", remotePath);
+    }
     this.setState({listData: []});
     sendAuthenticatedAsyncRequest(
-      this.props.remotePath,
+      remotePath,
       "POST", //TODO: take out to MenuListItems.js
       this.props.remoteParams,
       (r) => this.setState({listData: this.props.listItemFormatter(JSON.parse(r.data.body))})
@@ -101,7 +96,7 @@ class MenuSubSectionList extends React.Component {
           }}
         />
         {
-          listData 
+          listData.length !== 0
           ? <List component="nav">
             {listData.map((item,idx) => (
               <span key={`item--${idx}`}>
