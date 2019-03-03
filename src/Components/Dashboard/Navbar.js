@@ -14,7 +14,7 @@ class Navbar extends Component {
 
 
     handleReportClick = () => {
-        console.log(this.state.selectedUserID)
+        console.log('Dashboard clicked')
     }
 
     handleSettingClick = () => {

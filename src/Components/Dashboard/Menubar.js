@@ -1,6 +1,19 @@
 import React, { Component } from 'react';
-import {Grid} from '@material-ui/core';
 import Axios from 'axios';
+
+import MenuItems from './MenuItems';
+
+
+const styles = {
+  menubarItem : {
+    height: 20,
+    color: '#4d4f5c',
+    fontFamily: 'Source Sans Pro',
+    fontSize: 13,
+    fontWeight: 700,
+    lineHeight: 20,
+  }
+}
 
 class Menubar extends Component {
     constructor(props){
@@ -28,13 +41,31 @@ class Menubar extends Component {
     }).catch(error => {
         console.log("Error", error)
     })
-}
+  }
+
+
+  // label 
+  // label on click to fetch child components
+  // child components with routes
+  prepareMenuItems() {
+
+  }
 
   render(){
     return (
-      <Grid item sm={10} style={{ backgroundColor: '#f5f4f4'}}> {/* menu bar */}
-          <p>{this.state.selectedUserID}</p>
-      </Grid>
+      <div> 
+          <MenuItems />
+          {/* <MenuList style={{ marginTop: '45%', width: "100%"}}>
+            {
+              items.map((item, index) => (
+                <MenuItem style={{...styles.menubarItem}} key={index}>
+                  {item}
+                </MenuItem>
+              ))
+            }
+           
+        </MenuList> */}
+      </div>
     );
   }
 }
