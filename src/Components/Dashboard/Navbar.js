@@ -60,7 +60,7 @@ class Navbar extends Component {
                 </ListItemIcon>
             </MenuItem>
             <MenuItem onClick={this.handleSettingClick}>
-                <ListItemIcon style={{ marginLeft: '-23%'}}>
+                <ListItemIcon style={{ marginLeft: '-10%'}}>
                     <img src={logoSettings} alt="Not Found"/>
                 </ListItemIcon>
             </MenuItem>
