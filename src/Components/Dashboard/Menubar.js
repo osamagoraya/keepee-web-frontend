@@ -1,137 +1,154 @@
 import React, { Component } from 'react';
-import Axios from 'axios';
+import { withRouter } from 'react-router-dom';
+
 import Moment from 'moment';
-import Grid from '@material-ui/core/Grid';
 
-import MenuItems from './MenuItems';
+import { withStyles } from '@material-ui/core/styles';
+import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
+import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+
+import MenuListItems from '../../Lookup/MenuListItems';
+import MenuSubSectionList from './MenuSubSectionList';
+import MenuSubSectionFilters from './MenuSubSectionFilters';
 
 
-const styles = {
-  menubarItem : {
-    height: 20,
+const ExpansionPanel = withStyles({
+  root: {
     color: '#4d4f5c',
     fontFamily: 'Source Sans Pro',
     fontSize: 13,
     fontWeight: 700,
-    lineHeight: 20,
+    // border: '1px solid rgba(0,0,0,.125)',
+    boxShadow: 'none',
+    '&:not(:last-child)': {
+      borderBottom: 0,
+    },
+    '&:before': {
+      display: 'none',
+    },
+  },
+  expanded: {
+    margin: 'auto',
+  },
+})(MuiExpansionPanel);
+
+const ExpansionPanelSummary = withStyles({
+  root: {
+    backgroundColor: 'rgba(0,0,0,.03)',
+    borderBottom: '1px solid rgba(0,0,0,.125)',
+    marginBottom: -1,
+    minHeight: 56,
+    '&$expanded': {
+      minHeight: 56,
+    },
+  },
+  content: {
+    '&$expanded': {
+      margin: '12px 0',
+    },
+  },
+  expanded: {},
+})(props => <MuiExpansionPanelSummary {...props} />);
+
+ExpansionPanelSummary.muiName = 'ExpansionPanelSummary';
+
+const ExpansionPanelDetails = withStyles(theme => ({
+  root: {
+    padding: "0 14.15% 1.6% 14.15%",
+    backgroundColor: '#f5f4f4',
+  },
+}))(MuiExpansionPanelDetails);
+
+const invoiceListItemFormatter = (localPath) => (data) => {
+  if (!data) return [];
+
+  const imageId = (imageName) => {
+    let parts = imageName.split('/');
+    return parts[parts.length - 1];
   }
+
+  const imageName = (imageName) => {
+    return Moment(`${imageId(imageName)}`,'x').format("MM.DD.YY")
+  }
+
+  return data.map(image => ({
+      label: imageName(image.ImageID),
+      path: `${localPath}/${imageId(image.ImageID)}`
+    })
+  );
 }
 
 class Menubar extends Component {
-  constructor(props){
-    super(props);
-    console.log(props);
-    this.state = {
-      selectedUserID: this.props.selectedUserID,
-      selectedImageID: null,
-      imageList: null
-    }
-    console.log('select User ID',this.state.selectedUserID)
+  state = {
+    expanded: this.props.location.pathname, //TODO: fix this
+    selectedUserId: this.props.selectedUserId
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.selectedUserId !== nextProps.selectedUserId)
+      this.setState({selectedUserId: nextProps.selectedUserId})
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    const { selectedUserID } = this.state;
-    console.log("before",selectedUserID);
-    this.setState({ selectedUserID: nextProps.selectedUserID});
-    if( selectedUserID !== nextProps.selectedUserID)
-      this.getImages(this.state.selectedUserID);
-      console.log("after",selectedUserID);
-  }
+  handleChange = (localPath) => (event, expanded) => {
+    this.setState({
+      expanded: expanded ? localPath : "/",
+    });
+    if (expanded)
+      this.props.history.push(localPath);
+    else
+      this.props.history.push("/");
+  };
 
-  getImages = (userId) => {
-    if(userId) {
-      Axios.post('http://803d6b1b.ngrok.io/getImages', {userID: userId}).then(response => {
-        console.log("Result", response.data)
-        this.setState({ imageList: JSON.parse(response.data.body)})
-      }).catch(error => {
-        console.log("Error", error)
-      })
-  }
-}
-
-
-  // getImages = (userId) => {
-  //   Axios.post('http://803d6b1b.ngrok.io/getImages', userId).then(response => {
-  //       console.log("Result", response.data)
-  //       this.setState({ imageList: JSON.parse(response.data.body)})
-  //   }).catch(error => {
-  //       console.log("Error", error)
-  //   })
-  // }
-
-
-  // // label 
-  // // label on click to fetch child components
-  // // child components with routes
-  // prepareMenuItems() {
-
-  // }
-
-  // render(){
-  //   return (
-  //     <div> 
-  //         <MenuItems />
-  //         {/* <MenuList style={{ marginTop: '45%', width: "100%"}}>
-  //           {
-  //             items.map((item, index) => (
-  //               <MenuItem style={{...styles.menubarItem}} key={index}>
-  //                 {item}
-  //               </MenuItem>
-  //             ))
-  //           }
-           
-  //       </MenuList> */}
-  //     </div>
-  imageSelected = (imageID,fileType) => {
-    console.log("image details",imageID,fileType);
-    this.setState({ selectedImageID: imageID});
-  }
-  
-  getImageName(imageName){
-    let parts = imageName.split('/');
-    let answer = parts[parts.length - 1];
-    return Moment(`${answer}`,'x').format("MM.DD.YY")
-  }
-
-renderImageList = () => {
-  const { imageList } = this.state;
-  
-  if( !imageList )
-    return;
-
-  let imageRow = [];
-      imageList.forEach((image,i) => {
-          imageRow.push(
-              <div key={i} className="list-item">
-                  <li onClick={()=>{this.props.imageSelected(image.ImageID,image.FileType)}} className={`panel-block list-item-container ${this.state.selectedImageID === image.ImageID? 'is-active active-list-item':''}`} >
-                      <span className="panel-icon image-list-item-icon">
-                          <i className="fas fa-chevron-left" aria-hidden="true"></i>
-                      </span>
-                      <div className="image-list-item-text" style={{ color: 'rgba(121, 111, 111, 1)' }}>
-                      {
-                              this.getImageName(image.ImageID)
-                      }
-                      </div>
-                      <i className={` ${this.state.selectedImageID === image.ImageID ? 'fas fa-caret-right fa-4x fa-caret-right-image is-active active-list-item':''}`}></i>
-                  </li>
-              </div>
-           )
-      })
-      console.log(imageRow);
-      return imageRow
-}
-
-  render(){
+  render() {
+    const { expanded, selectedUserId } = this.state;
+    console.log("menubar", this.state);
     return (
-      <Grid item sm={10} style={{ backgroundColor: '#f5f4f4'}}> {/* menu bar */}
-          <p>{this.state.selectedUserID}</p>
-
-          <p>ImageList:</p>
-          <div>{this.renderImageList()}</div>
-          
-      </Grid>
+      <div style={{ marginTop: '45%', width: "100%"}}>
+      {
+        MenuListItems.map((item, idx) => (
+          <ExpansionPanel
+            key={idx}
+            square
+            expanded={expanded.indexOf(item.localBasePath) !== -1}
+            onChange={this.handleChange(item.localBasePath)}
+          >
+            <ExpansionPanelSummary>
+              {item.label}
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              {
+                item.isSubsectionList
+                ? expanded.indexOf(item.localBasePath) !== -1
+                  ? (item.isSelectedUserIdRequired && selectedUserId) || !item.isSelectedUserIdRequired
+                    ? <MenuSubSectionList 
+                      remotePath={item.remotePath}
+                      remoteParams={{userID: selectedUserId}} //TODO: move to lookup
+                      listItemFormatter={(invoiceListItemFormatter(item.localBasePath))} //TODO: move to lookup
+                    />
+                    : "no user id"
+                  : "no body"
+                : <MenuSubSectionFilters />
+              }
+              
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        ))
+      }
+      </div>
     );
   }
 }
 
-export default Menubar;
+
+// const styles = {
+//   menubarItem : {
+//     height: 20,
+//     color: '#4d4f5c',
+//     fontFamily: 'Source Sans Pro',
+//     fontSize: 13,
+//     fontWeight: 700,
+//     lineHeight: 20,
+//   }
+// }
+export default (withRouter(Menubar));

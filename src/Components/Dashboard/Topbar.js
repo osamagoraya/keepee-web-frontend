@@ -3,20 +3,20 @@ import React from 'react';
 import Axios from "axios";
 
 import Select from 'react-select';
-import {Grid} from '@material-ui/core';
-import PrimarySearchAppBar from '../PrimarySearchAppBar';
+// import {Grid} from '@material-ui/core';
+// import PrimarySearchAppBar from '../PrimarySearchAppBar';
 
 import SearchIcon from '../../Assets/Images/Icons/search_topbar.png';
 
-class OldTopbar extends React.Component {
-  render(){
-    return (
-      <Grid item sm={12} style={{ flexBasis: '19%' }}>
-        <PrimarySearchAppBar />
-      </Grid >
-    );
-  }
-}
+// class OldTopbar extends React.Component {
+//   render(){
+//     return (
+//       <Grid item sm={12} style={{ flexBasis: '19%' }}>
+//         <PrimarySearchAppBar />
+//       </Grid >
+//     );
+//   }
+// }
 
 const topbar = {
   paddingTop: "3%",
@@ -44,6 +44,7 @@ class Topbar extends React.Component {
   }
 
   getUsers = (user) => {
+    console.log("fetching user", user)
     Axios.post('http://803d6b1b.ngrok.io/getUsers', user).then(response => {
       this.setState({ userList: JSON.parse(response.data.body), isLoadingUsers: false})
     }).catch(error => {

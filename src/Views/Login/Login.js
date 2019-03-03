@@ -35,7 +35,7 @@ class Login extends React.PureComponent {
                          Auth.login(values,(status,user,errorMessage)=>{
                              if(status){
                                 this.setState({buttonLoading: ''})
-                                this.props.history.push({pathname: "/",state:{user}})
+                                this.props.history.push({pathname: "/"})
                              }else{
                                 this.setState({buttonLoading: '',loginError: errorMessage})
                              }                            

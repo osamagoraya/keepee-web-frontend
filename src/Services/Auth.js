@@ -1,16 +1,36 @@
 import Axios from 'axios'
 
+const loggedInUserHandle = "LIU";
+const userKeys = ["UserID", "Name", "Email", "Type", "AccountantID"];
+
+// TODO: refactor this class
 class Auth {
+  
+
     constructor(){
         this.isAuthenticated = false
     }
 
+    putUser (user) {
+      console.log("putting", user);
+      userKeys.forEach(k => localStorage.setItem(`${loggedInUserHandle}${k}`, user[k]))
+    }
+
+    getUser () {
+      let user = {};
+      userKeys.forEach(k => user[k] = localStorage.getItem(`${loggedInUserHandle}${k}`))
+      return user;
+    }
+    
     login(userData,cb){
         Axios.post('http://54.245.6.3:8085/login',userData).then(response=>{
             if(response.data.statusCode === 200){
                 this.isAuthenticated = true
                 localStorage.setItem('token',response.data.token)
-                cb(true,JSON.parse(response.data.body))
+                const loggedInUser = JSON.parse(response.data.body);
+                this.putUser(loggedInUser)
+                cb(true,loggedInUser)
+                
             }else{
                 this.isAuthenticated = false
                 cb(false, null,"Invalid Credentials")
@@ -26,6 +46,10 @@ class Auth {
 
         this.isAuthenticated = false
         cb(true)
+    }
+
+    getLoggedInUser() {
+      return this.getUser();
     }
 
     getAuthentication(){

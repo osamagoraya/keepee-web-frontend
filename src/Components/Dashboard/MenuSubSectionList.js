@@ -1,15 +1,17 @@
 import React from 'react';
+
+import {Link} from 'react-router-dom';
+
+import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
+
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import MuiListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Search from '@material-ui/icons/Search';
-
-import {Link} from 'react-router-dom';
 
 const styles = theme => ({
   root: {
@@ -42,17 +44,54 @@ const ListItem = withStyles({
   }
 }) (MuiListItem);
 
+// required params = {
+//   remotePath: complete URI with query params if required
+//   remoteParams: params to be sent as POST request body if required
+//   listItemFormatter: a function that takes and returns array of item: {label: "item name", localPath: "local path / id"}
+//   
+// }
+
 class MenuSubSectionList extends React.Component {
   state = {
-    selectedIndex: 0,
+    selectedIndex: null,
+    listData: []
   };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.remotePath){
+      console.log("fetching list items", this.props);
+      this.fetchListData();
+    } else {
+      console.log("not fetching list items", this.props);
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.remotePath){
+      console.log("fetching list items", this.props);
+      this.fetchListData();
+    } else {
+      console.log("not fetching list items", this.props);
+    }
+  }
+
+  fetchListData() {
+    this.setState({listData: []});
+    sendAuthenticatedAsyncRequest(
+      this.props.remotePath,
+      "POST", //TODO: take out to MenuListItems.js
+      this.props.remoteParams,
+      (r) => this.setState({listData: this.props.listItemFormatter(JSON.parse(r.data.body))})
+    );
+  }
 
   handleListItemClick = (event, index) => {
     this.setState({ selectedIndex: index });
   };
 
   render() {
-    const { classes, listItems } = this.props;
+    const { classes } = this.props;
+    const { listData } = this.state;
 
     return (
       <div className={classes.root}>
@@ -62,24 +101,24 @@ class MenuSubSectionList extends React.Component {
           }}
         />
         {
-          listItems 
+          listData 
           ? <List component="nav">
-            {this.props.listItems.map((item,idx) => (
+            {listData.map((item,idx) => (
               <span key={`item--${idx}`}>
                 <ListItem
                   component={Link}
-                  to="/"
+                  to={item.path}
                   button 
                   selected={this.state.selectedIndex === item}
-                  onClick={event => this.handleListItemClick(event, item)}  
+                  onClick={event => this.handleListItemClick(event, idx)}  
                 >
-                  <ListItemText className={classes.listItemText} disableTypography={true} primary="Image Name" />
+                  <ListItemText className={classes.listItemText} disableTypography={true} primary={item.label} />
                 </ListItem>
-                {idx === this.props.listItems.length - 1 ? null : <Divider />}
+                {idx === listData.length - 1 ? null : <Divider />}
               </span>
             ))}
           </List>
-          : "Loading ... "
+          : <p>Loading data ...</p>
         }
         
       </div>

@@ -19,7 +19,6 @@ class App extends React.Component {
                 />
                 <ProtectedRoute
                     component={Dashboard}
-                    exact
                     path="/" />
             </Switch>
         </BrowserRouter>

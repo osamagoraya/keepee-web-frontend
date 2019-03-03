@@ -1,42 +1,45 @@
+// remote data path
+// local base path
+// 
+
 const items = [
   {
     label: "Invoices",
-    subSectionType: "list",
-    baseRoute: "/invoices"
+    isSubsectionList: true,
+    remotePath: '/getImages',
+    localBasePath: '/invoice',
+    // move the following to requiredProps object
+    isSelectedUserIdRequired: true
   },
   {
     label: "Batches",
-    subSectionType: "list",
-    baseRoute: "/batch"
+    isSubsectionList: true,
+    localBasePath: '/batch',
   },
   {
     label: "Account Inquiries",
-    subSectionType: "filters"
-  },
-  {
-    label: "Invoices",
-    subSectionType: "list",
-    baseRoute: "/invoices"
+    isSubsectionList: false,
+    localBasePath: '/account-inquiry',
   },
   {
     label: "VAT Report",
-    subSectionType: "list",
-    baseRoute: "/report/vat"
+    isSubsectionList: true,
+    localBasePath: '/report/vat',
   },
   {
     label: "Income Tax Advances",
-    subSectionType: "list",
-    baseRoute: "/report/income-tax-advances"
+    isSubsectionList: true,
+    localBasePath: "/report/income-tax-advances"
   },
   {
     label: "P & L",
-    subSectionType: "list",
-    baseRoute: "/report/profilt-and-loss"
+    isSubsectionList: true,
+    localBasePath: "/report/profilt-and-loss"
   },
   {
     label: "Trial Balance",
-    subSectionType: "list",
-    baseRoute: "/report/trial-balance"
+    isSubsectionList: true,
+    localBasePath: "/report/trial-balance"
   },
 ];
 

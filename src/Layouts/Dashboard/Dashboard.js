@@ -2,31 +2,33 @@ import React, { Component } from 'react';
 import './Dashboard.css';
 import Navbar from '../../Components/Dashboard/Navbar';
 
-
 import Invoices from "../../Components/Invoices/Invoices";
 import Menubar from '../../Components/Dashboard/Menubar';
 import Topbar from '../../Components/Dashboard/Topbar';
 
+import Auth from '../../Services/Auth';
+
 class Dashboard extends Component {
 
   state = {
-    selectedUserId: null
+    selectedUserId: null,
+    loggedInUser: Auth.getLoggedInUser()
   }
 
   render () {
-    const {selectedUserId} = this.state;
-    console.log("selectedUserId", selectedUserId );
+    const {selectedUserId, loggedInUser} = this.state;
+
     return (
       <span >
         <div style={navbar} className="full-height">
           <Navbar/>
         </div>
         <div style={menubar} className="full-height">
-          <Menubar selectedUserID={selectedUserId} imageSelected={(imageID,fileType) => console.log("wapsi",imageID, fileType)}/>
+          <Menubar selectedUserId={selectedUserId} />
         </div>
         <div style={content} className="full-height">
           {/* TODO: remove user from state and store in redux */}
-          <Topbar onUserChange={(selectedUserId) => this.setState({selectedUserId})} loggedInUser={this.props.location.state.user}/>
+          <Topbar onUserChange={(selectedUserId) => this.setState({selectedUserId})} loggedInUser={loggedInUser}/>
           <div style={canvas}>
             <Invoices />
           </div>
