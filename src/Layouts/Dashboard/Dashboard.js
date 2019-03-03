@@ -14,6 +14,8 @@ class Dashboard extends Component {
         this.state = {
             userList: null,
             selectedUserID: null,
+            selectedImageID: null,
+            selectedImageFileType: null,
             isLoadingUsers: true
         }
     }
@@ -55,11 +57,11 @@ class Dashboard extends Component {
     }
 
     imageSelected = (imageID,fileType) => {
-        console.log("wapsi",imageID);
+        this.setState({ selectedImageID: imageID, selectedImageFileType: fileType});
     }
 
   render () {
-    const { selectedUserID , userList}  = this.state;
+    const { userList , selectedUserID , selectedImageID , selectedImageFileType }  = this.state;
     return (
       <span >
         <div style={navbar} className="full-height">
@@ -86,7 +88,7 @@ class Dashboard extends Component {
               />
           </div>
           <div style={canvas}>
-              <Invoices />
+              <Invoices imageID={selectedImageID} fileType={selectedImageFileType}/>
           </div>
         </div>
       </span>

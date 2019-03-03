@@ -6,22 +6,18 @@ import Moment from 'moment';
 class Menubar extends Component {
     constructor(props){
       super(props);
-      console.log(props);
       this.state = {
         selectedUserID: this.props.selectedUserID,
         selectedImageID: null,
         imageList: null
       }
-      console.log('select User ID',this.state.selectedUserID)
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
     const { selectedUserID } = this.state;
-    console.log("before",selectedUserID);
     this.setState({ selectedUserID: nextProps.selectedUserID});
     if( selectedUserID !== nextProps.selectedUserID)
       this.getImages(this.state.selectedUserID);
-      console.log("after",selectedUserID);
   }
 
   getImages = (userId) => {
@@ -34,8 +30,7 @@ class Menubar extends Component {
       })
   }
 }
-
-  imageSelected = (imageID,fileType) => {
+imageSelected = (imageID,fileType) => {
     console.log("image details",imageID,fileType);
     this.setState({ selectedImageID: imageID});
 }
