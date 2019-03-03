@@ -7,7 +7,7 @@ import Select from 'react-select';
 // import PrimarySearchAppBar from '../PrimarySearchAppBar';
 
 import SearchIcon from '../../Assets/Images/Icons/search_topbar.png';
-
+import "./Topbar.css";
 // class OldTopbar extends React.Component {
 //   render(){
 //     return (
