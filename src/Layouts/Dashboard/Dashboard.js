@@ -2,91 +2,33 @@ import React, { Component } from 'react';
 import './Dashboard.css';
 import Navbar from '../../Components/Dashboard/Navbar';
 
-import SearchIcon from '../../Assets/Images/Icons/search_topbar.png';
+
 import Invoices from "../../Components/Invoices/Invoices";
-import Axios from "axios";
-import Select from 'react-select';
 import Menubar from '../../Components/Dashboard/Menubar';
+import Topbar from '../../Components/Dashboard/Topbar';
 
 class Dashboard extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            userList: null,
-            selectedUserID: null,
-            isLoadingUsers: true
-        }
-    }
-    componentWillMount() {
-        if(this.props.location.state){
-            this.getUsers(this.props.location.state)
-        }else{
-            localStorage.clear()
-            this.props.history.push("/")
-        }
 
-    }
-
-    getUsers = (user) => {
-        Axios.post('http://localhost:8085/getUsers', user).then(response => {
-            this.setState({ userList: JSON.parse(response.data.body), isLoadingUsers: false})
-        }).catch(error => {
-            console.log("Error", error)
-        })
-    }
-
-    filterUsersForSelect = (list) => {
-      if(!list)
-        return;
-
-      const optionUsers = list.map(userRow => {
-        return {
-            value: userRow.UserID,
-            label: userRow.Name
-        }
-    });
-    return optionUsers;
-    }
-
-    handleSelect = (selectedOption) => {
-      console.log("handle select",selectedOption);
-      if(selectedOption.value)
-        this.setState({ selectedUserID: selectedOption.value});
-    }
-
-    imageSelected = (imageID,fileType) => {
-        console.log("wapsi",imageID);
-    }
+  state = {
+    selectedUserId: null
+  }
 
   render () {
-    const { selectedUserID , userList}  = this.state;
+    const {selectedUserId} = this.state;
+    console.log("selectedUserId", selectedUserId );
     return (
       <span >
         <div style={navbar} className="full-height">
-            <Navbar/>
+          <Navbar/>
         </div>
         <div style={menubar} className="full-height">
-            <Menubar selectedUserID={selectedUserID} imageSelected={this.imageSelected.bind(this)}/>
+          <Menubar selectedUserID={selectedUserId} imageSelected={(imageID,fileType) => console.log("wapsi",imageID, fileType)}/>
         </div>
         <div style={content} className="full-height">
-          <div style={topbar}>
-            <div className="left-floater search-icon">
-              <img src={SearchIcon} alt="search icon"/>
-            </div>
-
-              <Select
-                  className="basic-single topbar-search-input topbar-search"
-                  defaultValue="Select User"
-                  isSearchable={true}
-                  isMulti={false}
-                  isLoading={this.state.isLoadingUsers}
-                  onChange={(selectedOption) => this.handleSelect(selectedOption)}
-                  name="color"
-                  options={this.filterUsersForSelect(userList)}
-              />
-          </div>
+          {/* TODO: remove user from state and store in redux */}
+          <Topbar onUserChange={(selectedUserId) => this.setState({selectedUserId})} loggedInUser={this.props.location.state.user}/>
           <div style={canvas}>
-              <Invoices />
+            <Invoices />
           </div>
         </div>
       </span>
@@ -104,11 +46,6 @@ const canvas = {
   fontFamily: "'Heebo', sans-serif"
 }
 
-const topbar = {
-  paddingTop: "3%",
-  height: "15.7vh",
-  marginLeft: "6.87%"
-}
 
 const navbar = {
   width: `3.6%`,
@@ -124,39 +61,5 @@ const menubar = {
 const content = {
   width: `82.4%`
 }
-
-
-
-// class OldDashboard extends Component {
-//   render() {
-//     return (
-//       <Grid container style={{ minHeight: '100vh'}}>
-//         <Grid container item  sm={2}>
-//           <Navbar />
-//           <Menubar />
-//         </Grid>
-//         <Grid container item sm={10} wrap="nowrap" direction="column">
-//             <Topbar />
-//             <Grid item sm={12} >
-//               <div
-//                 style={{
-//                   borderRadius: '3px',
-//                   boxShadow: '0 3px 6px rgba(0, 0, 0, 0.04)',
-//                   backgroundColor: '#f8f8f8',
-//                   height: '78vh',
-//                   marginLeft: '8%',
-//                   width: '78%'
-//
-//                 }}>
-//                 <div>
-//                     content
-//                 </div>
-//               </div>
-//             </Grid>
-//         </Grid>
-//       </Grid>
-//     );
-//   }
-// }
 
 export default Dashboard;
