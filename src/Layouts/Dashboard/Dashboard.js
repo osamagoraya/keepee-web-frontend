@@ -37,7 +37,7 @@ class Dashboard extends Component {
           <Topbar onUserChange={(selectedUserId) => this.setState({selectedUserId})} loggedInUser={loggedInUser}/>
           <div style={canvas}>
             <Switch>
-              <Route path="/invoice/:imageId" component={Invoices} exact/>
+              <Route path="/invoice/:imageId/:imageType" component={Invoices} exact/>
             </Switch>
           </div>
         </div>

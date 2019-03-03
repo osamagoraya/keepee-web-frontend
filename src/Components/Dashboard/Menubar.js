@@ -72,9 +72,10 @@ const invoiceListItemFormatter = (localPath) => (data) => {
     return Moment(`${imageId(imageName)}`,'x').format("MM.DD.YY")
   }
 
+  console.log("ADSASD",data);
   return data.map(image => ({
       label: imageName(image.ImageID),
-      path: `${localPath}/${imageId(image.ImageID)}`
+      path: `${localPath}/${imageId(image.ImageID)}/${image.FileType}`
     })
   );
 }
