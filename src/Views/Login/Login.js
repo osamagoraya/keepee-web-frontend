@@ -4,7 +4,6 @@ import  * as Yup from 'yup'
 import Auth from '../../Services/Auth'
 import './Login.css';
 import logo from '../../Assets/Images/logo.png';
-import 'bulma/css/bulma.css'
 
 class Login extends React.PureComponent {
     constructor(props){

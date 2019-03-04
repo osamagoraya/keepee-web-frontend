@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import './Dashboard.css';
 import Navbar from '../../Components/Dashboard/Navbar';
-
 import Invoices from "../../Components/Invoices/Invoices";
 import Menubar from '../../Components/Dashboard/Menubar';
 import Topbar from '../../Components/Dashboard/Topbar';
-
 import {Switch, Route} from 'react-router-dom';
-
 import Auth from '../../Services/Auth';
+import Batch from '../../Components/Batch/Batch';
 
 
 class Dashboard extends Component {
@@ -36,6 +34,7 @@ class Dashboard extends Component {
           <div style={canvas}>
             <Switch>
               <Route path="/invoice/:imageId/:imageType" component={Invoices} exact/>
+              <Route path="/batch" component={Batch} exact/>
             </Switch>
           </div>
         </div>
