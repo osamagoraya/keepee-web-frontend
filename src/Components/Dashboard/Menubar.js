@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
-import Moment from 'moment';
 
 import { withStyles } from '@material-ui/core/styles';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -9,8 +8,9 @@ import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import MenuListItems from '../../Lookup/MenuListItems';
-import MenuSubSectionList from './MenuSubSectionList';
-import MenuSubSectionFilters from './MenuSubSectionFilters';
+import MenuSubSectionList from './MenubarItems/MenuSubSectionList';
+import MenuSubSectionFilters from './MenubarItems/MenuSubSectionFilters';
+import InvoiceMenubarItems from './MenubarItems/InvoiceMenubarItems';
 
 
 const ExpansionPanel = withStyles({
@@ -60,41 +60,22 @@ const ExpansionPanelDetails = withStyles(theme => ({
   },
 }))(MuiExpansionPanelDetails);
 
-const invoiceListItemFormatter = (localPath) => (data) => {
-  if (!data) return [];
-
-  const imageId = (imageName) => {
-    let parts = imageName.split('/');
-    return parts[parts.length - 1];
-  }
-
-  const imageName = (imageName) => {
-    return Moment(`${imageId(imageName)}`,'x').format("MM.DD.YY")
-  }
-
-  console.log("ADSASD",data);
-  return data.map(image => ({
-      label: imageName(image.ImageID),
-      path: `${localPath}/${imageId(image.ImageID)}/${image.FileType}`
-    })
-  );
-}
 
 class Menubar extends Component {
   state = {
     selectedMenuItem: this.props.location.pathname, //TODO: fix this
     selectedUserId: this.props.selectedUserId
   };
-
-  isSelected(path) {
-    return this.state.selectedMenuItem.indexOf(path) !== -1;
-  }
-
+  
   componentWillReceiveProps(nextProps) {
     if (this.state.selectedUserId !== nextProps.selectedUserId)
       this.setState({selectedUserId: nextProps.selectedUserId})
   }
 
+  isSelected(path) {
+    return this.state.selectedMenuItem.indexOf(path) !== -1;
+  }
+  
   handleChange = (localPath) => (event, expanded) => {
     this.setState({
       selectedMenuItem: expanded ? localPath : "/",
@@ -107,9 +88,22 @@ class Menubar extends Component {
 
   render() {
     const { selectedUserId } = this.state;
-    console.log("menubar", this.state);
+    console.log("rendeing menubar", this.state);
     return (
       <div style={{ marginTop: '45%', width: "100%"}}>
+      {/* TODO: map over list with items : {localRoute: "/invoice", component, isUserRequired} */}
+      <ExpansionPanel
+        square
+        expanded={this.isSelected("/invoice")}
+        onChange={this.handleChange("/invoice")}
+        >
+          <ExpansionPanelSummary>
+            Invoices
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <InvoiceMenubarItems selectedUserId={selectedUserId}/>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
       {
         MenuListItems.map((item, idx) => (
           <ExpansionPanel
@@ -129,7 +123,6 @@ class Menubar extends Component {
                     ? <MenuSubSectionList 
                       remotePath={item.remotePath}
                       remoteParams={{userID: selectedUserId}} //TODO: move to lookup
-                      listItemFormatter={(invoiceListItemFormatter(item.localBasePath))} //TODO: move to lookup
                     />
                     : "no user id"
                   : "no body"

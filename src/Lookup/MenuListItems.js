@@ -1,13 +1,13 @@
 
 const items = [
-  {
-    label: "Invoices",
-    isSubsectionList: true,
-    remotePath: '/getImages',
-    localBasePath: '/invoice',
-    // move the following to requiredProps object
-    isSelectedUserIdRequired: true
-  },
+  // {
+  //   label: "Invoices",
+  //   isSubsectionList: true,
+  //   remotePath: '/getImages',
+  //   localBasePath: '/invoice',
+  //   // move the following to requiredProps object
+  //   isSelectedUserIdRequired: true
+  // },
   {
     label: "Batches",
     isSubsectionList: true,

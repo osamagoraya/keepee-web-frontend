@@ -2,8 +2,6 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
-import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
-
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import MuiListItem from '@material-ui/core/ListItem';
@@ -32,11 +30,11 @@ const ListItem = withStyles({
   root: {
     '&$selected': { // <-- mixing the two classes
       backgroundColor: '#87dfef',
-      // opacity: 0.3,
+      opacity: 0.3,
     },
     '&$selected:focus': { // <-- mixing the two classes
       backgroundColor: '#87dfef',
-      // opacity: 0.3,
+      opacity: 0.3,
     }
   },
   selected: {
@@ -54,30 +52,12 @@ const ListItem = withStyles({
 class MenuSubSectionList extends React.Component {
   state = {
     selectedIndex: null,
-    listData: []
+    listData: this.props.listData,
   };
 
   componentWillReceiveProps(nextProps) {
-    this.fetchListData(nextProps.remotePath);
-  }
-
-  componentDidMount() {
-    this.fetchListData(this.props.remotePath);
-  }
-
-  fetchListData(remotePath) {
-    if (!remotePath){
-      console.log("not fetching list items", remotePath);
-    } else {
-      console.log("fetching list items", remotePath);
-    }
-    this.setState({listData: []});
-    sendAuthenticatedAsyncRequest(
-      remotePath,
-      "POST", //TODO: take out to MenuListItems.js
-      this.props.remoteParams,
-      (r) => this.setState({listData: this.props.listItemFormatter(JSON.parse(r.data.body))})
-    );
+    console.log("MenuSubSectionList received props", nextProps)
+    this.setState({listData: nextProps.listData});
   }
 
   handleListItemClick = (event, index) => {
@@ -87,6 +67,8 @@ class MenuSubSectionList extends React.Component {
   render() {
     const { classes } = this.props;
     const { listData } = this.state;
+
+    console.log("rendering MenuSubSectionList", listData);
 
     return (
       <div className={classes.root}>
@@ -113,7 +95,7 @@ class MenuSubSectionList extends React.Component {
               </span>
             ))}
           </List>
-          : <p>Loading data ...</p>
+          : <p>No data for selected user</p>
         }
         
       </div>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 // import config from '../config';
 
-const config = {apiRoot: 'http://803d6b1b.ngrok.io'}
+const config = {apiRoot: 'http://localhost:8085'}
 
 export function sendAsyncRequest(url, method, data, onSuccessCallback, onFailureCallback){
 	axios ({

@@ -45,7 +45,7 @@ class Topbar extends React.Component {
 
   getUsers = (user) => {
     console.log("fetching user", user)
-    Axios.post('http://803d6b1b.ngrok.io/getUsers', user).then(response => {
+    Axios.post('http://localhost:8085/getUsers', user).then(response => {
       this.setState({ userList: JSON.parse(response.data.body), isLoadingUsers: false})
     }).catch(error => {
       console.log("Error", error)

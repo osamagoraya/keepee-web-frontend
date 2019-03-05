@@ -18,7 +18,7 @@ class Dashboard extends Component {
 
   render () {
     const {selectedUserId, loggedInUser} = this.state;
-
+    console.log("rendering dashboard", this.state);
 
     return (
       <span >
