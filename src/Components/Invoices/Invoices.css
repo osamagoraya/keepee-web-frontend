@@ -15,36 +15,61 @@
 
 .inputFields {
     /* Style for "Rectangle" */
-    width: 80%;
-    height: 14.9%;
+    width: 100%;
+    height: 10%;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04);
     border-radius: 3px;
-    background-color: #ffffff;
-    opacity: 0.48;
+    background-color: rgba(255, 255, 255, 0.48) !important;
     direction: rtl;
+    margin-bottom: 3%;
+    border-color: #828389 !important; 
+}
+
+.MuiInputBase-input-221:focus { 
+    border-bottom-width: 50%;
+}
+
+.MuiInput-underline-202 {
+    display: none;
+}
+
+.MuiFab-label-235 {
+    width: 75%;
+}
+
+.MuiInput-input-206 {
+    font-size: 13px !important;
+    height: 20px !important;
+    width: 100% !important;
+    color: #c4c0c0 !important;
+    letter-spacing: -0.13px !important;
+    font-family: Heebo !important;
+    font-weight: 500 !important;
+    margin-right: 2% !important;
 }
 
 .invoiceImageBox {
     /* Style for "XMLID_1_" */
     width: 80%;
     height: 43.9%;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 3px 6px rgba(136, 92, 92, 0.16);
     background-color: #ffffff;
     opacity: 0.49;
     border-radius: 5px;
 }
 
 .invoicesImageBoxBtn {
-    height: 25px;
-    border-radius: 3px;
     background-color: #d0cccc !important;
+    border-radius: 3px;
+    height: 30px;
 }
 
-.invoicesImageBoxBtnText {
-    color: #f8f7f7;
-    font-family: Heebo;
-    font-size: 13px;
-    font-weight: 700;
+.MuiButton-label-170 {
+    
+    color: #f8f7f7 !important;
+    font-family: Heebo !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
 }
 
 .image {
