@@ -18,9 +18,9 @@ class InvoiceMenubarItems extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("InvoiceMenubarItems received props", nextProps)
+    // console.log("InvoiceMenubarItems received props", nextProps)
     if (nextProps.selectedUserId !== this.state.selectedUserId){
-      console.log("InvoiceMenubarItems state update", nextProps)
+      // console.log("InvoiceMenubarItems state update", nextProps)
       this.setState({selectedUserId: nextProps.selectedUserId});
       this.fetchListData(nextProps.selectedUserId);
     }
@@ -28,7 +28,7 @@ class InvoiceMenubarItems extends React.Component {
 
   fetchListData(selectedUserId) {
     if (selectedUserId === undefined || selectedUserId === null){
-      console.log("not fetching list data, no selected user id founf");
+      // console.log("not fetching list data, no selected user id founf");
       return;
     } else 
       console.log("fetching list data four user id", selectedUserId);
@@ -55,7 +55,7 @@ class InvoiceMenubarItems extends React.Component {
       return Moment(`${imageId(imageName)}`,'x').format("MM.DD.YY")
     }
   
-    console.log("Images received",data);
+    // console.log("Images received",data);
     return data.map(image => ({
         label: imageName(image.ImageID),
         path: `${localPath}/${imageId(image.ImageID)}/${image.FileType}`
@@ -64,7 +64,7 @@ class InvoiceMenubarItems extends React.Component {
   }
 
   render (){
-    console.log("rendering InvoiceMenubarItems", this.state, this.props);
+    // console.log("rendering InvoiceMenubarItems", this.state, this.props);
     const {listData} = this.state;
     return ( listData !== null ? 
       <MenuSubSectionList listData={this.state.listData} />

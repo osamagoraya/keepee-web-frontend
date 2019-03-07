@@ -18,7 +18,7 @@ class Dashboard extends Component {
 
   render () {
     const {selectedUserId, loggedInUser} = this.state;
-    console.log("rendering dashboard", this.state);
+    // console.log("rendering dashboard", this.state);
 
     return (
       <span >
@@ -33,7 +33,7 @@ class Dashboard extends Component {
           <Topbar onUserChange={(selectedUserId) => this.setState({selectedUserId})} loggedInUser={loggedInUser}/>
           <div style={canvas}>
             <Switch>
-              <Route path="/invoice/:imageId/:imageType" component={Invoices} exact/>
+              <Route path="/invoice/:imageId/:imageType" component={Invoices} exact />
               <Route path="/batch" component={Batch} exact/>
             </Switch>
           </div>

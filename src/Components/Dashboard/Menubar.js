@@ -88,7 +88,7 @@ class Menubar extends Component {
 
   render() {
     const { selectedUserId } = this.state;
-    console.log("rendeing menubar", this.state);
+    // console.log("rendeing menubar", this.state);
     return (
       <div style={{ marginTop: '45%', width: "100%"}}>
       {/* TODO: map over list with items : {localRoute: "/invoice", component, isUserRequired} */}

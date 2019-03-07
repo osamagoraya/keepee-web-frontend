@@ -56,7 +56,7 @@ class MenuSubSectionList extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log("MenuSubSectionList received props", nextProps)
+    // console.log("MenuSubSectionList received props", nextProps)
     this.setState({listData: nextProps.listData});
   }
 
@@ -68,7 +68,7 @@ class MenuSubSectionList extends React.Component {
     const { classes } = this.props;
     const { listData } = this.state;
 
-    console.log("rendering MenuSubSectionList", listData);
+    // console.log("rendering MenuSubSectionList", listData);
 
     return (
       <div className={classes.root}>

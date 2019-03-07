@@ -44,7 +44,7 @@ class Topbar extends React.Component {
   }
 
   getUsers = (user) => {
-    console.log("fetching user", user)
+    // console.log("fetching user", user)
     Axios.post('http://localhost:8085/getUsers', user).then(response => {
       this.setState({ userList: JSON.parse(response.data.body), isLoadingUsers: false})
     }).catch(error => {
@@ -65,7 +65,7 @@ class Topbar extends React.Component {
   }
 
   handleSelect = (selectedOption) => {
-    console.log("handle select",selectedOption);
+    // console.log("handle select",selectedOption);
     if(selectedOption.value){
       this.setState({ selectedUserID: selectedOption.value});
       this.props.onUserChange(selectedOption.value);
