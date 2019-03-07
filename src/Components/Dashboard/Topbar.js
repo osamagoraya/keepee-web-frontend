@@ -75,7 +75,7 @@ class Topbar extends React.Component {
   render (){
     const { userList } = this.state;
     return (
-      <div style={topbar}>
+      <div style={topbar} className="topBar">
         <div className="left-floater search-icon">
           <img src={SearchIcon} alt="search icon"/>
         </div>

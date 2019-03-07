@@ -8,7 +8,7 @@ class Batch extends Component {
   
   render() {
     const products = [{
-      id : 12,
+      id : <div>12</div>,
       category : "0034 office and time",
       reference : '1234567',
       date : '12.03.19',
