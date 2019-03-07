@@ -4,10 +4,11 @@ import Navbar from '../../Components/Dashboard/Navbar';
 import Invoices from "../../Components/Invoices/Invoices";
 import Menubar from '../../Components/Dashboard/Menubar';
 import Topbar from '../../Components/Dashboard/Topbar';
-import {Switch, Route} from 'react-router-dom';
+import {Switch} from 'react-router-dom';
 import Auth from '../../Services/Auth';
 import Batch from '../../Components/Batch/Batch';
 
+import ProtectedRoute from '../../Components/Routes/ProtectedRoute';
 
 class Dashboard extends Component {
 
@@ -33,8 +34,9 @@ class Dashboard extends Component {
           <Topbar onUserChange={(selectedUserId) => this.setState({selectedUserId})} loggedInUser={loggedInUser}/>
           <div style={canvas}>
             <Switch>
-              <Route path="/invoice/:imageId/:imageType" component={Invoices} exact />
-              <Route path="/batch" component={Batch} exact/>
+              {/* TODO: move these routes in AppRoute or something similar? */}
+              <ProtectedRoute path="/workspace/invoice/:imageId/:imageType" component={Invoices} exact />
+              <ProtectedRoute path="/workspace/batch" component={Batch} exact/>
             </Switch>
           </div>
         </div>

@@ -44,7 +44,8 @@ class InvoiceMenubarItems extends React.Component {
   invoiceListItemFormatter = (data) => {
     if (!data) return [];
   
-    const localPath = "/invoice"
+    //TODO: get this from approutes or somewhere
+    const localPath = "/workspace/invoice";
 
     const imageId = (imageName) => {
       let parts = imageName.split('/');

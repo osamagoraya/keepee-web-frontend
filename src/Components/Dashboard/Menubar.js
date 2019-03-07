@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
-
 import { withStyles } from '@material-ui/core/styles';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
-import MenuListItems from '../../Lookup/MenuListItems';
-import MenuSubSectionList from './MenubarItems/MenuSubSectionList';
-import MenuSubSectionFilters from './MenubarItems/MenuSubSectionFilters';
 import InvoiceMenubarItems from './MenubarItems/InvoiceMenubarItems';
+
+import AppRoutes from '../../Routes/AppRoutes';
 
 
 const ExpansionPanel = withStyles({
@@ -63,7 +61,7 @@ const ExpansionPanelDetails = withStyles(theme => ({
 
 class Menubar extends Component {
   state = {
-    selectedMenuItem: this.props.location.pathname, //TODO: fix this
+    selectedRoute: this.props.location.pathname, 
     selectedUserId: this.props.selectedUserId
   };
   
@@ -73,65 +71,53 @@ class Menubar extends Component {
   }
 
   isSelected(path) {
-    return this.state.selectedMenuItem.indexOf(path) !== -1;
+    return this.state.selectedRoute.indexOf(path) !== -1;
   }
   
   handleChange = (localPath) => (event, expanded) => {
     this.setState({
-      selectedMenuItem: expanded ? localPath : "/",
+      selectedRoute: expanded ? localPath : this.getBasePath(),
     });
     if (expanded)
       this.props.history.push(localPath);
     else
-      this.props.history.push("/");
+      this.props.history.push(this.getBasePath());
   };
+
+  getBasePath(){
+    const currentPath = this.props.location.pathname;
+    const indexOfNextSlash = currentPath.indexOf("/", 1);
+    return indexOfNextSlash !== -1 ? currentPath.substr(0, indexOfNextSlash) : currentPath;
+  }
 
   render() {
     const { selectedUserId } = this.state;
+    
+    const basePath = this.getBasePath();
     // console.log("rendeing menubar", this.state);
     return (
       <div style={{ marginTop: '45%', width: "100%"}}>
       {/* TODO: map over list with items : {localRoute: "/invoice", component, isUserRequired} */}
-      <ExpansionPanel
-        square
-        expanded={this.isSelected("/invoice")}
-        onChange={this.handleChange("/invoice")}
-        >
-          <ExpansionPanelSummary>
-            Invoices
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <InvoiceMenubarItems selectedUserId={selectedUserId}/>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
       {
-        MenuListItems.map((item, idx) => (
-          <ExpansionPanel
-            key={idx}
-            square
-            expanded={this.isSelected(item.localBasePath)}
-            onChange={this.handleChange(item.localBasePath)}
-          >
-            <ExpansionPanelSummary>
-              {item.label}
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              {
-                item.isSubsectionList
-                ? this.isSelected(item.localBasePath)
-                  ? (item.isSelectedUserIdRequired && selectedUserId) || !item.isSelectedUserIdRequired
-                    ? <MenuSubSectionList 
-                      remotePath={item.remotePath}
-                      remoteParams={{userID: selectedUserId}} //TODO: move to lookup
-                    />
-                    : "no user id"
-                  : "no body"
-                : <MenuSubSectionFilters />
-              }
-              
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-        ))
+        AppRoutes.map((route, idx) => {
+          if (route.to === basePath) {
+            return route.menubarItems.map((item, midx) => (
+              <ExpansionPanel
+                square
+                expanded={this.isSelected(item.path)}
+                onChange={this.handleChange(item.path)}
+                >
+                  <ExpansionPanelSummary>
+                    {item.label}
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <item.component selectedUserId={selectedUserId} />
+                  </ExpansionPanelDetails>
+              </ExpansionPanel>
+            ))
+          } else 
+            return null;
+        })
       }
       </div>
     );

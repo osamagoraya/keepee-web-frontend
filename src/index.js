@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import ProtectedRoute from './Components/Routes/ProtectedRoutes';
+import ProtectedRoute from './Components/Routes/ProtectedRoute';
 import Login from './Views/Login/Login';
 import Dashboard from './Layouts/Dashboard/Dashboard';
 

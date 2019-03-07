@@ -133,7 +133,7 @@ class Invoices extends Component {
         <Grid container className="containerMain">
             <Grid container item  style={{ flexBasis: '20%', alignItems: 'flex-end',justifyContent: 'space-evenly'}}>
                 <Grid item style={{ flexBasis: '80%', paddingBottom: '3.4%'}}>
-                    <Button size="small" className="invoiceSubmitBtn">
+                    <Button size="small" className="invoiceSubmitBtn" >
                         Continue
                     </Button>
                 </Grid>
