@@ -130,7 +130,7 @@ class Invoice extends Component {
     const commonTextfieldClasses = "bottom-spacer";
 
     return (
-      <Grid container className="containerMain">
+      <Grid container className="invoice-container">
         <Grid item container sm={2} direction="column" justify="flex-end" alignItems="center">
           <KButton className="bottom-btn-container">
             continue

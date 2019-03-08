@@ -1,4 +1,4 @@
-.containerMain {
+.invoice-container {
     width: inherit;
     height: inherit;
 }
@@ -41,7 +41,7 @@
 }
 
 .bottom-spacer {
-  margin-bottom: 3.5%;
+  margin-bottom: 15%;
 }
 
 .inputFields {
