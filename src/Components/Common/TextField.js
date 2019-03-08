@@ -4,7 +4,7 @@ import './Common.css';
 import FilledInput from "@material-ui/core/es/FilledInput";
 
 //TODO: custom style for date, and number
-const TextField = (props) => (
+const KTextField = (props) => (
   <FilledInput 
     type={props.type}
     placeholder={props.placeholder}
@@ -14,9 +14,9 @@ const TextField = (props) => (
     name={props.name}
     fullWidth={props.fullWidth}
     className={props.className}
-    classes={{root: 'k-textfield-plain', underline: 'custom-focus'}}
+    classes={{root: 'k-textfield-plain', underline: 'k-textfield-focus'}}
     autoComplete="off"
     />
 );
 
-export default TextField;
+export default KTextField;

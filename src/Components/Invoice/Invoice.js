@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import {Grid} from '@material-ui/core';
 import './Invoice.css';
-import Button from "@material-ui/core/es/Button/Button";
-import Input from "@material-ui/core/es/Input/Input";
-
-
-import FilledInput from "@material-ui/core/es/FilledInput";
-import logoReport from '../../Assets/Images/Path_981.svg';
+import Button from "@material-ui/core/Button";
+import iconRotate from '../../Assets/Images/Path_981.svg';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import Card from '@material-ui/core/Card';
@@ -14,6 +10,7 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import Select from 'react-select';
 import TextField from '../Common/TextField';
+import KButton from '../Common/Button';
 
 const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
 
@@ -129,152 +126,157 @@ class Invoice extends Component {
       vat: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
       image: Yup.string().required("נדרש")
     })
+
+    const commonTextfieldClasses = "bottom-spacer";
+
     return (
       <Grid container className="containerMain">
-        <Grid container item  style={{ flexBasis: '20%', alignItems: 'flex-end',justifyContent: 'space-evenly'}}>
-          <Grid item style={{ flexBasis: '80%', paddingBottom: '3.4%'}}>
-            <Button size="small" className="invoiceSubmitBtn" >
-              Continue
-            </Button>
-          </Grid>
+        <Grid item container sm={2} direction="column" justify="flex-end" alignItems="center">
+          <KButton className="bottom-btn-container">
+            continue
+          </KButton>
         </Grid>
-        <Grid container item  style={{ flexBasis: '30%', flexDirection:"column", justifyContent: 'center'}}>
-          <Grid  container item style={{ flexBasis: '50%', justifyContent: 'space-evenly', marginTop: '-15%'}}>
-          <Formik
-            initialValues={{ reference: '', date: '', detail: '', category: '', vat: '', sum: '', image: this.props.imageID || '', vendor: '' }}    
-            onSubmit={(values, actions) => {
-            // this.setState({ buttonLoading: 'is-loading' })
-            // this.props.saveImageData(values, this.showAlert)
-            }}
-            enableReinitialize={true}
-            validationSchema={validationSchema}
-            render={({ values, touched, errors, handleSubmit, handleChange, handleBlur, setFieldValue }) => 
-            (
-              <form onSubmit={handleSubmit}>
-                {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
-                <div> 
-                  <input
-                      name="image"
-                      type="hidden"
+        <Grid item container sm={10} style={{paddingTop: "10%"}}>
+          <Grid item container sm={4} direction="column" alignItems="center" >
+            <Formik
+              initialValues={{ reference: '', date: '', detail: '', category: '', vat: '', sum: '', image: this.props.imageID || '', vendor: '' }}    
+              onSubmit={(values, actions) => {
+              // this.setState({ buttonLoading: 'is-loading' })
+              // this.props.saveImageData(values, this.showAlert)
+              }}
+              enableReinitialize={true}
+              validationSchema={validationSchema} 
+              >
+              {({ values, touched, errors, handleSubmit, handleChange, handleBlur, setFieldValue }) => 
+              (
+                <form onSubmit={handleSubmit} style={{width: "75%"}}>
+                  {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
+                  <div> 
+                    <input
+                        name="image"
+                        type="hidden"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={this.props.imageID || ''}
+                        variant="filled"
+                    />
+                  </div>
+                  <div> 
+                    <TextField
+                      type="date"
+                      placeholder="Date"
+                      name="date"
+                      value={values.date}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      value={this.props.imageID || ''}
-                      variant="filled"
-                  />
-                </div>
-                <div> 
-                  <TextField
-                    type="date"
-                    placeholder="Date"
-                    name="date"
-                    value={values.date}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    fullWidth={true} 
-                    />
-                  {touched.date && errors.date && <p className="help is-danger">{errors.date}</p>}
-                </div>
-                <div>
-                    <Select
-                        value={categories.filter(category => category.type === values.category)}
-                            onChange={(selectedOption) => {
-                                setFieldValue('category', selectedOption.type)
-                                setFieldValue('vat', selectedOption.vat)
-                            }}
-                            options={categories}
-                            getOptionLabel={option => option.type}
-                            isMulti={false}
-                            placeholder="Category"
-                            isRtl={true}
-                            className="inputFields"
-                    />
-                    {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
-                </div>
-                <div>
-                  <TextField
-                    type="number"
-                    placeholder="Sum"
-                    name="sum"
-                    value={values.sum}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    fullWidth={true} 
-                    />
-                  {touched.sum && errors.sum && <p className="help is-danger">{errors.sum}</p>}
-                </div>
-                <div>
-                  <TextField
-                    type="text"
-                    placeholder="Vendor"
-                    name="vendor"
-                    value={values.vendor}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    fullWidth={true} 
-                    />
-                  {touched.vendor && errors.vendor && <p className="help is-danger">{errors.vendor}</p>}
-                </div>
-                <div>
-                  <TextField
-                    type="text"
-                    placeholder="Details"
-                    name="details"
-                    value={values.details}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    fullWidth={true} 
-                    />
-                    {touched.details && errors.details && <p className="help is-danger">{errors.details}</p>}
-                </div>
-                <div>
-                  <TextField
-                    type="text"
-                    placeholder="VAT"
-                    name="vat"
-                    value={values.vat}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    fullWidth={true} 
-                    />
-                  {touched.vat && errors.vat && <p className="help is-danger">{errors.vat}</p>}
-                </div>
-              </form>
-            )}
-          />
+                      fullWidth={true}
+                      className={commonTextfieldClasses}
+                      />
+                    {touched.date && errors.date && <p className="help is-danger">{errors.date}</p>}
+                  </div>
+                  <div>
+                      <Select
+                          value={categories.filter(category => category.type === values.category)}
+                              onChange={(selectedOption) => {
+                                  setFieldValue('category', selectedOption.type)
+                                  setFieldValue('vat', selectedOption.vat)
+                              }}
+                              options={categories}
+                              getOptionLabel={option => option.type}
+                              isMulti={false}
+                              placeholder="Category"
+                              isRtl={true}
+                              className="inputFields bottom-spacer"
+                      />
+                      {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
+                  </div>
+                  <div>
+                    <TextField
+                      type="number"
+                      placeholder="Sum"
+                      name="sum"
+                      value={values.sum}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth={true} 
+                      className={commonTextfieldClasses}
+                      />
+                    {touched.sum && errors.sum && <p className="help is-danger">{errors.sum}</p>}
+                  </div>
+                  <div>
+                    <TextField
+                      type="text"
+                      placeholder="Vendor"
+                      name="vendor"
+                      value={values.vendor}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth={true} 
+                      className={commonTextfieldClasses}
+                      />
+                    {touched.vendor && errors.vendor && <p className="help is-danger">{errors.vendor}</p>}
+                  </div>
+                  <div>
+                    <TextField
+                      type="text"
+                      placeholder="Details"
+                      name="details"
+                      value={values.details}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth={true} 
+                      className={commonTextfieldClasses}
+                      />
+                      {touched.details && errors.details && <p className="help is-danger">{errors.details}</p>}
+                  </div>
+                  <div>
+                    <TextField
+                      type="text"
+                      placeholder="VAT"
+                      name="vat"
+                      value={values.vat}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth={true} 
+                      className={commonTextfieldClasses}
+                      />
+                    {touched.vat && errors.vat && <p className="help is-danger">{errors.vat}</p>}
+                  </div>
+                </form>
+              )}
+            </Formik>
+          </Grid>
+          <Grid item container sm={8} style={{paddingLeft: "5%"}}>
+            <Card className="document-box">
+              <CardActionArea style={{ height: '100%'}}>
+              { selectedImageID && selectedImageFileType === "image" 
+              ? <CardMedia style={{ transform: `rotate(${this.state.imageAngle}deg)`}}
+                    component="img"
+                    alt="Unable to load"
+                    height="inherit"
+                    image={selectedImagePath}
+                />
+              : selectedImageID && selectedImageFileType === "pdf" 
+                ? <div>A PDF FILE</div> 
+                : <div>בחר תמונה</div>
+              }
+              </CardActionArea>
+            </Card>
+            <div className="doc-action-btn-box">
+              <Button size="small" className="k-btn-grey doc-action-btns">
+                  Not Relevant
+              </Button>  
+              <Button size="small" className="k-btn-grey doc-action-btns">
+              New picture
+              </Button>  
+              <Button onClick={this.transformImage} variant="fab" className="k-btn-grey k-fab">
+                  <img src={iconRotate} alt="Not Found"/>
+              </Button>
+            </div>
           </Grid>
         </Grid>
-        <Grid container item  style={{ flexBasis: '50%' , flexDirection:"column", justifyContent: 'center'}}>
-          <Grid item style={{ flexBasis: '70%'}} className="invoiceImageBox">
-          {   (selectedImageID && selectedImageFileType === "image") ?
-                  <Card style={{ height: '100%'}}>
-                      <CardActionArea style={{ height: '100%'}}>
-                          <CardMedia style={{ transform: `rotate(${this.state.imageAngle}deg)`}}
-                              component="img"
-                              alt="Unable to load"
-                              height="inherit"
-                              image={selectedImagePath}
-                          />
-                      </CardActionArea>
-                  </Card> :
-              ( selectedImageID && selectedImageFileType === "pdf" ) ?
-                  <div>A PDF FILE</div> :
-                  <div>בחר תמונה</div>
-          }
-          </Grid>
-          <Grid container item style={{ flexBasis: '15%', width: '80%' , alignContent: 'center', justifyContent: 'space-around'}}>
-              <Grid item container style={{ flexBasis: '90%', alignContent: 'center', justifyContent: 'space-around'}}>
-                  <Button size="small" className="invoicesImageBoxBtn">
-                      Not Relevant
-                  </Button>
-                  <Button size="small" className="invoicesImageBoxBtn">
-                      New picture
-                  </Button>
-                  <Button onClick={this.transformImage}  className="invoicesImageBoxBtn"  style={{ borderRadius: '50%'}}>
-                      <img src={logoReport} style={{ width: '45%'}} alt="Not Found"/>
-                  </Button>
-              </Grid>
-          </Grid>
-        </Grid>
+        {/* <Grid item sm={6}>
+        </Grid> */}
       </Grid>
     );
   }

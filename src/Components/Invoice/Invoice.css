@@ -3,14 +3,45 @@
     height: inherit;
 }
 
-.invoiceSubmitBtn {
-    /* Style for "Rectangle" */
-    width: 148px;
-    height: 35%;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
-    border-radius: 3px;
-    background-image: linear-gradient(180deg, #ef7474 0%, #b0b5bf 0%, #87dfef 100%, #f7b3a9 100%);
-    opacity: 0.67;
+.document-box {
+  height: 70%;
+  width: 70%;
+}
+
+.doc-action-btn-box {
+  display: block;
+  width: 70%;
+  height: 10%;
+  margin-top: -12%;
+}
+
+/* TODO: move out to a common file if used again */
+.k-btn-grey {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+  border-radius: 3px;
+  background-color: #d0cccc !important;
+  opacity: 0.67;
+  text-transform: capitalize !important;
+}
+
+.doc-action-btns {
+  width: 30%;
+  margin-right: 9% !important;
+  margin-left: 3% !important;
+}
+
+.k-fab {
+  height: 30px !important;
+  width: 30px !important;
+}
+
+.bottom-btn-container {
+  width: 80%;
+  margin-bottom: 7% !important;
+}
+
+.bottom-spacer {
+  margin-bottom: 3.5%;
 }
 
 .inputFields {
@@ -23,29 +54,7 @@
     margin-bottom: 3%;
     border-color: #828389 !important; 
 }
-.inputField {
-    width: 100%;
-    height: 10%;
-    /* box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04); */
-    /* border-radius: 3px; */
-    background-color: lightblue !important;
-    direction: rtl;
-    margin-bottom: 3%;
-    border-color: #828389 !important; 
-}
 
-.inputField input {
-  padding: 10px;
-  color: orange;
-}
-
-.MuiInputBase-input-221:focus { 
-    border-bottom-width: 50%;
-}
-
-.MuiInput-underline-202 {
-    display: none;
-}
 
 .MuiFab-label-235 {
     width: 75%;
