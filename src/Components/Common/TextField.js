@@ -15,6 +15,7 @@ const TextField = (props) => (
     fullWidth={props.fullWidth}
     className={props.className}
     classes={{root: 'k-textfield-plain', underline: 'custom-focus'}}
+    autoComplete="off"
     />
 );
 
