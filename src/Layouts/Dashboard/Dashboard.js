@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Dashboard.css';
 import Navbar from '../../Components/Dashboard/Navbar';
-import Invoices from "../../Components/Invoices/Invoices";
+import Invoice from "../../Components/Invoice/Invoice";
 import Menubar from '../../Components/Dashboard/Menubar';
 import Topbar from '../../Components/Dashboard/Topbar';
 import {Switch} from 'react-router-dom';
@@ -35,7 +35,7 @@ class Dashboard extends Component {
           <div style={canvas}>
             <Switch>
               {/* TODO: move these routes in AppRoute or something similar? */}
-              <ProtectedRoute path="/workspace/invoice/:imageId/:imageType" component={Invoices} exact />
+              <ProtectedRoute path="/workspace/invoice/:imageId/:imageType" component={Invoice} exact />
               <ProtectedRoute path="/workspace/batch" component={Batch} exact/>
             </Switch>
           </div>

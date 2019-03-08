@@ -6,8 +6,6 @@ import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
-import InvoiceMenubarItems from './MenubarItems/InvoiceMenubarItems';
-
 import AppRoutes from '../../Routes/AppRoutes';
 
 
@@ -97,7 +95,6 @@ class Menubar extends Component {
     // console.log("rendeing menubar", this.state);
     return (
       <div style={{ marginTop: '45%', width: "100%"}}>
-      {/* TODO: map over list with items : {localRoute: "/invoice", component, isUserRequired} */}
       {
         AppRoutes.map((route, idx) => {
           if (route.to === basePath) {
@@ -106,6 +103,7 @@ class Menubar extends Component {
                 square
                 expanded={this.isSelected(item.path)}
                 onChange={this.handleChange(item.path)}
+                key={midx}
                 >
                   <ExpansionPanelSummary>
                     {item.label}

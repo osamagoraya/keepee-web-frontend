@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Grid} from '@material-ui/core';
-import './Invoices.css';
+import './Invoice.css';
 import Button from "@material-ui/core/es/Button/Button";
 import Input from "@material-ui/core/es/Input/Input";
 import logoReport from '../../Assets/Images/Path_981.svg';
@@ -86,7 +86,7 @@ const categories = [
     { label: 'אופנוע/קטנוע 950007', value: 100, vat: 100, type: 'אופנוע/קטנוע 950007', }
 ]
 
-class Invoices extends Component {
+class Invoice extends Component {
     
   constructor(props){
     super(props);
@@ -278,4 +278,4 @@ class Invoices extends Component {
   }
 }
 
-export default Invoices;
+export default Invoice;
