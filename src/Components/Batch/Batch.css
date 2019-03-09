@@ -1,7 +1,7 @@
-caption {
-   caption-side : top !important;
-   font-size: 18px !important;
+.batch-container {
+  padding: 3% 1% 2% 1%;
 }
+
 
 .headerRowColumn {
     height: 5%;

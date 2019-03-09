@@ -3,52 +3,28 @@ import BootstrapTable from 'react-bootstrap-table-next';
 // import cellEditFactory from 'react-bootstrap-table2-editor';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import '../Batch/Batch.css'
+import Caption from '../Common/Caption';
+import ClipIcon from '@material-ui/icons/AttachFile';
+import FileIcon from '@material-ui/icons/Description';
 
 class Batch extends Component {
+
+  renderStubData () {
+    return [1,2,3,4,5,6,7,8,9,10].map((i) => {
+      return {
+        id : <div>{i}</div>,
+        category : <div>0034 office and time</div>,
+        reference : <div>1234567</div>,
+        date : <div>12.03.19</div>,
+        vendor : <div>Honigman and co INC</div>,
+        details : <div> new month new month</div>,
+        sum : <div> 154,000.34</div>,
+        invoiceType: <FileIcon />
+      }
+    })
+  }
   
   render() {
-    const products = [{
-      id : <div>12</div>,
-      category : "0034 office and time",
-      reference : '1234567',
-      date : '12.03.19',
-      vendor : "Honigman and co INC",
-      details : 'new month new month',
-      sum : "154,000.34"
-    },{
-      id : 13,
-      category : "0034 office and time",
-      reference : '1234567',
-      date : '12.03.19',
-      vendor : "Honigman and co INC",
-      details : 'new month new month',
-      sum : "154,000.34"
-    },{
-      id : 14,
-      category : "0034 office and time",
-      reference : '1234567',
-      date : '12.03.19',
-      vendor : "Honigman and co INC",
-      details : 'new month new month',
-      sum : "154,000.34"
-    },{
-      id : 15,
-      category : "0034 office and time",
-      reference : '1234567',
-      date : '12.03.19',
-      vendor : "Honigman and co INC",
-      details : 'new month new month',
-      sum : "154,000.34"
-    },{
-      id : 16,
-      category : "0034 office and time",
-      reference : '1234567',
-      date : '12.03.19',
-      vendor : "Honigman and co INC",
-      details : 'new month new month',
-      sum : "154,000.34"
-    }];
-    
     const columns = [{
       dataField: 'id',
       text: 'JE',
@@ -57,11 +33,11 @@ class Batch extends Component {
       classes: 'cell',
       headerStyle: { width: '10%' }
     }, {
-    dataField: 'category',
-    text: 'Category',
-    headerAlign: 'left',
-    headerClasses: 'headerRowColumn',
-    classes: 'cell'
+      dataField: 'category',
+      text: 'Category',
+      headerAlign: 'left',
+      headerClasses: 'headerRowColumn',
+      classes: 'cell'
     }, {
       dataField: 'reference',
       text: 'Reference',
@@ -99,25 +75,35 @@ class Batch extends Component {
       classes: 'cell'
     },
     {
-      dataField: 'attachment',
-      text: <span><i className="fal fa-paperclip"></i></span>,
+      dataField: 'invoiceType',
+      text: <ClipIcon />,
       headerAlign: 'left',
       headerClasses: 'headerRowColumn',
       classes: 'cell',
       headerStyle: { width: '5%' }
     }
   ];
- 
-    const CaptionElement = () => <p style={{ marginLeft: '1%',color: '#828389',fontFamily: "Source Sans Pro",fontSize: '18px',fontWeight: '600' }}>008</p>;
-    return <BootstrapTable 
-                caption={<CaptionElement className="a"/>} 
-                keyField='id' 
-                data={products} 
-                columns={columns} 
-                bordered={false}
-                headerClasses="header-class"
-                wrapperClasses="tablewrap"
-                />
+
+  
+    return (
+      <div className="canvas-container batch-container">
+      <Caption style={{
+        marginLeft: '60px',
+        marginBottom: '10px',
+      }}>
+        008
+      </Caption>
+      <BootstrapTable 
+        // caption={<CaptionElement className="a"/>} 
+        keyField='id' 
+        data={this.renderStubData()} 
+        columns={columns} 
+        bordered={false}
+        headerClasses="header-class"
+        wrapperClasses="tablewrap"
+        />
+      </div>
+    );
   }
 }
 

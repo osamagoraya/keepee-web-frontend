@@ -1,3 +1,13 @@
+.k-caption {
+  color: #828389;
+  font-family: Source Sans Pro;
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+}
+
+
+/* MUI Text Field overrides */
 .k-textfield-plain {
   background-color: rgba(255, 255, 255, 0.48) !important;
 
