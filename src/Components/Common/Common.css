@@ -6,6 +6,33 @@
   font-style: italic;
 }
 
+.k-blue-button {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+  border-radius: 3px;
+  background-image: linear-gradient(180deg, #ef7474 0%, #b0b5bf 0%, #87dfef 100%, #f7b3a9 100%);
+  opacity: 0.67;
+  text-transform: capitalize !important;
+}
+
+.k-grey-button {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+  border-radius: 3px;
+  background-color: #d0cccc !important;
+  opacity: 0.67;
+  text-transform: capitalize !important;
+}
+
+.k-button-text {
+  color: white;
+  font-family: Heebo;
+}
+
+.k-form-feedback {
+  font-size: 0.8em;
+  font-weight: 300;
+  color: #ea797a;
+}
+
 
 /* MUI Text Field overrides */
 .k-textfield-plain {
@@ -33,34 +60,6 @@
 
 .k-textfield-focus:after {
   border-bottom: 2px solid #3794a5 !important;
-}
-
-.k-blue-button {
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
-  border-radius: 3px;
-  background-image: linear-gradient(180deg, #ef7474 0%, #b0b5bf 0%, #87dfef 100%, #f7b3a9 100%);
-  opacity: 0.67;
-  text-transform: capitalize !important;
-}
-
-/* TODO: move out to a common file if used again */
-.k-grey-button {
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
-  border-radius: 3px;
-  background-color: #d0cccc !important;
-  opacity: 0.67;
-  text-transform: capitalize !important;
-}
-
-.k-button-text {
-  color: white;
-  font-family: Heebo;
-}
-
-.k-form-feedback {
-  font-size: 0.8em;
-  font-weight: 300;
-  color: #ea797a;
 }
 
 /*
