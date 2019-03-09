@@ -81,7 +81,7 @@ class Topbar extends React.Component {
         </div>
         <Select
             className="basic-single topbar-search-input topbar-search"
-            defaultValue="Select User"
+            placeholder="User"
             isSearchable={true}
             isMulti={false}
             isLoading={this.state.isLoadingUsers}
