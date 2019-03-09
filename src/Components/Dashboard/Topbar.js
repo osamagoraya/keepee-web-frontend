@@ -1,8 +1,9 @@
 import React from 'react';
 
-import Axios from "axios";
-
 import Select from 'react-select';
+
+import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
+
 // import {Grid} from '@material-ui/core';
 // import PrimarySearchAppBar from '../PrimarySearchAppBar';
 
@@ -34,8 +35,7 @@ class Topbar extends React.Component {
   componentWillMount() {
     const {loggedInUser} = this.props;
     if(loggedInUser){
-      console.log(loggedInUser)
-      this.getUsers({user: loggedInUser})
+      this.getUsers(loggedInUser)
     } else {
       // TODO: BAD idea, move this to service
       // localStorage.clear()
@@ -44,12 +44,13 @@ class Topbar extends React.Component {
   }
 
   getUsers = (user) => {
-    // console.log("fetching user", user)
-    Axios.post('http://localhost:8085/getUsers', user).then(response => {
-      this.setState({ userList: JSON.parse(response.data.body), isLoadingUsers: false})
-    }).catch(error => {
-      console.log("Error", error)
-    })
+    console.log("hi", user);
+    sendAuthenticatedAsyncRequest(
+      "/getUsers",
+      "POST", 
+      {userId: user.userId},
+      (r) => this.setState({ userList: JSON.parse(r.data.body), isLoadingUsers: false})
+    );
   }
 
   filterUsersForSelect = (list) => {
@@ -58,8 +59,8 @@ class Topbar extends React.Component {
 
     return list.map(userRow => {
       return {
-        value: userRow.UserID,
-        label: userRow.Name
+        value: parseInt(userRow.userId,10),
+        label: userRow.name
       }
     });
   }

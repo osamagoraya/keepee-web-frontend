@@ -1,11 +1,11 @@
 import Axios from 'axios'
+import {config} from './AsyncRequestService';
 
 const loggedInUserHandle = "LIU";
-const userKeys = ["UserID", "Name", "Email", "Type", "AccountantID"];
+const userKeys = ["userId", "name", "email", "type", "accountantId"];
 
 // TODO: refactor this class
 class Auth {
-  
 
     constructor(){
         this.isAuthenticated = false
@@ -23,7 +23,7 @@ class Auth {
     }
     
     login(userData,cb){
-        Axios.post('http://54.245.6.3:8085/login',userData).then(response=>{
+        Axios.post(`${config.apiRoot}/login`,userData).then(response=>{
             if(response.data.statusCode === 200){
                 this.isAuthenticated = true
                 localStorage.setItem('token',response.data.token)

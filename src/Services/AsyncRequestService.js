@@ -1,7 +1,7 @@
 import axios from 'axios';
 // import config from '../config';
 
-const config = {apiRoot: 'http://localhost:8085'}
+export const config = {apiRoot: 'http://localhost:8085'}
 
 export function sendAsyncRequest(url, method, data, onSuccessCallback, onFailureCallback){
 	axios ({
@@ -19,7 +19,6 @@ export function sendAsyncRequest(url, method, data, onSuccessCallback, onFailure
 
 export function sendAuthenticatedAsyncRequest(uri, method, data, onSuccessCallback, onFailureCallback){
 	const authorization_token = localStorage.getItem("token");
-	
 	if (authorization_token !== null) {
 		axios ({
 			method: method,
