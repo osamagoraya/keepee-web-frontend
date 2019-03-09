@@ -7,12 +7,13 @@
 }
 
 .k-textfield-plain input {
-  padding: 7px 7px;
+  padding: 0px 7px;
   color: #c4c0c0;
   font-family: Heebo;
   font-size: 11px;
   font-weight: 500;
   direction: rtl;
+  height: 36px;
 }
 
 .k-textfield-focus:before {
@@ -29,4 +30,58 @@
   background-image: linear-gradient(180deg, #ef7474 0%, #b0b5bf 0%, #87dfef 100%, #f7b3a9 100%);
   opacity: 0.67;
   text-transform: capitalize !important;
+}
+
+.k-form-feedback {
+  font-size: 0.8em;
+  font-weight: 300;
+  color: #ea797a;
+}
+
+/*
+* react-select style overrides
+*/
+
+/* Main select container */
+.k-select-container .css-vj8t7z,
+/* Active state */
+.k-select-container .css-2o5izw, 
+.k-select-container .css-2o5izw:hover,
+.k-select-container .css-2o5izw:focus {
+  background-color: rgba(255, 255, 255, 0.48) !important;
+  border-top-left-radius: 3px !important;
+  border-top-right-radius: 3px !important;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04);
+  border: none;
+  border-bottom: 1px solid #828389;
+}
+
+/* Text styles */
+.k-select-container .css-xp4uvy, 
+.k-select-container .css-1g6gooi input {
+  color: #c4c0c0 !important;
+  font-family: Heebo !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+}
+
+/* Placeholder */
+.k-select-container .css-1492t68 {
+  color: #e4e3e3 !important;
+  font-family: Heebo !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+}
+
+
+.k-select-container .css-bl6clz {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* dropdown icon border */
+.k-select-container .css-d8oujb {
+  display: none;
 }

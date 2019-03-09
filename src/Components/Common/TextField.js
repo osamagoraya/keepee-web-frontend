@@ -5,6 +5,7 @@ import FilledInput from "@material-ui/core/es/FilledInput";
 
 //TODO: custom style for date, and number
 const KTextField = (props) => (
+  <div className={props.containerClasses}>
   <FilledInput 
     type={props.type}
     placeholder={props.placeholder}
@@ -17,6 +18,13 @@ const KTextField = (props) => (
     classes={{root: 'k-textfield-plain', underline: 'k-textfield-focus'}}
     autoComplete="off"
     />
+    {
+      props.feedback 
+      ? <span className="k-form-feedback">{props.feedback}</span> 
+      : null
+    }
+  
+  </div>
 );
 
 export default KTextField;

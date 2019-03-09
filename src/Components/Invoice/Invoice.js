@@ -8,7 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Card from '@material-ui/core/Card';
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import Select from 'react-select';
+import Select from '../Common/Select';
 import TextField from '../Common/TextField';
 import KButton from '../Common/Button';
 
@@ -117,9 +117,10 @@ class Invoice extends Component {
     const { selectedImageID , selectedImageFileType} = this.state;
     const selectedImagePath = BASE_URL + selectedImageID;
     const validationSchema = Yup.object().shape({
-      reference: Yup.string().required("נדרש"),
+      referenceOne: Yup.string().required("נדרש"),
+      referencTwo: Yup.string().required("נדרש"),
       date: Yup.date().required("נדרש"),
-      detail: Yup.string().required("נדרש"),
+      details: Yup.string().required("נדרש"),
       category: Yup.string().required("נדרש"),
       vendor: Yup.string().required("נדרש"),
       sum: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
@@ -170,25 +171,25 @@ class Invoice extends Component {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth={true}
-                      className={commonTextfieldClasses}
+                      containerClasses={commonTextfieldClasses}
+                      feedback={touched.date && errors.date ? errors.date : null}
                       />
-                    {touched.date && errors.date && <p className="help is-danger">{errors.date}</p>}
                   </div>
                   <div>
                       <Select
-                          value={categories.filter(category => category.type === values.category)}
-                              onChange={(selectedOption) => {
-                                  setFieldValue('category', selectedOption.type)
-                                  setFieldValue('vat', selectedOption.vat)
-                              }}
-                              options={categories}
-                              getOptionLabel={option => option.type}
-                              isMulti={false}
-                              placeholder="Category"
-                              isRtl={true}
-                              className="inputFields bottom-spacer"
+                        value={values.category}
+                        onChange={(selectedOption) => {
+                            setFieldValue('category', selectedOption)
+                            setFieldValue('vat', selectedOption.vat)
+                        }}
+                        options={categories}
+                        labelKey="label"
+                        valueKey="type"
+                        placeholder="Category"
+                        onBlur={handleBlur}
+                        containerClasses="bottom-spacer"
+                        feedback={touched.category && errors.category ? errors.category : null}
                       />
-                      {touched.category && errors.category && <p className="help is-danger">{errors.category}</p>}
                   </div>
                   <div>
                     <TextField
@@ -199,9 +200,9 @@ class Invoice extends Component {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth={true} 
-                      className={commonTextfieldClasses}
+                      containerClasses={commonTextfieldClasses}
+                      feedback={touched.sum && errors.sum ? errors.sum : null}
                       />
-                    {touched.sum && errors.sum && <p className="help is-danger">{errors.sum}</p>}
                   </div>
                   <div>
                     <TextField
@@ -212,9 +213,9 @@ class Invoice extends Component {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth={true} 
-                      className={commonTextfieldClasses}
+                      containerClasses={commonTextfieldClasses}
+                      feedback={touched.vendor && errors.vendor ? errors.vendor : null}
                       />
-                    {touched.vendor && errors.vendor && <p className="help is-danger">{errors.vendor}</p>}
                   </div>
                   <div>
                     <TextField
@@ -225,9 +226,35 @@ class Invoice extends Component {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth={true} 
-                      className={commonTextfieldClasses}
+                      containerClasses={commonTextfieldClasses}
+                      feedback={touched.details && errors.details ? errors.details : null}
                       />
-                      {touched.details && errors.details && <p className="help is-danger">{errors.details}</p>}
+                  </div>
+                  <div>
+                    <TextField
+                      type="text"
+                      placeholder="Reference One"
+                      name="referenceOne"
+                      value={values.referenceOne}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth={true} 
+                      containerClasses={commonTextfieldClasses}
+                      // feedback={touched.referenceOne && errors.referenceOne ? errors.referenceOne : null}
+                      />
+                  </div>
+                  <div>
+                    <TextField
+                      type="text"
+                      placeholder="Reference Two"
+                      name="referenceTwo"
+                      value={values.referenceTwo}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth={true} 
+                      containerClasses={commonTextfieldClasses}
+                      // feedback={touched.referenceTwo && errors.referenceTwo ? errors.referenceTwo : null}
+                      />
                   </div>
                   <div>
                     <TextField
@@ -238,9 +265,9 @@ class Invoice extends Component {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth={true} 
-                      className={commonTextfieldClasses}
+                      containerClasses={commonTextfieldClasses}
+                      feedback={touched.vat && errors.vat ? errors.vat : null}
                       />
-                    {touched.vat && errors.vat && <p className="help is-danger">{errors.vat}</p>}
                   </div>
                 </form>
               )}
