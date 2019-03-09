@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {Grid} from '@material-ui/core';
 import './Invoice.css';
-import Fab from "@material-ui/core/Fab";
-import Button from "@material-ui/core/Button";
 import iconRotate from '../../Assets/Images/Path_981.svg';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -11,7 +9,7 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import Select from '../Common/Select';
 import TextField from '../Common/TextField';
-import KButton from '../Common/Button';
+import Button from '../Common/Button';
 
 const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
 
@@ -134,9 +132,9 @@ class Invoice extends Component {
     return (
       <Grid container className="invoice-container">
         <Grid item container sm={2} direction="column" justify="flex-end" alignItems="center">
-          <KButton className="bottom-btn-container">
+          <Button className="bottom-btn-container" variant="blue">
             continue
-          </KButton>
+          </Button>
         </Grid>
         <Grid item container sm={10} style={{paddingTop: "10%"}}>
           <Grid item container sm={4} direction="column" alignItems="center" >
@@ -291,15 +289,15 @@ class Invoice extends Component {
               </CardActionArea>
             </Card>
             <div className="doc-action-btn-box">
-              <Button size="small" className="k-btn-grey doc-action-btns">
+              <Button size="small" variant="grey" className="doc-action-btns">
                 Not Relevant
               </Button>  
-              <Button size="small" className="k-btn-grey doc-action-btns">
+              <Button size="small" variant="grey" className="doc-action-btns">
                 New picture
               </Button>  
-              <Fab onClick={this.transformImage} className="k-btn-grey k-fab">
+              <Button fab onClick={this.transformImage} className="k-fab">
                 <img src={iconRotate} alt="Not Found"/>
-              </Fab>
+              </Button>
             </div>
           </Grid>
         </Grid>
