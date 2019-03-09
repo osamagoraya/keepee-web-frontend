@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Grid} from '@material-ui/core';
 import './Invoice.css';
+import Fab from "@material-ui/core/Fab";
 import Button from "@material-ui/core/Button";
 import iconRotate from '../../Assets/Images/Path_981.svg';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -284,21 +285,21 @@ class Invoice extends Component {
                     image={selectedImagePath}
                 />
               : selectedImageID && selectedImageFileType === "pdf" 
-                ? <div>A PDF FILE</div> 
+                ? <embed src={selectedImagePath} type="application/pdf" height="100%" width="100%"  />
                 : <div>בחר תמונה</div>
               }
               </CardActionArea>
             </Card>
             <div className="doc-action-btn-box">
               <Button size="small" className="k-btn-grey doc-action-btns">
-                  Not Relevant
+                Not Relevant
               </Button>  
               <Button size="small" className="k-btn-grey doc-action-btns">
-              New picture
+                New picture
               </Button>  
-              <Button onClick={this.transformImage} variant="fab" className="k-btn-grey k-fab">
-                  <img src={iconRotate} alt="Not Found"/>
-              </Button>
+              <Fab onClick={this.transformImage} className="k-btn-grey k-fab">
+                <img src={iconRotate} alt="Not Found"/>
+              </Fab>
             </div>
           </Grid>
         </Grid>
