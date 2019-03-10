@@ -1,4 +1,5 @@
 .batch-container {
+  overflow: scroll;
   padding: 3% 1% 2% 1%;
 }
 

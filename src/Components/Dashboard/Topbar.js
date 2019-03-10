@@ -44,7 +44,6 @@ class Topbar extends React.Component {
   }
 
   getUsers = (user) => {
-    console.log("hi", user);
     sendAuthenticatedAsyncRequest(
       "/getUsers",
       "POST", 

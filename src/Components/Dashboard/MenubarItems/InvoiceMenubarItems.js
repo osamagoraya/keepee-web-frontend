@@ -35,8 +35,8 @@ class InvoiceMenubarItems extends React.Component {
     this.setState({listData: []});
     sendAuthenticatedAsyncRequest(
       "/getImages",
-      "POST", 
-      {userID: selectedUserId},
+      "POST",
+      {userId: selectedUserId},
       (r) => this.setState({listData: this.invoiceListItemFormatter(JSON.parse(r.data.body))})
     );
   }
@@ -47,19 +47,19 @@ class InvoiceMenubarItems extends React.Component {
     //TODO: get this from approutes or somewhere
     const localPath = "/workspace/invoice";
 
-    const imageId = (imageName) => {
+    const imageStamp = (imageName) => {
       let parts = imageName.split('/');
       return parts[parts.length - 1];
     }
   
     const imageName = (imageName) => {
-      return Moment(`${imageId(imageName)}`,'x').format("MM.DD.YY")
+      return Moment(`${imageStamp(imageName)}`,'x').format("MM.DD.YY")
     }
   
     // console.log("Images received",data);
     return data.map(image => ({
-        label: imageName(image.ImageID),
-        path: `${localPath}/${image.FileType}/${imageId(image.ImageID)}`
+        label: imageName(image.imageLink),
+        path: `${localPath}/${image.imageId}/${image.imageType}/${imageStamp(image.imageLink)}`
       })
     );
   }

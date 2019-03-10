@@ -11,6 +11,9 @@ import Select from '../Common/Select';
 import TextField from '../Common/TextField';
 import Button from '../Common/Button';
 
+import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
+import Auth from '../../Services/Auth';
+
 const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
 
 const categories = [
@@ -92,17 +95,31 @@ class Invoice extends Component {
     super(props);
     this.state = {
       selectedImageID: this.props.match.params.imageId,
+      selectedImageStamp: this.props.match.params.imageStamp,
       selectedImageFileType: this.props.match.params.imageType,
       imageAngle: 90,
+      selectedUserId: this.props.selectedUserId,
+      loggedInUser: Auth.getLoggedInUser(),
+      asyncInProgress: false
     }
   }
   
   componentWillReceiveProps(nextProps,nextContext) {
     const oldImageId = this.state.selectedImageID;
-    const { imageId, imageType } = nextProps.match.params;
+    const { imageId, imageType, imageStamp } = nextProps.match.params;
     if( oldImageId !== imageId ){
-      this.setState({ selectedImageID: imageId, selectedImageFileType: imageType});
+      this.setState({ 
+        selectedImageID: imageId, 
+        selectedImageFileType: imageType, 
+        selectedImageStamp: imageStamp,
+        selectedUserId: nextProps.selectedUserId
+      });
+    } else if (nextProps.selectedUserId){
+      this.setState({
+        selectedUserId: nextProps.selectedUserId
+      });
     }
+
   }
 
   transformImage = () => {
@@ -111,20 +128,46 @@ class Invoice extends Component {
     this.setState({ imageAngle: angle })
   }
   
+  uploadInvoice = (values) => {
+    const {selectedUserId,loggedInUser} = this.state
+    if (!selectedUserId){
+      alert ("No client id present, please select a client first");
+      return;
+    }
+    values.userId = selectedUserId;
+    values.accountantId = loggedInUser.userId;
+    this.setState({asyncInProgress: true});
+    sendAuthenticatedAsyncRequest(
+      "/saveImageData",
+      "POST", 
+      {values: values},
+      (r) => {
+        this.setState({asyncInProgress: false}); 
+        this.props.history.push("/workspace/invoice");
+      }
+    );
+  }
+
+  formSubmitter = null;
+
+  bindFormSubmitter(submitter) {
+    this.formSubmitter = submitter ;
+  }
+  
   render(){
       
-    const { selectedImageID , selectedImageFileType} = this.state;
-    const selectedImagePath = BASE_URL + selectedImageID;
+    const { selectedImageID , selectedImageFileType, selectedImageStamp, asyncInProgress} = this.state;
+    const selectedImagePath = BASE_URL + selectedImageStamp;
     const validationSchema = Yup.object().shape({
-      referenceOne: Yup.string().required("נדרש"),
-      referencTwo: Yup.string().required("נדרש"),
-      date: Yup.date().required("נדרש"),
+      reference_1: Yup.string().required("נדרש"),
+      reference_2: Yup.string().required("נדרש"),
+      jeDate: Yup.date().required("נדרש"),
       details: Yup.string().required("נדרש"),
-      category: Yup.string().required("נדרש"),
-      vendor: Yup.string().required("נדרש"),
+      // categoryId: Yup.string().required("נדרש"),
+      vendorName: Yup.string().required("נדרש"),
       sum: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
       vat: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
-      image: Yup.string().required("נדרש")
+      imageId: Yup.string().required("נדרש")
     })
 
     const commonTextfieldClasses = "bottom-spacer";
@@ -132,53 +175,59 @@ class Invoice extends Component {
     return (
       <Grid container className="canvas-container">
         <Grid item container sm={2} direction="column" justify="flex-end" alignItems="center">
-          <Button className="bottom-btn-container" variant="blue">
-            continue
+          <Button className="bottom-btn-container" variant="blue" onClick={(e) => this.formSubmitter(e)}>
+            {asyncInProgress ? "submitting ...": "continue"}
           </Button>
         </Grid>
-        <Grid item container sm={10} style={{paddingTop: "10%"}}>
+        <Grid item container sm={10} style={{paddingTop:"8%"}}>
           <Grid item container sm={4} direction="column" alignItems="center" >
             <Formik
-              initialValues={{ reference: '', date: '', detail: '', category: '', vat: '', sum: '', image: this.props.imageID || '', vendor: '' }}    
-              onSubmit={(values, actions) => {
+              initialValues={{ 
+                reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', 
+                vat: '', sum: '', imageId: selectedImageID || '', vendorName: '' 
+              }}    
+              onSubmit={(values,  { setSubmitting }) => {
               // this.setState({ buttonLoading: 'is-loading' })
-              // this.props.saveImageData(values, this.showAlert)
+                console.log("onSubmit called");
+                this.uploadInvoice(values)
+                setSubmitting(false);
               }}
               enableReinitialize={true}
               validationSchema={validationSchema} 
               >
-              {({ values, touched, errors, handleSubmit, handleChange, handleBlur, setFieldValue }) => 
-              (
-                <form onSubmit={handleSubmit} style={{width: "75%"}}>
-                  {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
-                  <div> 
-                    <input
-                        name="image"
+              {({ values, touched, errors, handleSubmit, handleChange, handleBlur, setFieldValue, submitForm }) => {
+                this.bindFormSubmitter(submitForm);
+                return (
+                  <form onSubmit={handleSubmit} style={{width: "75%"}}>
+                    {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
+                    <div> 
+                      <input
+                        name="imageId"
                         type="hidden"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={this.props.imageID || ''}
+                        value={selectedImageID || ''}
                         variant="filled"
-                    />
-                  </div>
-                  <div> 
-                    <TextField
-                      type="date"
-                      placeholder="Date"
-                      name="date"
-                      value={values.date}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth={true}
-                      containerClasses={commonTextfieldClasses}
-                      feedback={touched.date && errors.date ? errors.date : null}
                       />
-                  </div>
-                  <div>
+                    </div>
+                    <div> 
+                      <TextField
+                        type="date"
+                        placeholder="Date"
+                        name="jeDate"
+                        value={values.jeDate}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth={true}
+                        containerClasses={commonTextfieldClasses}
+                        feedback={touched.jeDate && errors.jeDate ? errors.jeDate : null}
+                        />
+                    </div>
+                    <div>
                       <Select
                         value={values.category}
                         onChange={(selectedOption) => {
-                            setFieldValue('category', selectedOption)
+                            setFieldValue('categoryId', selectedOption)
                             setFieldValue('vat', selectedOption.vat)
                         }}
                         options={categories}
@@ -187,92 +236,94 @@ class Invoice extends Component {
                         placeholder="Category"
                         onBlur={handleBlur}
                         containerClasses="bottom-spacer"
-                        feedback={touched.category && errors.category ? errors.category : null}
+                        feedback={touched.categoryId && errors.categoryId ? errors.categoryId : null}
                       />
-                  </div>
-                  <div>
-                    <TextField
-                      type="number"
-                      placeholder="Sum"
-                      name="sum"
-                      value={values.sum}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth={true} 
-                      containerClasses={commonTextfieldClasses}
-                      feedback={touched.sum && errors.sum ? errors.sum : null}
-                      />
-                  </div>
-                  <div>
-                    <TextField
-                      type="text"
-                      placeholder="Vendor"
-                      name="vendor"
-                      value={values.vendor}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth={true} 
-                      containerClasses={commonTextfieldClasses}
-                      feedback={touched.vendor && errors.vendor ? errors.vendor : null}
-                      />
-                  </div>
-                  <div>
-                    <TextField
-                      type="text"
-                      placeholder="Details"
-                      name="details"
-                      value={values.details}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth={true} 
-                      containerClasses={commonTextfieldClasses}
-                      feedback={touched.details && errors.details ? errors.details : null}
-                      />
-                  </div>
-                  <div>
-                    <TextField
-                      type="text"
-                      placeholder="Reference One"
-                      name="referenceOne"
-                      value={values.referenceOne}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth={true} 
-                      containerClasses={commonTextfieldClasses}
-                      // feedback={touched.referenceOne && errors.referenceOne ? errors.referenceOne : null}
-                      />
-                  </div>
-                  <div>
-                    <TextField
-                      type="text"
-                      placeholder="Reference Two"
-                      name="referenceTwo"
-                      value={values.referenceTwo}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth={true} 
-                      containerClasses={commonTextfieldClasses}
-                      // feedback={touched.referenceTwo && errors.referenceTwo ? errors.referenceTwo : null}
-                      />
-                  </div>
-                  <div>
-                    <TextField
-                      type="text"
-                      placeholder="VAT"
-                      name="vat"
-                      value={values.vat}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth={true} 
-                      containerClasses={commonTextfieldClasses}
-                      feedback={touched.vat && errors.vat ? errors.vat : null}
-                      />
-                  </div>
-                </form>
-              )}
+                    </div>
+                    <div>
+                      <TextField
+                        type="number"
+                        placeholder="Sum"
+                        name="sum"
+                        value={values.sum}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth={true} 
+                        containerClasses={commonTextfieldClasses}
+                        feedback={touched.sum && errors.sum ? errors.sum : null}
+                        />
+                    </div>
+                    <div>
+                      <TextField
+                        type="text"
+                        placeholder="Vendor"
+                        name="vendorName"
+                        value={values.vendorName}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth={true} 
+                        containerClasses={commonTextfieldClasses}
+                        feedback={touched.vendorName && errors.vendorName ? errors.vendorName : null}
+                        />
+                    </div>
+                    <div>
+                      <TextField
+                        type="text"
+                        placeholder="Details"
+                        name="details"
+                        value={values.details}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth={true} 
+                        containerClasses={commonTextfieldClasses}
+                        feedback={touched.details && errors.details ? errors.details : null}
+                        />
+                    </div>
+                    <div>
+                      <TextField
+                        type="text"
+                        placeholder="Reference One"
+                        name="reference_1"
+                        value={values.reference_1}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth={true} 
+                        containerClasses={commonTextfieldClasses}
+                        // feedback={touched.reference_1 && errors.reference_1 ? errors.reference_1 : null}
+                        />
+                    </div>
+                    <div>
+                      <TextField
+                        type="text"
+                        placeholder="Reference Two"
+                        name="reference_2"
+                        value={values.reference_2}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth={true} 
+                        containerClasses={commonTextfieldClasses}
+                        // feedback={touched.reference_2 && errors.reference_2 ? errors.reference_2 : null}
+                        />
+                    </div>
+                    <div>
+                      <TextField
+                        type="text"
+                        placeholder="VAT"
+                        name="vat"
+                        value={values.vat}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth={true} 
+                        containerClasses={commonTextfieldClasses}
+                        feedback={touched.vat && errors.vat ? errors.vat : null}
+                        />
+                    </div>
+                  </form>
+                )
+              }}
             </Formik>
           </Grid>
-          <Grid item container sm={8} style={{paddingLeft: "5%"}}>
+          <Grid item sm={1}></Grid>
+          <Grid item container sm={7} >
             <Card className="document-box">
               <CardActionArea style={{ height: '100%'}}>
               { selectedImageID && selectedImageFileType === "image" 
@@ -283,9 +334,10 @@ class Invoice extends Component {
                     image={selectedImagePath}
                 />
               : selectedImageID && selectedImageFileType === "pdf" 
-                ? <embed src={selectedImagePath} type="application/pdf" height="100%" width="100%"  />
+                ? <embed src={selectedImagePath} type="application/pdf" height="100%" width="100%"  /> 
                 : <div>בחר תמונה</div>
               }
+              {/* force re render pdf when component received new props*/}
               </CardActionArea>
             </Card>
             <div className="doc-action-btn-box">
@@ -305,6 +357,58 @@ class Invoice extends Component {
         </Grid> */}
       </Grid>
     );
+  }
+}
+
+// export default Invoice;
+class MyForm extends React.Component {
+  render() {
+      const { bindSubmitForm } = this.props;
+      return (
+          <Formik
+              initialValues={{ a: '' }}
+              onSubmit={(values, { setSubmitting }) => {
+                  console.log({ values });
+                  setSubmitting(false);
+              }}
+          >
+              {(formikProps) => {
+                  const { values, handleChange, handleBlur, handleSubmit } = formikProps;
+
+                  // bind the submission handler remotely
+                  bindSubmitForm(formikProps.submitForm);
+
+                  return (
+                      <form noValidate onSubmit={handleSubmit}>
+                          <input type="text" name="a" value={values.a} onChange={handleChange} onBlur={handleBlur} />
+                      </form>
+                  )
+              }}
+          </Formik>
+      )
+  }
+}
+
+class MyApp extends React.Component {
+
+  // will hold access to formikProps.submitForm, to trigger form submission outside of the form
+  submitMyForm = null;
+
+  handleSubmitMyForm = (e) => {
+      if (this.submitMyForm) {
+          this.submitMyForm(e);
+      }
+  };
+  bindSubmitForm = (submitForm) => {
+      this.submitMyForm = submitForm;
+  };
+  render() {
+      return (
+          <div>
+              <button onClick={this.handleSubmitMyForm}>Submit from outside</button>
+              <MyForm bindSubmitForm={this.bindSubmitForm} />
+          </div>
+      )
   }
 }
 
