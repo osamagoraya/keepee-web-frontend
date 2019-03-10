@@ -5,14 +5,11 @@ import iconRotate from '../../Assets/Images/Path_981.svg';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import Card from '@material-ui/core/Card';
-import { Formik } from 'formik'
-import * as Yup from 'yup'
-import Select from '../Common/Select';
-import TextField from '../Common/TextField';
 import Button from '../Common/Button';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 import Auth from '../../Services/Auth';
+import InvoiceForm from '../Forms/InvoiceForm/InvoiceForm';
 
 const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
 
@@ -33,9 +30,6 @@ class Invoice extends Component {
     }
   }
 
-  componentDidMount() {
-    this.fetchCategories();
-  }
   
   componentWillReceiveProps(nextProps,nextContext) {
     const oldImageId = this.state.selectedImageID;
@@ -54,40 +48,6 @@ class Invoice extends Component {
     }
   }
 
-  fetchCategories() {
-    if (this.state.categories.length !== 0){
-      console.log("not fetching categories, they exist", this.state.categories);
-      return;
-    }
-
-    sendAuthenticatedAsyncRequest(
-      "/getCategories",
-      "POST", 
-      null,
-      (r) => this.setState({categories: JSON.parse(r.data.body)})
-    );
-
-  }
-  
-  uploadInvoice = (values) => {
-    const {selectedUserId,loggedInUser} = this.state
-    if (!selectedUserId){
-      alert ("No client id present, please select a client first");
-      return;
-    }
-    values.userId = selectedUserId;
-    values.accountantId = loggedInUser.userId;
-    this.setState({apiCallInProgress: true, apiCallType: 'invoice'});
-    sendAuthenticatedAsyncRequest(
-      "/saveImageData",
-      "POST", 
-      {values: values},
-      (r) => {
-        this.setState({apiCallInProgress: false, apiCallType: 'none'});
-        this.props.history.push("/workspace/invoice");
-      }
-    );
-  }
 
   updateImageStatus = (uri, apiCallType) => {
     this.setState({apiCallInProgress: true, apiCallType: apiCallType});
@@ -110,32 +70,26 @@ class Invoice extends Component {
 
   // To enable form submitting from outside form tag. Can't put this in state. Causes too many renders and depth exceeds
   formSubmitter = null;
-  bindFormSubmitter(submitter) {
+  bindSubmitForm(submitter) {
     this.formSubmitter = submitter ;
   }
   
   render(){
       
-    const { selectedImageID , selectedImageFileType, selectedImageStamp, apiCallInProgress, apiCallType, categories} = this.state;
+    const { selectedImageID , selectedImageFileType, selectedImageStamp, apiCallInProgress, apiCallType, selectedUserId, loggedInUser} = this.state;
     const selectedImagePath = BASE_URL + selectedImageStamp;
-    const validationSchema = Yup.object().shape({
-      reference_1: Yup.string().required("נדרש"),
-      reference_2: Yup.string().required("נדרש"),
-      jeDate: Yup.date().required("נדרש"),
-      details: Yup.string().required("נדרש"),
-      categoryId: Yup.string().required("נדרש"),
-      vendorName: Yup.string().required("נדרש"),
-      sum: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
-      vat: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
-      imageId: Yup.string().required("נדרש")
-    })
 
-    const commonTextfieldClasses = "bottom-spacer";
 
     return (
       <Grid container className="canvas-container">
         <Grid item container sm={2} direction="column" justify="flex-end" alignItems="center">
-          <Button className="bottom-btn-container" variant="blue" disabled={apiCallInProgress} onClick={(e) => this.formSubmitter(e)}>
+          <Button className="bottom-btn-container" 
+            variant="blue" 
+            disabled={apiCallInProgress} 
+            onClick={(e) => {
+              this.setState({apiCallInProgress: true, apiCallType: 'invoice'});
+              this.formSubmitter(e)}
+          }>
             {apiCallInProgress 
             ? apiCallType === 'invoice' 
               ? "submitting ..."
@@ -146,144 +100,18 @@ class Invoice extends Component {
         </Grid>
         <Grid item container sm={10} style={{paddingTop:"8%"}}>
           <Grid item container sm={4} direction="column" alignItems="center" >
-            <Formik
-              initialValues={{ 
-                reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', 
-                vat: '', sum: '', imageId: selectedImageID || '', vendorName: '' 
-              }}    
-              onSubmit={(values,  { setSubmitting }) => {
-                this.uploadInvoice(values)
-                setSubmitting(false);
-              }}
-              enableReinitialize={true}
-              validationSchema={validationSchema} 
-              >
-              {({ values, touched, errors, handleSubmit, handleChange, handleBlur, setFieldValue, submitForm }) => {
-                this.bindFormSubmitter(submitForm);
-                return (
-                  <form onSubmit={handleSubmit} style={{width: "75%"}}>
-                    {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
-                    <div> 
-                      <input
-                        name="imageId"
-                        type="hidden"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={selectedImageID || ''}
-                        variant="filled"
-                      />
-                    </div>
-                    <div> 
-                      <TextField
-                        type="date"
-                        placeholder="Date"
-                        name="jeDate"
-                        value={values.jeDate}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        fullWidth={true}
-                        containerClasses={commonTextfieldClasses}
-                        feedback={touched.jeDate && errors.jeDate ? errors.jeDate : null}
-                        />
-                    </div>
-                    <div>
-                      <Select
-                        value={values.category}
-                        onChange={(selectedOption) => {
-                            setFieldValue('categoryId', selectedOption.categoryId)
-                            setFieldValue('vat', selectedOption.vatpercent)
-                        }}
-                        options={categories}
-                        labelKey="categoryLabel"
-                        valueKey="categoryId"
-                        placeholder="Category"
-                        onBlur={handleBlur}
-                        containerClasses="bottom-spacer"
-                        feedback={touched.categoryId && errors.categoryId ? errors.categoryId : null}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        type="number"
-                        placeholder="Sum"
-                        name="sum"
-                        value={values.sum}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        fullWidth={true} 
-                        containerClasses={commonTextfieldClasses}
-                        feedback={touched.sum && errors.sum ? errors.sum : null}
-                        />
-                    </div>
-                    <div>
-                      <TextField
-                        type="text"
-                        placeholder="Vendor"
-                        name="vendorName"
-                        value={values.vendorName}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        fullWidth={true} 
-                        containerClasses={commonTextfieldClasses}
-                        feedback={touched.vendorName && errors.vendorName ? errors.vendorName : null}
-                        />
-                    </div>
-                    <div>
-                      <TextField
-                        type="text"
-                        placeholder="Details"
-                        name="details"
-                        value={values.details}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        fullWidth={true} 
-                        containerClasses={commonTextfieldClasses}
-                        feedback={touched.details && errors.details ? errors.details : null}
-                        />
-                    </div>
-                    <div>
-                      <TextField
-                        type="text"
-                        placeholder="Reference One"
-                        name="reference_1"
-                        value={values.reference_1}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        fullWidth={true} 
-                        containerClasses={commonTextfieldClasses}
-                        feedback={touched.reference_1 && errors.reference_1 ? errors.reference_1 : null}
-                        />
-                    </div>
-                    <div>
-                      <TextField
-                        type="text"
-                        placeholder="Reference Two"
-                        name="reference_2"
-                        value={values.reference_2}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        fullWidth={true} 
-                        containerClasses={commonTextfieldClasses}
-                        feedback={touched.reference_2 && errors.reference_2 ? errors.reference_2 : null}
-                        />
-                    </div>
-                    <div>
-                      <TextField
-                        type="text"
-                        placeholder="VAT"
-                        name="vat"
-                        value={values.vat}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        fullWidth={true} 
-                        containerClasses={commonTextfieldClasses}
-                        feedback={touched.vat && errors.vat ? errors.vat : null}
-                        />
-                    </div>
-                  </form>
-                )
-              }}
-            </Formik>
+            <InvoiceForm 
+              imageId={selectedImageID} 
+              selectedUserId={selectedUserId} 
+              isUserIdRequired={true}
+              onSubmit={() => {
+                this.setState({apiCallInProgress: false, apiCallType: 'none'});
+                this.props.history.push("/workspace/invoice")}
+              }
+              bindSubmitForm={this.bindSubmitForm.bind(this)}
+              loggedInUser={loggedInUser}
+              formStyle={{width: "75%"}}
+            />
           </Grid>
           <Grid item sm={1}></Grid>
           <Grid item container sm={7} >

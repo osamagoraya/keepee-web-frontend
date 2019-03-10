@@ -9,10 +9,64 @@ import Caption from '../Common/Caption';
 import ClipIcon from '@material-ui/icons/AttachFile';
 import FileIcon from '@material-ui/icons/Description';
 import CameraIcon from '@material-ui/icons/CameraAlt';
+import AddIcon from '@material-ui/icons/Add';
 
 import Button from '../Common/Button';
 
+import InvoiceForm from '../Forms/InvoiceForm/InvoiceForm';
+
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
+import Auth from '../../Services/Auth';
+import DismissableDialog from '../Common/DismissableDialog';
+
+class InvoiceFormDialog extends Component {
+
+  state = {
+    isSubmitting: false
+  }
+
+  formSubmitter = null;
+  bindSubmitForm(submitter) {
+    console.log("submitted updated");
+    this.formSubmitter = submitter ;
+  }
+
+
+  render () {
+    const {isSubmitting} = this.state;
+    const button = (
+      <Button className="left-bottom-fab-btn" fab onClick={() => this.refs["createJeDialog"].handleClickOpen() }>
+        <AddIcon />
+      </Button>
+    );
+    return (
+      <DismissableDialog
+        ref="createJeDialog"
+        openDialogButton={button}
+        title="Create Invoice"
+      >
+        <InvoiceForm 
+          onSubmit={() => {
+            this.setState({isSubmitting: false});
+            this.props.onSubmit();
+          }}
+          bindSubmitForm={this.bindSubmitForm.bind(this)}
+          loggedInUser={Auth.getLoggedInUser()}
+        />
+        <Button 
+            variant="blue" 
+            // disabled={isSubmitting} TODO: allow this, currently backend fails
+            disabled={true} 
+            onClick={(e) => {
+              this.setState({isSubmitting: true});
+              this.formSubmitter(e)}
+          }>
+            {isSubmitting ? "Creating ...": "continue"}
+          </Button>
+      </DismissableDialog>
+    );
+  }
+}
 
 class Batch extends Component {
 
@@ -64,6 +118,7 @@ class Batch extends Component {
     else if (name.length === 2) return "0"+name;
     else return name;
   }
+
   
   render() {
     const {batch, apiCallInProgress, apiCallType} = this.state;
@@ -162,6 +217,11 @@ class Batch extends Component {
             headerClasses="header-class"
             wrapperClasses="tablewrap"
             /> 
+            {
+              batch.batchStatus === 'open'
+              ? <InvoiceFormDialog onSubmit={() => this.fetchBatchDetails(batch.batchId)}/> // count not bumped on list view
+              : null  
+            }
             {
               batch.batchStatus === 'open' && batch.journal_entries.length > 0
               ? <Button className="right-bottom-btn" variant="blue" onClick={this.confirmBatch.bind(this)}>

@@ -56,3 +56,11 @@ tbody > tr > td {
   float: right;
   margin-right: 22px !important;
 }
+
+.left-bottom-fab-btn {
+  width: 37px !important;
+  height: 30px !important;
+  float: left;
+  margin-left: 40px !important;
+}
+
