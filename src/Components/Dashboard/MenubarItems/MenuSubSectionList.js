@@ -95,7 +95,7 @@ class MenuSubSectionList extends React.Component {
               </span>
             ))}
           </List>
-          : <p>No data for selected user</p>
+          : <p>Nothing new here</p>
         }
         
       </div>

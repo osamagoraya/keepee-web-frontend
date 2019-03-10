@@ -5,6 +5,7 @@ import logoUser from '../Assets/Images/Path_902.svg';
 import logoSettings from '../Assets/Images/Path_1054.svg'
 
 import InvoiceMenubarItems from '../Components/Dashboard/MenubarItems/InvoiceMenubarItems';
+import BatchMenubarItems from '../Components/Dashboard/MenubarItems/BatchMenubarItems';
 import Dummy from '../Components/Dummy';
 
 
@@ -22,7 +23,7 @@ const appRoutes = [
       {
         label: "Batches",
         path: "/workspace/batch",
-        component: Dummy
+        component: BatchMenubarItems
       },
       {
         label: "Account Inquiries",
