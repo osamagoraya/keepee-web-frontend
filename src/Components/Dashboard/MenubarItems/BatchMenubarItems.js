@@ -12,6 +12,7 @@ class BatchMenubarItems extends React.Component {
   
   state = {
     listData: null,
+    loading: false,
     loggedInUser: Auth.getLoggedInUser()
   }
 
@@ -26,17 +27,24 @@ class BatchMenubarItems extends React.Component {
   }
 
   fetchListData() {
-    this.setState({listData: []});
+    if (this.state.loading)
+      return;
+    this.setState({listData: [], loading: true});
     sendAuthenticatedAsyncRequest(
       "/getBatches",
       "POST",
       {accountantId: this.state.loggedInUser.userId},
-      (r) => this.setState({listData: this.batchListItemFormatter(JSON.parse(r.data.body))})
+      (r) => this.setState({
+        listData: this.batchListItemFormatter(JSON.parse(r.data.body)),
+        loading: false
+      })
     );
   }
 
   batchListItemFormatter = (data) => {
     if (!data) return [];
+    
+    data.sort((o1, o2) => parseInt(o2.batchId,10) - parseInt(o1.batchId,10));
 
     const batchName = (batch) => {
       let name = batch.batchId.toString();

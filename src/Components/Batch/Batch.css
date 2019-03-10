@@ -50,3 +50,9 @@ tbody > tr > td {
 .table  {
     table-layout: 'auto' !important; 
 }
+
+.right-bottom-btn {
+  width: 150px;
+  float: right;
+  margin-right: 22px !important;
+}
