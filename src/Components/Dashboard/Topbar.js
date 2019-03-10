@@ -2,6 +2,8 @@ import React from 'react';
 
 import Select from 'react-select';
 
+import {withRouter} from 'react-router-dom';
+
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 
 // import {Grid} from '@material-ui/core';
@@ -69,6 +71,7 @@ class Topbar extends React.Component {
     if(selectedOption.value){
       this.setState({ selectedUserID: selectedOption.value});
       this.props.onUserChange(selectedOption.value);
+      this.props.history.push("/workspace/invoice");
     }
   }
 
@@ -94,4 +97,4 @@ class Topbar extends React.Component {
   }
  }
 
-export default Topbar;
+export default withRouter(Topbar);

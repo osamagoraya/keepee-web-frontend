@@ -1,6 +1,6 @@
 import React from 'react';
 import Moment from 'moment';
-
+import {withRouter} from 'react-router-dom';
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
 
 import MenuSubSectionList from './MenuSubSectionList';
@@ -24,6 +24,7 @@ class InvoiceMenubarItems extends React.Component {
       this.setState({selectedUserId: nextProps.selectedUserId});
       this.fetchListData(nextProps.selectedUserId);
     }
+    // if route changed to /workspace/invoice, fetch list data
   }
 
   fetchListData(selectedUserId) {
@@ -74,4 +75,4 @@ class InvoiceMenubarItems extends React.Component {
   }
 }
 
-export default InvoiceMenubarItems;
+export default withRouter(InvoiceMenubarItems);
