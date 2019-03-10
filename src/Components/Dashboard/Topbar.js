@@ -71,7 +71,7 @@ class Topbar extends React.Component {
     if(selectedOption.value){
       this.setState({ selectedUserID: selectedOption.value});
       this.props.onUserChange(selectedOption.value);
-      this.props.history.push("/workspace/invoice");
+      this.props.history.push("/workspace");
     }
   }
 

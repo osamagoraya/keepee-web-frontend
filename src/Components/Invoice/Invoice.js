@@ -24,10 +24,11 @@ class Invoice extends Component {
       selectedImageID: this.props.match.params.imageId,
       selectedImageStamp: this.props.match.params.imageStamp,
       selectedImageFileType: this.props.match.params.imageType,
-      imageAngle: 90,
+      imageAngle: 0,
       selectedUserId: this.props.selectedUserId,
       loggedInUser: Auth.getLoggedInUser(),
-      asyncInProgress: false,
+      apiCallInProgress: false,
+      apiCallType: 'none',
       categories: []
     }
   }
@@ -76,13 +77,26 @@ class Invoice extends Component {
     }
     values.userId = selectedUserId;
     values.accountantId = loggedInUser.userId;
-    this.setState({asyncInProgress: true});
+    this.setState({apiCallInProgress: true, apiCallType: 'invoice'});
     sendAuthenticatedAsyncRequest(
       "/saveImageData",
       "POST", 
       {values: values},
       (r) => {
-        this.setState({asyncInProgress: false}); 
+        this.setState({apiCallInProgress: false, apiCallType: 'none'});
+        this.props.history.push("/workspace/invoice");
+      }
+    );
+  }
+
+  updateImageStatus = (uri, apiCallType) => {
+    this.setState({apiCallInProgress: true, apiCallType: apiCallType});
+    sendAuthenticatedAsyncRequest(
+      uri,
+      "POST", 
+      {imageId: this.state.selectedImageID, email: "not available"},
+      (r) => {
+        this.setState({apiCallInProgress: false, apiCallType: apiCallType});
         this.props.history.push("/workspace/invoice");
       }
     );
@@ -102,8 +116,7 @@ class Invoice extends Component {
   
   render(){
       
-    const { selectedImageID , selectedImageFileType, selectedImageStamp, asyncInProgress, categories} = this.state;
-    console.log(categories);
+    const { selectedImageID , selectedImageFileType, selectedImageStamp, apiCallInProgress, apiCallType, categories} = this.state;
     const selectedImagePath = BASE_URL + selectedImageStamp;
     const validationSchema = Yup.object().shape({
       reference_1: Yup.string().required("נדרש"),
@@ -122,8 +135,13 @@ class Invoice extends Component {
     return (
       <Grid container className="canvas-container">
         <Grid item container sm={2} direction="column" justify="flex-end" alignItems="center">
-          <Button className="bottom-btn-container" variant="blue" onClick={(e) => this.formSubmitter(e)}>
-            {asyncInProgress ? "submitting ...": "continue"}
+          <Button className="bottom-btn-container" variant="blue" disabled={apiCallInProgress} onClick={(e) => this.formSubmitter(e)}>
+            {apiCallInProgress 
+            ? apiCallType === 'invoice' 
+              ? "submitting ..."
+              : "continue"
+            : "continue"
+            }
           </Button>
         </Grid>
         <Grid item container sm={10} style={{paddingTop:"8%"}}>
@@ -286,11 +304,21 @@ class Invoice extends Component {
               </CardActionArea>
             </Card>
             <div className="doc-action-btn-box">
-              <Button size="small" variant="grey" className="doc-action-btns">
-                Not Relevant
+              <Button size="small" variant="grey" className="doc-action-btns" disabled={apiCallInProgress} onClick={() => this.updateImageStatus('/irrelevantPicture', 'irrelevant')}>
+                {apiCallInProgress 
+                  ? apiCallType === 'irrelevant' 
+                    ? "updating ..."
+                    : "Not Relevant"
+                  : "Not Relevant"
+                  }
               </Button>  
-              <Button size="small" variant="grey" className="doc-action-btns">
-                New picture
+              <Button size="small" variant="grey" className="doc-action-btns" disabled={apiCallInProgress} onClick={() => this.updateImageStatus('/retakePicture', 'declined')}>
+                {apiCallInProgress 
+                  ? apiCallType === 'declined' 
+                    ? "updating ..."
+                    : "New Picture"
+                  : "New Picture"
+                  }
               </Button>  
               <Button fab onClick={this.transformImage} className="k-fab">
                 <img src={iconRotate} alt="Not Found"/>

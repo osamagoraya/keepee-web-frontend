@@ -5,6 +5,7 @@ import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestServi
 
 import MenuSubSectionList from './MenuSubSectionList';
 
+const localPath = "/workspace/invoice";
 
 class InvoiceMenubarItems extends React.Component {
   
@@ -24,7 +25,9 @@ class InvoiceMenubarItems extends React.Component {
       this.setState({selectedUserId: nextProps.selectedUserId});
       this.fetchListData(nextProps.selectedUserId);
     }
-    // if route changed to /workspace/invoice, fetch list data
+    else if (nextProps.location.pathname === localPath) {
+      this.fetchListData(nextProps.selectedUserId);
+    }
   }
 
   fetchListData(selectedUserId) {
@@ -44,9 +47,6 @@ class InvoiceMenubarItems extends React.Component {
 
   invoiceListItemFormatter = (data) => {
     if (!data) return [];
-  
-    //TODO: get this from approutes or somewhere
-    const localPath = "/workspace/invoice";
 
     const imageStamp = (imageName) => {
       let parts = imageName.split('/');

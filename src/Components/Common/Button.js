@@ -17,6 +17,7 @@ const KButton = (props) => (
       classes={{root: props.variant === 'blue' ? 'k-blue-button' : 'k-grey-button', label: 'k-button-text'}}
       className={props.className}
       onClick={props.onClick}
+      disabled={props.disabled}
     >   
       {props.children}
     </Button>
