@@ -114,3 +114,61 @@
 .k-select-container .css-d8oujb {
   display: none;
 }
+
+/* 
+* bootstrap table overrides
+*/
+
+.k-table-container {
+  padding: 0% 2% 1% 2%;
+}
+
+.k-header-row {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04);
+  border-radius: 3px !important;
+  background-color: #dbdada;
+  margin-bottom: 10px;
+}
+
+.k-header-cell {
+  color: #4d4f5c;
+  font-family: Heebo;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 20px;
+  text-transform: capitalize;
+  padding: 16px 0px;
+}
+
+
+.k-body-cell {
+  vertical-align: middle !important;
+  text-align: left;
+  color: #4d4f5c;
+  font-family: Heebo;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 10px !important;
+  background-color: #f8f8f8 !important;
+  padding: 0px !important;
+  border: none !important;
+}
+
+.k-force {
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.04);
+  /* border-radius: 3px; */
+  background-color: white !important;
+  margin: 6px 0px;
+  padding: 15px 10px;
+  height: 40px;
+}
+
+tr td:first-child .k-force {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+tr td:last-child .k-force {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}

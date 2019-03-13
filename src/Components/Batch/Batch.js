@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 
-import BootstrapTable from 'react-bootstrap-table-next';
-// import cellEditFactory from 'react-bootstrap-table2-editor';
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import {BootstrapTable, cellEditFactory} from '../Common/Table';
 import '../Batch/Batch.css'
 import Caption from '../Common/Caption';
 import ClipIcon from '@material-ui/icons/AttachFile';
@@ -127,72 +125,74 @@ class Batch extends Component {
       {
         dataField: 'jeid',
         text: 'JE',
+        headerClasses: 'k-header-cell',
         headerAlign: 'center',
-        headerClasses: 'headerRowColumn',
-        classes: 'cell',
-        headerStyle: { width: '10%' }
+        classes: 'k-body-cell',
+        headerStyle: { width: '10%' },
+        style: {textAlign: 'center'},
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       }, {
         dataField: 'categoryLabel',
         text: 'Category',
-        headerAlign: 'left',
-        headerClasses: 'headerRowColumn',
-        classes: 'cell'
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       }, {
         dataField: 'reference_one',
         text: 'Ref 1',
-        headerAlign: 'left',
-        headerClasses: 'headerRowColumn',
-        classes: 'cell',
-        headerStyle: { width: '10%' }
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        headerStyle: { width: '10%' },
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       }, {
         dataField: 'reference_two',
         text: 'Ref 2',
-        headerAlign: 'left',
-        headerClasses: 'headerRowColumn',
-        classes: 'cell',
-        headerStyle: { width: '10%' }
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        headerStyle: { width: '10%' },
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       },
       {
         dataField: 'jeDate',
-        formatter: (cell, row, index) => (Moment(cell,'x').format("MM.DD.YY")),
         text: 'Date',
-        headerAlign: 'left',
-        headerClasses: 'headerRowColumn',
-        classes: 'cell',
-        headerStyle: { width: '10%' }
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        headerStyle: { width: '10%' },
+        formatter: (cell, row, index) => <div className='k-force'>{Moment(cell,'x').format("MM.DD.YY")}</div>
       },{
         dataField: 'vendor',
         text: 'Vendor',
-        headerAlign: 'left',
-        headerClasses: 'headerRowColumn',
-        classes: 'cell'
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       },
       {
         dataField: 'details',
         text: 'Details',
-        headerAlign: 'left',
-        headerClasses: 'headerRowColumn',
-        classes: 'cell'
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       },
       {
         dataField: 'sum',
         text: 'Sum',
-        headerAlign: 'left',
-        headerClasses: 'headerRowColumn',
-        classes: 'cell'
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       },
       {
         dataField: 'imageType',
         text: '',
         headerFormatter: (col, colIdx) => <ClipIcon />,
-        formatter: (cell) => cell === "image" ? <CameraIcon /> : <FileIcon />,
-        headerAlign: 'left',
-        headerClasses: 'headerRowColumn',
-        classes: 'cell',
+        formatter: (cell, row, index) => <div className='k-force' style={{padding: "8px 10px"}}>{cell === "image" ? <CameraIcon /> : <FileIcon />}</div>,
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
         headerStyle: { width: '5%' }
       }
     ];
-    
+    const cellEdit = cellEditFactory({
+      mode: 'dbclick'
+    });
     return (
       <div className="canvas-container batch-container">
       <Caption style={{
@@ -214,8 +214,9 @@ class Batch extends Component {
             data={batch.journal_entries} 
             columns={columns} 
             bordered={false}
-            headerClasses="header-class"
-            wrapperClasses="tablewrap"
+            headerClasses="k-header-row"
+            wrapperClasses="k-table-container"
+            cellEdit={cellEdit}
             /> 
             {
               batch.batchStatus === 'open'

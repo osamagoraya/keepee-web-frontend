@@ -3,54 +3,6 @@
   padding: 3% 1% 2% 1%;
 }
 
-
-.headerRowColumn {
-    height: 5%;
-    color: #4d4f5c;
-    font-family: Heebo;
-    font-size: 13px;
-    font-weight: 700;
-    line-height: 20px;
-}
-
-.header-class {
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04);
-    border-radius: 3px !important;
-    background-color: #dbdada;
-    height : 37px;
-}
-
-.cell {
-text-align: left;
-color: #4d4f5c;
-font-family: Heebo;
-font-size: 10px;
-font-weight: 400;
-line-height: 10px !important;
-background-color: #ffffff !important;
-}
-
-tr td:first-child {
-    text-align: center;
-}
-
-tr th:first-child {
-    border-radius: 3px !important; 
-}
-
-
-tbody > tr > td {
-    border-top: 6px solid #f8f8f8 !important;
-}
-
-.tablewrap {
-    padding: 0% 2% 1% 2%;
-}
-
-.table  {
-    table-layout: 'auto' !important; 
-}
-
 .right-bottom-btn {
   width: 150px;
   float: right;
