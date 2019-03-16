@@ -7,6 +7,7 @@ import Topbar from '../../Components/Dashboard/Topbar';
 import {Switch} from 'react-router-dom';
 import Auth from '../../Services/Auth';
 import Batch from '../../Components/Batch/Batch';
+import AccountInquiry from '../../Components/AccountInquiry/AccountInquiry';
 
 import ProtectedRoute from '../../Components/Routes/ProtectedRoute';
 
@@ -37,6 +38,7 @@ class Dashboard extends Component {
               {/* TODO: move these routes in AppRoute or something similar? */}
               <ProtectedRoute path="/workspace/invoice/:imageId/:imageType/:imageStamp" component={(props) => <Invoice selectedUserId={selectedUserId} {...props}/>} exact />
               <ProtectedRoute path="/workspace/batch/:batchId" component={Batch} exact/>
+              <ProtectedRoute path="/workspace/account-inquiry" component={AccountInquiry} exact/>
             </Switch>
           </div>
         </div>
