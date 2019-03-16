@@ -16,6 +16,7 @@ const ExpansionPanel = withStyles({
     fontSize: 13,
     fontWeight: 700,
     // border: '1px solid rgba(0,0,0,.125)',
+    minHeight: "40px !important",
     boxShadow: 'none',
     '&:not(:last-child)': {
       borderBottom: 0,
@@ -34,9 +35,9 @@ const ExpansionPanelSummary = withStyles({
     backgroundColor: 'rgba(0,0,0,.03)',
     borderBottom: '1px solid rgba(0,0,0,.125)',
     marginBottom: -1,
-    minHeight: 56,
+    minHeight: 40,
     '&$expanded': {
-      minHeight: 56,
+      minHeight: 40,
     },
   },
   content: {
