@@ -62,59 +62,6 @@
   border-bottom: 2px solid #3794a5 !important;
 }
 
-/*
-* react-select style overrides
-*/
-
-/* Main select container */
-.k-select-container .css-vj8t7z,
-/* Active state */
-.k-select-container .css-2o5izw, 
-.k-select-container .css-2o5izw:hover,
-.k-select-container .css-2o5izw:focus {
-  background-color: rgba(255, 255, 255, 0.48) !important;
-  border-top-left-radius: 3px !important;
-  border-top-right-radius: 3px !important;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04);
-  border: none;
-  border-bottom: 1px solid #828389;
-}
-
-.k-select-container .css-2o5izw:hover,
-.k-select-container .css-2o5izw:focus {
-  border-bottom: 2px solid #3794a5;
-}
-
-/* Text styles */
-.k-select-container .css-xp4uvy, 
-.k-select-container .css-1g6gooi input {
-  color: #c4c0c0 !important;
-  font-family: Heebo !important;
-  font-size: 11px !important;
-  font-weight: 500 !important;
-}
-
-/* Placeholder */
-.k-select-container .css-1492t68 {
-  color: #e4e3e3 !important;
-  font-family: Heebo !important;
-  font-size: 11px !important;
-  font-weight: 500 !important;
-}
-
-
-.k-select-container .css-bl6clz {
-  border: none !important;
-  background: transparent !important;
-}
-
-/* dropdown icon border */
-.k-select-container .css-d8oujb {
-  display: none;
-}
-
 /* 
 * bootstrap table overrides
 */

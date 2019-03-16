@@ -6,6 +6,7 @@ import logoSettings from '../Assets/Images/Path_1054.svg'
 
 import InvoiceMenubarItems from '../Components/Dashboard/MenubarItems/InvoiceMenubarItems';
 import BatchMenubarItems from '../Components/Dashboard/MenubarItems/BatchMenubarItems';
+import AccountInquiryFilters from '../Components/Dashboard/MenubarItems/AccountInquiryFilters';
 import Dummy from '../Components/Dummy';
 
 
@@ -28,7 +29,7 @@ const appRoutes = [
       {
         label: "Account Inquiries",
         path: "/workspace/account-inquiry",
-        component: Dummy
+        component: AccountInquiryFilters
       },
       {
         label: "VAT Report",

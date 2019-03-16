@@ -1,0 +1,26 @@
+.k-textfield-transparent-plain {
+  background-color: transparent !important;
+
+  border-top-left-radius: 0px !important;
+  border-top-right-radius : 0px !important;
+  box-shadow: none;
+}
+
+.k-textfield-transparent-plain input {
+  padding: 0px 0px;
+  color: #c4c0c0;
+  font-family: Heebo;
+  font-size: 11px;
+  font-weight: 400;
+  direction: rtl;
+  height: 25px;
+  text-align: right;
+}
+
+.k-textfield-transparent-focus:before {
+  border-bottom: 1px solid #828389 !important;
+}
+
+.k-textfield-transparent-focus:after {
+  border-bottom: 1px solid #3794a5 !important;
+}
