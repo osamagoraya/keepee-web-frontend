@@ -10,7 +10,7 @@ const style = {
     fontFamily: 'Heebo',
     fontSize: 13,
     fontWeight: 300,
-    fontStyle: 'italic'
+    // fontStyle: 'italic'
   },
   label: {
     color: "rgba(0, 0, 0, 0.54)",

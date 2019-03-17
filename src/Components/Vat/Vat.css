@@ -1,0 +1,9 @@
+.vat-container {
+  overflow: scroll;
+  /* padding: 3% 1% 2% 1%; */
+  padding: 8% 5% 0 5%;
+}
+
+.vat-button {
+  width: 100%;
+}

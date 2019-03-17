@@ -14,10 +14,11 @@ const KButton = (props) => (
     {props.children}
     </Fab> 
   : <Button 
-      classes={{root: props.variant === 'blue' ? 'k-blue-button' : 'k-grey-button', label: 'k-button-text'}}
+      classes={{root: props.variant ? `k-${props.variant}-button` : 'k-grey-button', label: 'k-button-text'}}
       className={props.className}
       onClick={props.onClick}
       disabled={props.disabled}
+      size={props.size}
     >   
       {props.children}
     </Button>

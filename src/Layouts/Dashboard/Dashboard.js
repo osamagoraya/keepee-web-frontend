@@ -8,6 +8,7 @@ import {Switch} from 'react-router-dom';
 import Auth from '../../Services/Auth';
 import Batch from '../../Components/Batch/Batch';
 import AccountInquiry from '../../Components/AccountInquiry/AccountInquiry';
+import Vat from '../../Components/Vat/Vat';
 
 import ProtectedRoute from '../../Components/Routes/ProtectedRoute';
 
@@ -39,6 +40,7 @@ class Dashboard extends Component {
               <ProtectedRoute path="/workspace/invoice/:imageId/:imageType/:imageStamp" component={(props) => <Invoice selectedUserId={selectedUserId} {...props}/>} exact />
               <ProtectedRoute path="/workspace/batch/:batchId" component={Batch} exact/>
               <ProtectedRoute path="/workspace/account-inquiry" component={AccountInquiry} exact/>
+              <ProtectedRoute path="/workspace/report/vat/:vatId" component={Vat} exact/>
             </Switch>
           </div>
         </div>

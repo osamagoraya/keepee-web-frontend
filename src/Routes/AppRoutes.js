@@ -7,6 +7,7 @@ import logoSettings from '../Assets/Images/Path_1054.svg'
 import InvoiceMenubarItems from '../Components/Dashboard/MenubarItems/InvoiceMenubarItems';
 import BatchMenubarItems from '../Components/Dashboard/MenubarItems/BatchMenubarItems';
 import AccountInquiryFilters from '../Components/Dashboard/MenubarItems/AccountInquiryFilters';
+import VatMenubarItems from '../Components/Dashboard/MenubarItems/VatMenubarItems';
 import Dummy from '../Components/Dummy';
 
 
@@ -34,7 +35,7 @@ const appRoutes = [
       {
         label: "VAT Report",
         path: "/workspace/report/vat",
-        component: Dummy
+        component: VatMenubarItems
         
       },
       {
