@@ -93,7 +93,7 @@ class Batch extends Component {
       "/getBatch",
       "POST", 
       {batchId: batchId},
-      (r) => this.setState({batch: r.data, apiCallInProgress: false, apiCallType: 'none'})
+      (r) => this.setState({batch: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
     );
   }
 
