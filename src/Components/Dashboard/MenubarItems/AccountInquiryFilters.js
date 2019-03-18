@@ -50,7 +50,7 @@ class MenuSubSectionFilters extends React.Component {
     const {minCategory, maxCategory, minDate, maxDate } = values;
     this.props.history.push({
       pathname: '/workspace/account-inquiry',
-      search: `?minCat=${minCategory.categoryId}&maxCat=${maxCategory.categoryId}&minDate=${minDate}&maxDate=${maxDate}`
+      search: `?minCat=${minCategory.categoryNo}&maxCat=${maxCategory.categoryNo}&minDate=${minDate}&maxDate=${maxDate}`
     });
   }
 
