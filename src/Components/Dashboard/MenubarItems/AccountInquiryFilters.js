@@ -1,9 +1,10 @@
 import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
-import Select from '../../Common/Select';
 import { Formik } from 'formik';
+import {withRouter} from 'react-router-dom';
 
+import Select from '../../Common/Select';
 import TransparentTextField from '../../Common/TransparentTextField';
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
 
@@ -45,7 +46,12 @@ class MenuSubSectionFilters extends React.Component {
   }
 
   setParams (values) {
-    console.log("Set params", values);
+
+    const {minCategory, maxCategory, minDate, maxDate } = values;
+    this.props.history.push({
+      pathname: '/workspace/account-inquiry',
+      search: `?minCat=${minCategory.categoryId}&maxCat=${maxCategory.categoryId}&minDate=${minDate}&maxDate=${maxDate}`
+    });
   }
 
   fetchCategories() {
@@ -67,7 +73,6 @@ class MenuSubSectionFilters extends React.Component {
 
   render (){
     const {categories} = this.state;
-    console.log(categories);
     return (
       <Grid container style={style.accountInquiryContainer}>
         <Formik
@@ -159,4 +164,4 @@ class MenuSubSectionFilters extends React.Component {
   }
 }
 
-export default MenuSubSectionFilters;
+export default withRouter(MenuSubSectionFilters);

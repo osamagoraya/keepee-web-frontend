@@ -39,7 +39,7 @@ class Dashboard extends Component {
               {/* TODO: move these routes in AppRoute or something similar? */}
               <ProtectedRoute path="/workspace/invoice/:imageId/:imageType/:imageStamp" component={(props) => <Invoice selectedUserId={selectedUserId} {...props}/>} exact />
               <ProtectedRoute path="/workspace/batch/:batchId" component={Batch} exact/>
-              <ProtectedRoute path="/workspace/account-inquiry" component={AccountInquiry} exact/>
+              <ProtectedRoute path="/workspace/account-inquiry" component={AccountInquiry}/>
               <ProtectedRoute path="/workspace/report/vat/:vatId" component={Vat} exact/>
             </Switch>
           </div>
