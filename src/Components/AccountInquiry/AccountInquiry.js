@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 
+import {withRouter} from 'react-router-dom';
+import queryString from 'query-string';
+
 import {BootstrapTable} from '../Common/Table';
 import './AccountInquiry.css'
 import Chip from '@material-ui/core/Chip';
@@ -10,36 +13,66 @@ import CameraIcon from '@material-ui/icons/CameraAlt';
 import Button from '@material-ui/core/Button';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
+import Auth from '../../Services/Auth';
 
 class AccountInquiry extends Component {
 
   state = {
-    // selectedBatchId: this.props.match.params.batchId,
-    apiCallInProgress: false,
+    apiCallInProgress: true,
     apiCallType: 'fetch',
-    // batch: null
+    searchString: this.props.location.search,
+    filters: queryString.parse(this.props.location.search),
+    loggedInUser: Auth.getLoggedInUser()
   }
 
   componentDidMount() {
-    // this.fetchAccountInquiry({});
+    this.fetchAccountInquiry(this.state.filters);
   }
   
   componentWillReceiveProps(nextProps) {
-    // this.fetchAccountInquiry({});
+    const {search} = nextProps.location;
+    if (search === this.state.searchString){
+      console.log("props received but same search params");
+    } else {
+      console.log("new props received", nextProps.location.search);
+      const filters = queryString.parse(nextProps.location.search);
+      this.setState({
+        searchString: nextProps.location.search,
+        filters: filters
+      });
+      this.fetchAccountInquiry(filters);
+    }
   }
 
   fetchAccountInquiry(filters) {
+    if (Object.entries(filters).length === 0 
+        && filters.constructor === Object){
+      console.log("empty filters, not fetching report");
+      return;
+    } else console.log("fetching data for: ",filters)
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
-      "/account-inqury",
+      "/accountInquiry",
       "POST", 
-      {filters: filters},
-      (r) => this.setState({report: r.data, apiCallInProgress: false, apiCallType: 'none'})
+      {
+        accountantId: this.state.loggedInUser.userId , 
+        minCategoryNum: filters.minCat , 
+        maxCategoryNum: filters.maxCat , 
+        minDate: filters.minDate , 
+        maxDate: filters.maxDate
+      },
+      (r) => this.setState({report: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
     );
   }
 
-  categoryInformation() {
-    return <Chip className='category-chip' label="001-Category to 009-Category" onDelete={() => console.log("delete clicked")}/>
+  categoryInformation(report,apiCallInProgress) {
+    if (apiCallInProgress)
+      return "Loading ...";
+
+    return Object.keys(report).map((k,i)=>
+      <Chip className='category-chip' label={k} key={i} onDelete={() => console.log("delete clicked for ",k)}/>
+    );
+
   }
 
   generateData() {
@@ -60,13 +93,25 @@ class AccountInquiry extends Component {
       };
     })
   }
+
+  prepareData(data) {
+    return data.map(d => {
+      return {
+        ...d,
+        credit: parseFloat(d.sum) > 0 ? d.sum : 0,
+        debit: parseFloat(d.sum) <= 0 ? d.sum : 0,
+        balance: d.sum
+      }
+    });
+  }
     
   render() {
-    const {apiCallInProgress, apiCallType} = this.state;
+    const {apiCallInProgress, apiCallType, report} = this.state;
+    console.log(report);
 
     const columns = [
       {
-        dataField: 'jeid',
+        dataField: 'je_id',
         text: 'JE',
         headerClasses: 'k-header-cell',
         headerAlign: 'center',
@@ -75,21 +120,21 @@ class AccountInquiry extends Component {
         style: {textAlign: 'center'},
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       }, {
-        dataField: 'movement',
+        dataField: 'movement_no',
         text: 'Movement',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '10%' },
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       }, {
-        dataField: 'batchId',
+        dataField: 'batch_id',
         text: 'Batch',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '10%' },
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       }, {
-        dataField: 'reference_one',
+        dataField: 'reference_1',
         text: 'Reference',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
@@ -97,14 +142,14 @@ class AccountInquiry extends Component {
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       },
       {
-        dataField: 'date',
+        dataField: 'je_date',
         text: 'Date',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '10%' },
         formatter: (cell, row, index) => <div className='k-force'>{Moment(cell,'x').format("MM.DD.YY")}</div>
       },{
-        dataField: 'vendor',
+        dataField: 'vendor_name',
         text: 'Vendor',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
@@ -122,18 +167,18 @@ class AccountInquiry extends Component {
         text: 'Credit',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
-        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
+        formatter: (cell, row, index) => <div className='k-force'>{parseFloat(cell) > 0 ? cell : 0}</div>
       },
       {
         dataField: 'debit',
-        text: 'Credit',
+        text: 'Debit',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       },
       {
         dataField: 'balance',
-        text: 'Credit',
+        text: 'Balance',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
@@ -152,21 +197,34 @@ class AccountInquiry extends Component {
     return (
       <div className="canvas-container account-inquiry-container">
       <div className="category-chip-container">
-        {this.categoryInformation({})}
+        {this.categoryInformation(report,apiCallInProgress)}
         <div className="download-options" ><Button className="download-button">PDF</Button> | <Button className="download-button">XL</Button></div>
       </div>
       {
         apiCallInProgress && apiCallType === 'fetch'  
         ? null 
-        : 
-          <BootstrapTable 
+        : [ <BootstrapTable 
             keyField='id' 
-            data={this.generateData()} 
+            data={[]} 
             columns={columns} 
             bordered={false}
             headerClasses="k-header-row"
             wrapperClasses="k-table-container"
-            /> 
+            />,
+            Object.keys(report).map((k,i) => {
+              return (
+                <BootstrapTable 
+                key={i}
+                keyField='id' 
+                data={this.prepareData(report[k])} 
+                columns={columns} 
+                bordered={false}
+                headerClasses="k-header-row k-hidden-row"
+                wrapperClasses="k-table-container"
+                /> 
+              );
+            })
+          ]
       }
       </div>
     );
@@ -174,4 +232,4 @@ class AccountInquiry extends Component {
 }
 
 
-export default AccountInquiry;
+export default withRouter(AccountInquiry);

@@ -92,6 +92,10 @@
   margin-bottom: 10px;
 }
 
+.k-hidden-row {
+  visibility: collapse;
+}
+
 .k-header-cell {
   color: #4d4f5c;
   font-family: Heebo;
