@@ -14,6 +14,7 @@ import Button from '@material-ui/core/Button';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 import Auth from '../../Services/Auth';
+import GreenHeader from '../Common/GreenHeader';
 
 class AccountInquiry extends Component {
 
@@ -49,17 +50,25 @@ class AccountInquiry extends Component {
         && filters.constructor === Object){
       console.log("empty filters, not fetching report");
       return;
-    } else console.log("fetching data for: ",filters)
+    } else {
+      console.log("fetching data for: ",filters)
+    }
+    const {minCat,maxCat,minDate,maxDate} = filters;
+    if (!minCat || !maxCat || !minDate || !maxDate){
+      console.log("some values are missing");
+      return;
+    }
+
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
       "/accountInquiry",
       "POST", 
       {
         accountantId: this.state.loggedInUser.userId , 
-        minCategoryNum: filters.minCat , 
-        maxCategoryNum: filters.maxCat , 
-        minDate: filters.minDate , 
-        maxDate: filters.maxDate
+        minCategoryNum: minCat , 
+        maxCategoryNum: maxCat , 
+        minDate: minDate , 
+        maxDate: maxDate
       },
       (r) => this.setState({report: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
     );
@@ -73,25 +82,6 @@ class AccountInquiry extends Component {
       <Chip className='category-chip' label={k} key={i} onDelete={() => console.log("delete clicked for ",k)}/>
     );
 
-  }
-
-  generateData() {
-    return [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].map(i => {
-      return {
-        id: i,
-        jeid: i, 
-        movement: i,
-        batchId: '00'+i,
-        reference_one: 'Some reference',
-        date: '10-10-2018',
-        vendor: "Some vendor",
-        details: "Some details",
-        credit: i % 2 === 0 ? 0 : 150,
-        debit: i % 2 === 0 ? -150 : 0,
-        balance: i % 2 === 0 ? -150 : 150,
-        imageType: i % 2 === 0 ? 'image' : 'pdf',
-      };
-    })
   }
 
   prepareData(data) {
@@ -203,28 +193,32 @@ class AccountInquiry extends Component {
       {
         apiCallInProgress && apiCallType === 'fetch'  
         ? null 
-        : [ <BootstrapTable 
+        : <div> 
+          <BootstrapTable 
             keyField='id' 
             data={[]} 
             columns={columns} 
             bordered={false}
             headerClasses="k-header-row"
             wrapperClasses="k-table-container"
-            />,
-            Object.keys(report).map((k,i) => {
-              return (
-                <BootstrapTable 
-                key={i}
-                keyField='id' 
-                data={this.prepareData(report[k])} 
-                columns={columns} 
-                bordered={false}
-                headerClasses="k-header-row k-hidden-row"
-                wrapperClasses="k-table-container"
-                /> 
-              );
-            })
-          ]
+            />
+            {
+              Object.keys(report).map((k,i) => {
+                return (
+                  <div className="k-table-container" key={i}>
+                    <GreenHeader leftLabel={k} rightLabel={"Balance 12,345"}/>
+                    <BootstrapTable 
+                    keyField='id' 
+                    data={this.prepareData(report[k])} 
+                    columns={columns} 
+                    bordered={false}
+                    headerClasses="k-header-row k-hidden-row"
+                    /> 
+                  </div>
+                );
+              })
+            }
+            </div>
       }
       </div>
     );
