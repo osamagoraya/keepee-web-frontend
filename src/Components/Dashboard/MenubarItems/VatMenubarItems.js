@@ -2,6 +2,7 @@ import React from 'react';
 import Moment from 'moment';
 import {withRouter} from 'react-router-dom';
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
+import Auth from '../../../Services/Auth';
 
 import MenuSubSectionList from './MenuSubSectionList';
 
@@ -10,7 +11,8 @@ const localPath = "/workspace/report/vat";
 class VatMenubarItems extends React.Component {
   
   state = {
-    listData: null
+    listData: null,
+    loggedInUser: Auth.getLoggedInUser()
   }
 
   componentDidMount() {
@@ -36,28 +38,21 @@ class VatMenubarItems extends React.Component {
 
   fetchListData() {
     this.setState({listData: []});
-
-    setTimeout( () => this.setState({listData: this.vatListItemFormatter(this.prepareData())}), 500);
-    
-    return; 
-
-    this.setState({listData: []});
     sendAuthenticatedAsyncRequest(
       "/getVatReports",
       "POST",
-      {},
+      {accountantId: this.state.loggedInUser.userId},
       (r) => this.setState({listData: this.vatListItemFormatter(JSON.parse(r.data.body))})
     );
   }
 
   vatListItemFormatter = (data) => {
     if (!data) return [];
-
   
-    // console.log("Images received",data);
+    console.log("Reports received",data);
     return data.map(vat => ({
-        label: `${Moment(vat.startDate).format("MM.YY")} - ${Moment(vat.endDate).format("MM.YY")}`,
-        path: `${localPath}/${vat.vatId}`
+        label: `${Moment(vat.start_date).format("MM.YY")} - ${Moment(vat.end_date).format("MM.YY")}`,
+        path: `${localPath}/${vat.id}`
       })
     );
   }
