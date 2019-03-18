@@ -4,7 +4,7 @@ import './TransparentTextField.css';
 import FilledInput from "@material-ui/core/es/FilledInput";
 
 //TODO: custom style for date, and number
-const KTextField = (props) => (
+const KTransparentTextField = (props) => (
   <div className={props.containerClasses}>
   <FilledInput 
     type={props.type}
@@ -27,4 +27,4 @@ const KTextField = (props) => (
   </div>
 );
 
-export default KTextField;
+export default KTransparentTextField;

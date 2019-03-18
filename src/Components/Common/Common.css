@@ -36,6 +36,12 @@
   font-family: Heebo;
 }
 
+.k-transparent-button-text {
+  color: #616774;
+  font-family: Heebo;
+  text-transform: none;
+}
+
 .k-form-feedback {
   font-size: 0.8em;
   font-weight: 300;
