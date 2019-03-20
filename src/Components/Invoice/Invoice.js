@@ -108,6 +108,11 @@ class Invoice extends Component {
                 this.setState({apiCallInProgress: false, apiCallType: 'none'});
                 this.props.history.push("/workspace/invoice")}
               }
+              onValidationFailed={() => {
+                // TODO: Sending a warning, please change this method
+                if (apiCallInProgress)
+                  this.setState({apiCallInProgress: false, apiCallType: 'none'})}
+              }
               bindSubmitForm={this.bindSubmitForm.bind(this)}
               loggedInUser={loggedInUser}
               formStyle={{width: "75%"}}

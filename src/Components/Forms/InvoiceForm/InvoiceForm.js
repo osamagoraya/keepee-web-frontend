@@ -51,7 +51,6 @@ class InvoiceForm extends Component {
   
   uploadInvoice = (values) => {
     const {selectedUserId,loggedInUser} = this.state;
-    debugger;
     if (this.props.isUserIdRequired && !selectedUserId){
       alert ("No client id present, please select a client first");
       return;
@@ -76,7 +75,7 @@ class InvoiceForm extends Component {
   // }
   
   render(){
-    const {bindSubmitForm} = this.props;
+    const {bindSubmitForm, onValidationFailed} = this.props;
     const { categories, selectedImageID} = this.state;
 
     const validationSchema = Yup.object().shape({
@@ -107,6 +106,10 @@ class InvoiceForm extends Component {
         >
         {({ values, touched, errors, handleSubmit, handleChange, handleBlur, setFieldValue, submitForm }) => {
           bindSubmitForm(submitForm);
+          // validation has failed, let the caller know
+          if (Object.keys(errors).length !== 0){
+            onValidationFailed();
+          }
           return (
             <form onSubmit={handleSubmit} style={this.props.formStyle}>
               {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}

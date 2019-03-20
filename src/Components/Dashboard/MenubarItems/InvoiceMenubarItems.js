@@ -57,7 +57,7 @@ class InvoiceMenubarItems extends React.Component {
       return Moment(`${imageStamp(imageName)}`,'x').format("MM.DD.YY")
     }
   
-    // console.log("Images received",data);
+    console.log("Images received",data);
     return data.map(image => ({
         label: imageName(image.imageLink),
         path: `${localPath}/${image.imageId}/${image.imageType}/${imageStamp(image.imageLink)}`
