@@ -63,10 +63,10 @@ class Vat extends Component {
     const field7 = (field4 - (field5 + field6)).toFixed(2);
 
     return (
-      <div className="canvas-container ">
+      <div className="canvas-container vat-container">
         <Grid container>
           <Grid item md={2}></Grid>
-          <Grid item container md={8} className="vat-container">
+          <Grid item container md={8} >
             <Grid item md={12}> 
               <GreenHeader rightLabel="Deals"/>
                 <InvisibleTable>

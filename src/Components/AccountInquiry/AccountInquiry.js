@@ -23,7 +23,8 @@ class AccountInquiry extends Component {
     apiCallType: 'fetch',
     searchString: this.props.location.search,
     filters: queryString.parse(this.props.location.search),
-    loggedInUser: Auth.getLoggedInUser()
+    loggedInUser: Auth.getLoggedInUser(),
+    isValid: false
   }
 
   componentDidMount() {
@@ -50,16 +51,16 @@ class AccountInquiry extends Component {
         && filters.constructor === Object){
       console.log("empty filters, not fetching report");
       return;
-    } else {
-      console.log("fetching data for: ",filters)
-    }
+    } 
     const {minCat,maxCat,minDate,maxDate} = filters;
     if (!minCat || !maxCat || !minDate || !maxDate){
-      console.log("some values are missing");
+      console.log("NOT fetching account inquity, some values are missing", filters);
+      this.setState({isValid: false, report: undefined});
       return;
     }
 
-    this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
+    console.log("Everything seems fine, fetching account inquiry report");
+    this.setState({isValid: true, apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
       "/accountInquiry",
       "POST", 
@@ -74,9 +75,16 @@ class AccountInquiry extends Component {
     );
   }
 
-  categoryInformation(report,apiCallInProgress) {
+  categoryInformation(report,apiCallInProgress, isValid) {
+    // console.log("categoryInformation", report, apiCallInProgress);
+    if (!isValid)
+      return "All parameters are mandatory.";
+
     if (apiCallInProgress)
       return "Loading ...";
+
+    if (!report || Object.keys(report).length === 0)
+      return "No records in report. Adjust parameters accordingly."
 
     return Object.keys(report).map((k,i)=>
       <Chip className='category-chip' label={k} key={i} onDelete={() => console.log("delete clicked for ",k)}/>
@@ -94,10 +102,11 @@ class AccountInquiry extends Component {
       }
     });
   }
-    
+
   render() {
-    const {apiCallInProgress, apiCallType, report} = this.state;
-    console.log(report);
+    const {apiCallInProgress, apiCallType, report, isValid} = this.state;
+    console.log("rendering account inquiry: ", report);
+    // console.log("account inquiry ", report);
 
     const columns = [
       {
@@ -137,7 +146,7 @@ class AccountInquiry extends Component {
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '10%' },
-        formatter: (cell, row, index) => <div className='k-force'>{Moment(cell,'x').format("MM.DD.YY")}</div>
+        formatter: (cell, row, index) => <div className='k-force'>{Moment(cell).format("MM.DD.YY")}</div>
       },{
         dataField: 'vendor_name',
         text: 'Vendor',
@@ -187,11 +196,11 @@ class AccountInquiry extends Component {
     return (
       <div className="canvas-container account-inquiry-container">
       <div className="category-chip-container">
-        {this.categoryInformation(report,apiCallInProgress)}
+        {this.categoryInformation(report, apiCallInProgress, isValid)}
         <div className="download-options" ><Button className="download-button">PDF</Button> | <Button className="download-button">XL</Button></div>
       </div>
       {
-        apiCallInProgress && apiCallType === 'fetch'  
+        (apiCallInProgress && apiCallType === 'fetch') || (!report || Object.keys(report).length === 0)
         ? null 
         : <div> 
           <BootstrapTable 
@@ -202,23 +211,23 @@ class AccountInquiry extends Component {
             headerClasses="k-header-row"
             wrapperClasses="k-table-container"
             />
-            {
-              Object.keys(report).map((k,i) => {
-                return (
-                  <div className="k-table-container" key={i}>
-                    <GreenHeader leftLabel={k} rightLabel={"Balance 12,345"}/>
-                    <BootstrapTable 
-                    keyField='id' 
-                    data={this.prepareData(report[k])} 
-                    columns={columns} 
-                    bordered={false}
-                    headerClasses="k-header-row k-hidden-row"
-                    /> 
-                  </div>
-                );
-              })
-            }
-            </div>
+          {
+            Object.keys(report).map((k,i) => {
+              return (
+                <div className="k-table-container" key={i}>
+                  <GreenHeader leftLabel={k} rightLabel={"Balance 12,345"}/>
+                  <BootstrapTable 
+                  keyField='id' 
+                  data={this.prepareData(report[k])} 
+                  columns={columns} 
+                  bordered={false}
+                  headerClasses="k-header-row k-hidden-row"
+                  /> 
+                </div>
+              );
+            })
+          }
+          </div>
       }
       </div>
     );
