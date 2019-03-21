@@ -80,7 +80,7 @@ class InvoiceForm extends Component {
 
     const validationSchema = Yup.object().shape({
       reference_1: Yup.string().required("נדרש"),
-      reference_2: Yup.string().required("נדרש"),
+      reference_2: Yup.string(),
       jeDate: Yup.date().required("נדרש"),
       details: Yup.string().required("נדרש"),
       categoryId: Yup.string().required("נדרש"),
