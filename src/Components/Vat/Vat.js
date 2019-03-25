@@ -54,13 +54,13 @@ class Vat extends Component {
       return <Caption>Loading ...</Caption>;
     }
 
-    const field1 = parseFloat(report.deal_zero);
-    const field2 = parseFloat(report.deal_seventeen);
-    const field3 = parseFloat(report.deal_seventeen_tax);
-    const field4 = ((field2 * 0.17) - field3).toFixed(2);
-    const field5 = parseFloat(report.equipment_deal);
-    const field6 = parseFloat(report.others_deal);
-    const field7 = (field4 - (field5 + field6)).toFixed(2);
+    const field1 = Math.round(parseFloat(report.deal_zero));
+    const field2 = Math.round(parseFloat(report.deal_seventeen));
+    const field3 = Math.round(parseFloat(report.deal_seventeen_tax));
+    const field4 = Math.round(((field2 * 0.17) - field3).toFixed(2));
+    const field5 = Math.round(parseFloat(report.equipment_deal));
+    const field6 = Math.round(parseFloat(report.others_deal));
+    const field7 = Math.round((field3 - (field5 + field6)).toFixed(2));
 
     return (
       <div className="canvas-container vat-container">
@@ -79,7 +79,7 @@ class Vat extends Component {
                 </TableHead>
                 <TableBody>
                   <TableRow >
-                    <TableCell align="right">{field4}</TableCell>
+                    <TableCell align="right">{field3}</TableCell>
                     <TableCell align="center">{field2}</TableCell>
                     <TableCell align="right">Deals 17%</TableCell>
                   </TableRow>
@@ -94,7 +94,7 @@ class Vat extends Component {
                     <TableCell align="right">Deals 0%</TableCell>
                   </TableRow>
                   <TableRow >
-                    <TableCell align="right"> <strong>Total tax {field4}</strong></TableCell>
+                    <TableCell align="right"> <strong>Total tax {field3}</strong></TableCell>
                     <TableCell align="right"></TableCell>
                     <TableCell align="right"></TableCell>
                   </TableRow>
