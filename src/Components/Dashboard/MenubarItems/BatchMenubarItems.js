@@ -17,27 +17,32 @@ class BatchMenubarItems extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchListData();
+    if (this.props.location.pathname.indexOf(localPath) >= 0)
+      this.fetchListData();
   }
   
   componentWillReceiveProps(nextProps) {
-    if (nextProps.location.pathname === localPath) {
+    if (nextProps.location.pathname === localPath) 
       this.fetchListData();
-    }
   }
 
   fetchListData() {
     if (this.state.loading)
       return;
+    
+    console.log("requesting batch list")
     this.setState({listData: [], loading: true});
     sendAuthenticatedAsyncRequest(
       "/getBatches",
       "POST",
       {accountantId: this.state.loggedInUser.userId},
-      (r) => this.setState({
-        listData: this.batchListItemFormatter(JSON.parse(r.data.body)),
-        loading: false
-      })
+      (r) => {
+          console.log("batch list received", r);
+          this.setState({
+          listData: this.batchListItemFormatter(JSON.parse(r.data.body)),
+          loading: false
+        })
+      }
     );
   }
 
@@ -72,10 +77,13 @@ class BatchMenubarItems extends React.Component {
 
   render (){
     // console.log("rendering InvoiceMenubarItems", this.state, this.props);
-    const {listData} = this.state;
-    return ( listData !== null ? 
-      <MenuSubSectionList listData={listData} />
-      : "Requesting Batches"
+    const {listData, loading} = this.state;
+    return ( 
+      !loading 
+      ? listData !== null 
+        ? <MenuSubSectionList listData={listData} />
+        : "No Batches"
+      : "Requesting batches ..."
     );
   }
 }
