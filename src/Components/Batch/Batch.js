@@ -124,7 +124,7 @@ class Batch extends Component {
 
   batchName = (batch) => {
     if (!batch) {
-      return `No batch data. ${!this.state.selectedUserId ? "Please select a user" : ""}`;
+      return `No batch data. ${!this.state.selectedUserId ? "Selecting a user is mandatory" : ""}`;
     }
     let name = batch.batchId.toString();
     if (name.length === 1) return "00"+name;

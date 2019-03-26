@@ -13,7 +13,6 @@ import CameraIcon from '@material-ui/icons/CameraAlt';
 import Button from '@material-ui/core/Button';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
-import Auth from '../../Services/Auth';
 import GreenHeader from '../Common/GreenHeader';
 
 class AccountInquiry extends Component {
@@ -23,35 +22,40 @@ class AccountInquiry extends Component {
     apiCallType: 'fetch',
     searchString: this.props.location.search,
     filters: queryString.parse(this.props.location.search),
-    loggedInUser: Auth.getLoggedInUser(),
+    selectedUserId: this.props.selectedUserId,
     isValid: false
   }
 
   componentDidMount() {
-    this.fetchAccountInquiry(this.state.filters);
+    this.fetchAccountInquiry(this.state.filters, this.state.selectedUserId);
   }
   
   componentWillReceiveProps(nextProps) {
     const {search} = nextProps.location;
-    if (search === this.state.searchString){
+    if (search === this.state.searchString && nextProps.selectedUserId === this.state.selectedUserId){
       console.log("props received but same search params");
     } else {
-      console.log("new props received", nextProps.location.search);
+      console.log("new props received", nextProps.location.search, nextProps.selectedUserId);
       const filters = queryString.parse(nextProps.location.search);
       this.setState({
         searchString: nextProps.location.search,
-        filters: filters
+        filters: filters,
+        selectedUserId: nextProps.selectedUserId
       });
-      this.fetchAccountInquiry(filters);
+      this.fetchAccountInquiry(filters, nextProps.selectedUserId);
     }
   }
 
-  fetchAccountInquiry(filters) {
+  fetchAccountInquiry(filters, selectedUserId) {
     if (Object.entries(filters).length === 0 
         && filters.constructor === Object){
-      console.log("empty filters, not fetching report");
+      console.log("empty filters, not account inquiry fetching report");
       return;
-    } 
+    }
+    if (!selectedUserId) {
+      console.log("no user id, not fetching account inquiry report");
+      return;
+    }
     const {minCat,maxCat,minDate,maxDate} = filters;
     if (!minCat || !maxCat || !minDate || !maxDate){
       console.log("NOT fetching account inquity, some values are missing", filters);
@@ -59,13 +63,13 @@ class AccountInquiry extends Component {
       return;
     }
 
-    console.log("Everything seems fine, fetching account inquiry report");
+    console.log("Everything seems fine, fetching account inquiry report for user", selectedUserId);
     this.setState({isValid: true, apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
       "/accountInquiry",
       "POST", 
       {
-        accountantId: this.state.loggedInUser.userId , 
+        userId: selectedUserId , 
         minCategoryNum: minCat , 
         maxCategoryNum: maxCat , 
         minDate: minDate , 
@@ -75,8 +79,11 @@ class AccountInquiry extends Component {
     );
   }
 
-  categoryInformation(report,apiCallInProgress, isValid) {
+  categoryInformation(report,apiCallInProgress, isValid, selectedUserId) {
     // console.log("categoryInformation", report, apiCallInProgress);
+    if (!selectedUserId)
+      return "Selecting a user is mandatory";
+
     if (!isValid)
       return "All parameters are mandatory.";
 
@@ -84,7 +91,7 @@ class AccountInquiry extends Component {
       return "Loading ...";
 
     if (!report || Object.keys(report).length === 0)
-      return "No records in report. Adjust parameters accordingly."
+      return "No records in report. Adjust parameters accordingly.";
 
     return Object.keys(report).map((k,i)=>
       <Chip className='category-chip' label={k} key={i} onDelete={() => console.log("delete clicked for ",k)}/>
@@ -104,7 +111,7 @@ class AccountInquiry extends Component {
   }
 
   render() {
-    const {apiCallInProgress, apiCallType, report, isValid} = this.state;
+    const {apiCallInProgress, apiCallType, report, isValid, selectedUserId} = this.state;
     console.log("rendering account inquiry: ", report);
     // console.log("account inquiry ", report);
 
@@ -196,7 +203,7 @@ class AccountInquiry extends Component {
     return (
       <div className="canvas-container account-inquiry-container">
       <div className="category-chip-container">
-        {this.categoryInformation(report, apiCallInProgress, isValid)}
+        {this.categoryInformation(report, apiCallInProgress, isValid, selectedUserId)}
         <div className="download-options" ><Button className="download-button">PDF</Button> | <Button className="download-button">XL</Button></div>
       </div>
       {
