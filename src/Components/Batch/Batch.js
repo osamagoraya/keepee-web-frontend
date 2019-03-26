@@ -114,7 +114,7 @@ class Batch extends Component {
     sendAuthenticatedAsyncRequest(
       "/confirmBatch",
       "POST", 
-      {batchId: this.state.selectedBatchId},
+      {batchId: this.state.selectedBatchId, userId: this.state.selectedUserId},
       (r) => {
         this.setState({apiCallInProgress: false, apiCallType: 'none'});
         this.props.history.push("/workspace/batch");

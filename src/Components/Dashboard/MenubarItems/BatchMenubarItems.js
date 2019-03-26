@@ -73,7 +73,7 @@ class BatchMenubarItems extends React.Component {
         <span style={{fontStyle:"italic", fontWeight: 300}}>
           {batchName(batch)} <br />
           Invoices ({batch.invoiceCount}) <br />
-          Since {Moment(batch.createdAt,'x').format("MM.DD.YY")} 
+          Since {Moment(batch.createdAt).format("MM.DD.YY")} 
         </span>
       );
     }
