@@ -3,6 +3,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { Formik } from 'formik';
 import {withRouter} from 'react-router-dom';
+import moment from 'moment';
 
 import Select from '../../Common/Select';
 import TransparentTextField from '../../Common/TransparentTextField';
@@ -76,7 +77,7 @@ class MenuSubSectionFilters extends React.Component {
       <Grid container style={style.accountInquiryContainer}>
         <Formik
         initialValues={{ 
-          minCategory: '', maxCategory: '', minDate: '', maxDate: '' 
+          minCategory: '', maxCategory: '', minDate: moment().startOf('year').format("YYYY-MM-DD"), maxDate: moment().format("YYYY-MM-DD") 
         }}    
         onSubmit={(values) => {
           this.setParams(values)
@@ -84,6 +85,7 @@ class MenuSubSectionFilters extends React.Component {
         enableReinitialize={true}
         >
         {({ values, touched, errors, handleSubmit, handleChange, handleBlur, setFieldValue, submitForm }) => {
+          console.log(values);
           return (
             <form onSubmit={handleSubmit} style={{width: "100%"}}>
             <Grid item md={12}>
