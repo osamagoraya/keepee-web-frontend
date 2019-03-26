@@ -193,7 +193,6 @@ class AccountInquiry extends Component {
         text: '',
         headerFormatter: (col, colIdx) => <ClipIcon />,
         formatter: (cell, row, index) => {
-          debugger;
           return (
             <div className='k-force' style={{padding: "8px 10px"}}>
               <InvoiceDocumentModal 
