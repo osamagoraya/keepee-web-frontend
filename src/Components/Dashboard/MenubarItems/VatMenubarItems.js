@@ -2,7 +2,6 @@ import React from 'react';
 import Moment from 'moment';
 import {withRouter} from 'react-router-dom';
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
-import Auth from '../../../Services/Auth';
 
 import MenuSubSectionList from './MenuSubSectionList';
 
@@ -12,15 +11,21 @@ class VatMenubarItems extends React.Component {
   
   state = {
     listData: null,
-    loggedInUser: Auth.getLoggedInUser()
+    loading: false,
+    selectedUserId: this.props.selectedUserId,
   }
 
   componentDidMount() {
-    this.fetchListData();
+    if (this.props.location.pathname.indexOf(localPath) >= 0)
+      this.fetchListData(this.props.selectedUserId);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.location.pathname === localPath) {
+    if (nextProps.selectedUserId !== this.state.selectedUserId){
+      this.setState({selectedUserId: nextProps.selectedUserId});
+      this.fetchListData(nextProps.selectedUserId);
+    }
+    else if (nextProps.location.pathname === localPath) {
       this.fetchListData(nextProps.selectedUserId);
     }
   }
@@ -36,13 +41,25 @@ class VatMenubarItems extends React.Component {
     })
   }
 
-  fetchListData() {
-    this.setState({listData: []});
+  fetchListData(selectedUserId) {
+    if (selectedUserId === undefined || selectedUserId === null){
+      console.log("not fetching vat reports, no selected user id found");
+      return;
+    } else if (this.state.loading) {
+      console.log("not fetching vat reports, request already sent");
+      return;
+    } else {
+      console.log("fetching vat reports for user id", selectedUserId);
+    }
+    this.setState({listData: [], loading: true});
     sendAuthenticatedAsyncRequest(
       "/getVatReports",
       "POST",
-      {accountantId: this.state.loggedInUser.userId},
-      (r) => this.setState({listData: this.vatListItemFormatter(JSON.parse(r.data.body))})
+      {userId: selectedUserId},
+      (r) => this.setState({
+        listData: this.vatListItemFormatter(JSON.parse(r.data.body)),
+        loading: false
+      })
     );
   }
 
@@ -59,10 +76,13 @@ class VatMenubarItems extends React.Component {
 
   render (){
     // console.log("rendering InvoiceMenubarItems", this.state, this.props);
-    const {listData} = this.state;
-    return ( listData !== null ? 
-      <MenuSubSectionList listData={this.state.listData} />
-      : "Select user first"
+    const {listData, loading} = this.state;
+    return ( 
+      !loading 
+      ? listData !== null 
+        ? <MenuSubSectionList listData={listData} />
+        : "No VAT Reports"
+      : "Requesting VAT Reports ..."
     );
   }
 }
