@@ -33,8 +33,8 @@ class DismissableDialog extends React.Component {
           open={this.state.open}
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
-          fullWidth={true}
-          maxWidth="xs"
+          scroll="paper"
+          PaperProps={this.props.PaperProps}
         >
           <DialogTitle id="form-dialog-title">{this.props.title}</DialogTitle>
           <DialogContent>

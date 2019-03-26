@@ -5,8 +5,6 @@ import {BootstrapTable, cellEditFactory} from '../Common/Table';
 import '../Batch/Batch.css'
 import Caption from '../Common/Caption';
 import ClipIcon from '@material-ui/icons/AttachFile';
-import FileIcon from '@material-ui/icons/Description';
-import CameraIcon from '@material-ui/icons/CameraAlt';
 import AddIcon from '@material-ui/icons/Add';
 
 import Button from '../Common/Button';
@@ -16,6 +14,7 @@ import InvoiceForm from '../Forms/InvoiceForm/InvoiceForm';
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 import Auth from '../../Services/Auth';
 import DismissableDialog from '../Common/DismissableDialog';
+import InvoiceDocumentModal from '../Invoice/InvoiceDocumentModal';
 
 class InvoiceFormDialog extends Component {
 
@@ -199,7 +198,18 @@ class Batch extends Component {
         dataField: 'imageType',
         text: '',
         headerFormatter: (col, colIdx) => <ClipIcon />,
-        formatter: (cell, row, index) => <div className='k-force' style={{padding: "8px 10px"}}>{cell === "image" ? <CameraIcon /> : <FileIcon />}</div>,
+        formatter: (cell, row, index) => {
+          return (
+            <div className='k-force' style={{padding: "8px 10px"}}>
+              <InvoiceDocumentModal 
+                documentType={row.imageType}
+                documentPath={row.imageLink}
+                selectedImageId={row.id}
+                uniqueKey={`batchDoc${row.id}`}
+              />
+            </div>
+          );
+        },
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '5%' }
