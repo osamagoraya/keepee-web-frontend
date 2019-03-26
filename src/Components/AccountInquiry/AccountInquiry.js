@@ -8,8 +8,7 @@ import {BootstrapTable} from '../Common/Table';
 import './AccountInquiry.css'
 import Chip from '@material-ui/core/Chip';
 import ClipIcon from '@material-ui/icons/AttachFile';
-import FileIcon from '@material-ui/icons/Description';
-import CameraIcon from '@material-ui/icons/CameraAlt';
+import InvoiceDocumentModal from '../Invoice/InvoiceDocumentModal';
 import Button from '@material-ui/core/Button';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
@@ -193,7 +192,18 @@ class AccountInquiry extends Component {
         dataField: 'imageType',
         text: '',
         headerFormatter: (col, colIdx) => <ClipIcon />,
-        formatter: (cell, row, index) => <div className='k-force' style={{padding: "8px 10px"}}>{cell === "image" ? <CameraIcon /> : <FileIcon />}</div>,
+        formatter: (cell, row, index) => {
+          return (
+            <div className='k-force' style={{padding: "8px 10px"}}>
+              <InvoiceDocumentModal 
+                documentType={row.imageType}
+                documentPath={row.imageLink}
+                selectedImageId={row.id}
+                uniqueKey={`batchDoc${row.id}`}
+              />
+            </div>
+          );
+        },
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '5%' }

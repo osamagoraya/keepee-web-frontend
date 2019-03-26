@@ -32,3 +32,13 @@
     object-fit: fill;
     overflow: hidden;
 }
+
+.document-modal-size {
+  height: 80%;
+  width: 40%;
+  max-width: 40% !important;
+}
+.document-modal-content {
+  height: 100%;
+  width: 100%;
+}

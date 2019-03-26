@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import {Grid} from '@material-ui/core';
 import './Invoice.css';
 import iconRotate from '../../Assets/Images/Path_981.svg';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardMedia from '@material-ui/core/CardMedia';
-import Card from '@material-ui/core/Card';
 import Button from '../Common/Button';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 import Auth from '../../Services/Auth';
 import InvoiceForm from '../Forms/InvoiceForm/InvoiceForm';
+
+import InvoiceDocumentCard from './InvoiceDocumentCard';
 
 const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
 
@@ -120,22 +119,13 @@ class Invoice extends Component {
           </Grid>
           <Grid item sm={1}></Grid>
           <Grid item container sm={7} >
-            <Card className="document-box">
-              <CardActionArea style={{ height: '100%'}}>
-              { selectedImageID && selectedImageFileType === "image" 
-              ? <CardMedia style={{ transform: `rotate(${this.state.imageAngle}deg)`}}
-                    component="img"
-                    alt="Unable to load"
-                    height="inherit"
-                    image={selectedImagePath}
-                />
-              : selectedImageID && selectedImageFileType === "pdf" 
-                ? <embed src={selectedImagePath} type="application/pdf" height="100%" width="100%"  /> 
-                : <div>בחר תמונה</div>
-              }
-              {/* force re render pdf when component received new props*/}
-              </CardActionArea>
-            </Card>
+              <InvoiceDocumentCard 
+                cardClassNames="document-box"
+                cardMediaStyle={{ transform: `rotate(${this.state.imageAngle}deg)`}}
+                documentType={selectedImageFileType}
+                documentPath={selectedImagePath}
+                selectedImageId={selectedImageID}
+              />
             <div className="doc-action-btn-box">
               <Button size="small" variant="grey" className="doc-action-btns" disabled={apiCallInProgress} onClick={() => this.updateImageStatus('/irrelevantPicture', 'irrelevant')}>
                 {apiCallInProgress 
