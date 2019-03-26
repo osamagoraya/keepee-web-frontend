@@ -69,31 +69,43 @@ class InvoiceFormDialog extends Component {
 class Batch extends Component {
 
   state = {
+    selectedUserId: this.props.selectedUserId,
     selectedBatchId: this.props.match.params.batchId,
-    apiCallInProgress: true,
+    apiCallInProgress: false,
     apiCallType: 'fetch',
-    batch: null
+    batch: null,
   }
 
   componentDidMount() {
-    this.fetchBatchDetails(this.state.selectedBatchId);
+    this.fetchBatchDetails(this.state.selectedBatchId, this.state.selectedUserId);
   }
   
   componentWillReceiveProps(nextProps) {
-    if (nextProps.match.params.batchId !== this.state.selectedBatchId)
-    {
-      this.setState({selectedBatchId: nextProps.match.params.batchId});
-      this.fetchBatchDetails(nextProps.match.params.batchId);
+    const {batchId} = nextProps.match.params;
+    const {selectedUserId} = nextProps;
+    if (batchId !== this.state.selectedBatchId || selectedUserId !== this.state.selectedUserId){
+      this.setState({
+        selectedBatchId: batchId,
+        selectedUserId: selectedUserId
+      });
+      this.fetchBatchDetails(batchId, selectedUserId);
     }
   }
 
-  fetchBatchDetails(batchId) {
+  fetchBatchDetails(batchId, selectedUserId) {
+    if ( !batchId || !selectedUserId) {
+      console.log("Incomplete information to fetch the batch", batchId, selectedUserId);
+      return;
+    }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
       "/getBatch",
       "POST", 
-      {batchId: batchId},
-      (r) => this.setState({batch: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
+      {batchId: batchId, userId: selectedUserId},
+      (r) => {
+        console.log("batch received", r);
+        this.setState({batch: r.data.result, apiCallInProgress: false, apiCallType: 'none'})
+      }
     );
   }
 
@@ -111,6 +123,9 @@ class Batch extends Component {
   }
 
   batchName = (batch) => {
+    if (!batch) {
+      return `No batch data. ${!this.state.selectedUserId ? "Please select a user" : ""}`;
+    }
     let name = batch.batchId.toString();
     if (name.length === 1) return "00"+name;
     else if (name.length === 2) return "0"+name;
@@ -205,7 +220,7 @@ class Batch extends Component {
         }
       </Caption>
       {
-        apiCallInProgress && apiCallType === 'fetch'  
+        (apiCallInProgress && apiCallType === 'fetch') || !batch
         ? null 
         : <span>
           <BootstrapTable 

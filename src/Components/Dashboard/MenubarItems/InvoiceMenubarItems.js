@@ -16,7 +16,7 @@ class InvoiceMenubarItems extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.location.pathname.indexOf(localPath)){
+    if (this.props.location.pathname.indexOf(localPath) >= 0){
       // console.log("InvoiceMenubarItems mounted, attempting to fetch images ")
       this.fetchListData(this.state.selectedUserId);
     } else {
@@ -38,13 +38,13 @@ class InvoiceMenubarItems extends React.Component {
 
   fetchListData(selectedUserId) {
     if (selectedUserId === undefined || selectedUserId === null){
-      console.log("not fetching list data, no selected user id found");
+      console.log("not fetching invoices, no selected user id found");
       return;
     } else if (this.state.loading) {
-      console.log("not fetching list data, request already sent");
+      console.log("not fetching invoices, request already sent");
       return;
     } else {
-      console.log("fetching list data four user id", selectedUserId);
+      console.log("fetching invoices for user id", selectedUserId);
     }
     this.setState({listData: [], loading: true});
     sendAuthenticatedAsyncRequest(

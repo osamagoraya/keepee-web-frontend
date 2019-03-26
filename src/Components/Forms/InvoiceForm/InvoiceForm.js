@@ -59,7 +59,7 @@ class InvoiceForm extends Component {
     values.accountantId = loggedInUser.userId;
     
     sendAuthenticatedAsyncRequest(
-      "/saveImageData",
+      "/saveInvoiceData",
       "POST", 
       {values: values},
       (r) => {
