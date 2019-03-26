@@ -40,7 +40,7 @@ class Dashboard extends Component {
               <ProtectedRoute path="/workspace/invoice/:imageId/:imageType/:imageStamp" component={(props) => <Invoice selectedUserId={selectedUserId} {...props}/>} exact />
               <ProtectedRoute path="/workspace/batch/:batchId" component={(props) => <Batch selectedUserId={selectedUserId} {...props}/>} exact/>
               <ProtectedRoute path="/workspace/account-inquiry" component={(props) => <AccountInquiry selectedUserId={selectedUserId} {...props}/>}/>
-              <ProtectedRoute path="/workspace/report/vat/:vatId" component={Vat} exact/>
+              <ProtectedRoute path="/workspace/report/vat/:vatId" component={(props) => <Vat selectedUserId={selectedUserId} {...props}/>} exact/>
             </Switch>
           </div>
         </div>

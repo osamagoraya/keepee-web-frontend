@@ -7,7 +7,6 @@ import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService'
 import GreenHeader from '../Common/GreenHeader';
 import Button from '../Common/Button';
 import {InvisibleTable, TableBody, TableHead, TableCell, TableRow} from '../Common/InvisibleTable';
-import Auth from '../../Services/Auth';
 import './Vat.css'
 import Caption from '../Common/Caption';
 
@@ -15,30 +14,39 @@ class Vat extends Component {
 
   state = {
     selectedVatId: this.props.match.params.vatId,
-    apiCallInProgress: true,
+    apiCallInProgress: false,
     apiCallType: 'fetch',
-    loggedInUser: Auth.getLoggedInUser()
+    selectedUserId: this.props.selectedUserId
   }
 
   componentDidMount() {
-    this.fetchVatReport(this.state.selectedVatId);
+    this.fetchVatReport(this.state.selectedVatId, this.state.selectedUserId);
   }
   
   componentWillReceiveProps(nextProps) {
-    console.log("props received", nextProps)
     const {vatId} = nextProps.match.params;
-    if (vatId !== this.state.selectedVatId){
-      this.setState({selectedVatId: vatId})
-      this.fetchVatReport(vatId);
+    const {selectedUserId} = nextProps;
+    console.log("props received", vatId, selectedUserId)
+    if (vatId !== this.state.selectedVatId || selectedUserId !== this.state.selectedUserId){
+      console.log("updating state of vat", vatId, selectedUserId)
+      this.setState({
+        selectedVatId: vatId,
+        selectedUserId: selectedUserId
+      });
+      this.fetchBatchDetails(vatId, selectedUserId);
     }
   }
 
-  fetchVatReport(vatId) {
+  fetchVatReport(vatId, selectedUserId) {
+    if ( !vatId || !selectedUserId) {
+      console.log("Incomplete information to fetch the VAT report", vatId, selectedUserId);
+      return;
+    }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
       "/getVatReport",
       "POST", 
-      {accountantId: this.state.loggedInUser.userId, vatReportId: vatId},
+      {userId: selectedUserId, vatReportId: vatId},
       (r) => {
         console.log("response received VAT", r);
         this.setState({report: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
@@ -48,12 +56,15 @@ class Vat extends Component {
   }
 
   render() {
-    const {apiCallInProgress, report} = this.state;
-
+    const {apiCallInProgress, report, selectedUserId} = this.state;
+    console.log("Rendering vat report",apiCallInProgress, report, selectedUserId);
     if (apiCallInProgress){
-      return <Caption>Loading ...</Caption>;
+      return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
+    } else if (!selectedUserId) {
+      return (<Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Selecting a user is mandatory </Caption>);
+    } else if (!report){
+      return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> No report data </Caption>);
     }
-
     const field1 = Math.round(parseFloat(report.deal_zero));
     const field2 = Math.round(parseFloat(report.deal_seventeen));
     const field3 = Math.round(parseFloat(report.deal_seventeen_tax));
