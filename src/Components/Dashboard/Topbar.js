@@ -49,7 +49,7 @@ class Topbar extends React.Component {
     sendAuthenticatedAsyncRequest(
       "/getUsers",
       "POST", 
-      {userId: user.userId},
+      {accountantId: user.userId},
       (r) => this.setState({ userList: JSON.parse(r.data.body), isLoadingUsers: false})
     );
   }
