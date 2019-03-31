@@ -56,17 +56,15 @@ class BatchMenubarItems extends React.Component {
 
   batchListItemFormatter = (data) => {
     if (!data) return [];
-    
+    debugger;
     data.sort((o1, o2) => parseInt(o2.batchId,10) - parseInt(o1.batchId,10));
 
     const batchName = (batch) => {
-      let name = batch.batchId.toString();
+      let name = batch.batchNumber.toString();
       if (name.length === 1) return "00"+name;
       else if (name.length === 2) return "0"+name;
       else return name;
     }
-  
-    console.log("Batches received",data);
 
     const batchNameWithDetails = (batch) => {
       return (
@@ -78,11 +76,14 @@ class BatchMenubarItems extends React.Component {
       );
     }
   
-    // console.log("Batches received",data);
-    return data.map(batch => ({
-      label: batch.batchStatus === 'open' ? batchNameWithDetails(batch) : batchName(batch),
-      path: `${localPath}/${batch.batchId}`
-    }));
+    console.log("Total", data.length ,"Batches received",data);
+    return data.map((batch,idx) => {
+      batch.batchNumber = data.length-idx;
+      return {
+        label: batch.batchStatus === 'open' ? batchNameWithDetails(batch) : batchName(batch),
+        path: `${localPath}/${batch.batchId}`
+      };
+    });
   }
 
   render (){
