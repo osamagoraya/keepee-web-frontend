@@ -100,11 +100,12 @@ class AccountInquiry extends Component {
 
   prepareData(data) {
     return data.map(d => {
+      let balance = d.type === "debit" ? -1 * parseFloat(d.sum): parseFloat(d.sum);
       return {
         ...d,
-        credit: parseFloat(d.sum) > 0 ? d.sum : 0,
-        debit: parseFloat(d.sum) <= 0 ? d.sum : 0,
-        balance: d.sum
+        credit: d.type === "credit" ? balance: 0,
+        debit: d.type === "debit" ? balance: 0,
+        balance: balance
       }
     });
   }
@@ -172,7 +173,7 @@ class AccountInquiry extends Component {
         text: 'Credit',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
-        formatter: (cell, row, index) => <div className='k-force'>{parseFloat(cell) > 0 ? cell : 0}</div>
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
       },
       {
         dataField: 'debit',
@@ -230,12 +231,14 @@ class AccountInquiry extends Component {
             />
           {
             Object.keys(report).map((k,i) => {
+              const data = this.prepareData(report[k]);
+              const totalBalance = data.map(d => d.balance).reduce((sum, curr) => sum+curr);
               return (
                 <div className="k-table-container" key={i}>
-                  <GreenHeader leftLabel={k} rightLabel={"Balance 12,345"}/>
+                  <GreenHeader leftLabel={k} rightLabel={`Balance ${totalBalance}`}/>
                   <BootstrapTable 
                   keyField='id' 
-                  data={this.prepareData(report[k])} 
+                  data={data} 
                   columns={columns} 
                   bordered={false}
                   headerClasses="k-header-row k-hidden-row"

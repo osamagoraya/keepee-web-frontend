@@ -56,7 +56,6 @@ class BatchMenubarItems extends React.Component {
 
   batchListItemFormatter = (data) => {
     if (!data) return [];
-    debugger;
     data.sort((o1, o2) => parseInt(o2.batchId,10) - parseInt(o1.batchId,10));
 
     const batchName = (batch) => {
