@@ -71,7 +71,13 @@ const appRoutes = [
     to: "/profile",
     menubarComponent: undefined,
     icon: logoUser,
-    menubarItems: []
+    menubarItems: [
+      {
+        label: "Personal Details",
+        path: "/profile/business",
+        component: Dummy
+      },
+    ]
   },
   {
     to: "/settings",

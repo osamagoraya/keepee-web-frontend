@@ -1,0 +1,33 @@
+.bp-container {
+  padding: 7% 10% 0 10%;
+  text-align: right;
+  font-family: Heebo;
+  font-size: 13px;
+}
+
+.bp-title {
+  color: #828389;
+  font-size: 18px;
+  padding-bottom: 15px;
+  margin-bottom: 15px !important;
+  border-bottom: 1px solid #828389;
+}
+
+.strong-font {
+  font-weight: 700;
+}
+
+.light-font {
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.bp-label {
+  color: #95959a;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.fields-column {
+  padding-left: 6%;
+}

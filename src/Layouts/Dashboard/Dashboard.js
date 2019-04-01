@@ -9,6 +9,7 @@ import Auth from '../../Services/Auth';
 import Batch from '../../Components/Batch/Batch';
 import AccountInquiry from '../../Components/AccountInquiry/AccountInquiry';
 import Vat from '../../Components/Vat/Vat';
+import BusinessProfile from '../../Components/BusinessProfile/BusinessProfile';
 
 import ProtectedRoute from '../../Components/Routes/ProtectedRoute';
 
@@ -41,6 +42,7 @@ class Dashboard extends Component {
               <ProtectedRoute path="/workspace/batch/:batchId" component={(props) => <Batch selectedUserId={selectedUserId} {...props}/>} exact/>
               <ProtectedRoute path="/workspace/account-inquiry" component={(props) => <AccountInquiry selectedUserId={selectedUserId} {...props}/>}/>
               <ProtectedRoute path="/workspace/report/vat/:vatId" component={(props) => <Vat selectedUserId={selectedUserId} {...props}/>} exact/>
+              <ProtectedRoute path="/profile/business" component={(props) => <BusinessProfile selectedUserId={selectedUserId} {...props}/>} exact/>
             </Switch>
           </div>
         </div>
