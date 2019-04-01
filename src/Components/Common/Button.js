@@ -23,6 +23,7 @@ const KButton = (props) => (
       disabled={props.disabled}
       size={props.size}
       type={props.type}
+      fullWidth={props.fullWidth}
     >   
       {props.children}
     </Button>

@@ -2,16 +2,17 @@ import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import { Formik } from 'formik'
-import * as Yup from 'yup'
+import * as Yup from 'yup';
 
 
 import Select from '../Common/Select';
 import TextField from '../Common/TextField';
+import Button from '../Common/Button';
 import './BusinessProfile.css';
 
 class BusinessProfile extends React.Component {
 
-  editUser (values) {
+  updateUser (values) {
     alert("user updated");
   }
 
@@ -30,7 +31,7 @@ class BusinessProfile extends React.Component {
             email: '', address: '', vendorName: '', supervisedBy: 'Supervisor'
           }}    
           onSubmit={(values,  { setSubmitting }) => {
-            this.editUser(values)
+            this.updateUser(values)
             setSubmitting(false);
           }}
           enableReinitialize={true}
@@ -104,6 +105,13 @@ class BusinessProfile extends React.Component {
                           
                         </div>
                         )
+                      }
+                      {
+                        cidx === 0
+                        ? <div className="submit-bp-btn-container">
+                            <Button type="submit" variant="blue" className="submit-bp-btn"> Update</Button>
+                          </div>
+                        : null
                       }
                     </Grid>
                   ))
