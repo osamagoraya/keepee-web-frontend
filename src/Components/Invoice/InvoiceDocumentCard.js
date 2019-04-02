@@ -2,7 +2,6 @@ import React from 'react';
 
 import Card from '@material-ui/core/Card';
 
-
 const verticallyCenteredImage = {
   display: "inline-block",
   height: "100%",
@@ -19,7 +18,7 @@ class InvoiceDocumentCard extends React.Component {
         { selectedImageId && documentType === "image" 
         ? <img style={cardMediaStyle} src={documentPath} alt="beautoful"/>
         : selectedImageId && documentType === "pdf" 
-          ? <embed src={documentPath} type="application/pdf" height="100%" width="100%"  /> 
+          ? <embed src={documentPath} type="application/pdf" style={{width: "100%", height: "100%"}}  /> 
           : <div>בחר תמונה</div>
         }
         {/* force re render pdf when component received new props*/}
