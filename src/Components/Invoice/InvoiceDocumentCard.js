@@ -1,7 +1,13 @@
 import React from 'react';
 
-import CardMedia from '@material-ui/core/CardMedia';
 import Card from '@material-ui/core/Card';
+
+
+const verticallyCenteredImage = {
+  display: "inline-block",
+  height: "100%",
+  verticalAlign: "middle"
+}
 
 class InvoiceDocumentCard extends React.Component {
   render () {
@@ -9,13 +15,9 @@ class InvoiceDocumentCard extends React.Component {
     return (
       <Card className={cardClassNames}>
         <div style={{ height: '100%'}}>
+          <span style={verticallyCenteredImage}></span>
         { selectedImageId && documentType === "image" 
-        ? <CardMedia style={cardMediaStyle}
-              component="img"
-              alt="Unable to load"
-              height="inherit"
-              image={documentPath}
-          />
+        ? <img style={cardMediaStyle} src={documentPath} alt="beautoful"/>
         : selectedImageId && documentType === "pdf" 
           ? <embed src={documentPath} type="application/pdf" height="100%" width="100%"  /> 
           : <div>בחר תמונה</div>
