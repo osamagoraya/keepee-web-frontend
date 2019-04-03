@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {BootstrapTable, cellEditFactory} from '../Common/Table';
+import {BootstrapTable, cellEditFactory, Type} from '../Common/Table';
 
 import Button from '../Common/Button';
 import Caption from '../Common/Caption';
@@ -57,7 +57,7 @@ class Categories extends Component {
       (r) => {
         console.log("Category update failed", r);
         alert("Category update failed");
-        //TODO: remove category data from state
+        //TODO: remove category changes from state
         this.setState({apiCallInProgress: false, apiCallType: 'none'})
       },
     );
@@ -72,13 +72,13 @@ class Categories extends Component {
       category,
       (r) => {
         console.log("Category added", r);
-        //TODO: must have received category id 
-        this.setState({apiCallInProgress: false, apiCallType: 'none'})
+        const {categories} = this.state;
+        categories[0].id = parseInt(r.data.body, 10);
+        this.setState({categories: categories, apiCallInProgress: false, apiCallType: 'none'})
       },
       (r) => {
         console.log("Category addition failed", r);
         alert("Category addition failed");
-        //TODO: remove category data from state
         this.setState({apiCallInProgress: false, apiCallType: 'none'})
       },
     );
@@ -88,15 +88,14 @@ class Categories extends Component {
     console.log("Category data updated",oldValue, newValue, row, column);
     if (row.id === -1) {
       // adding new category
-      if (!row.name || !row.vat || !row.categoryNo){
+      if (!row.name || !row.vat || !row.categoryNo || !row.type){
         console.log("incomplete data, not adding category")
       } else {
-        row.id = undefined;
-        // this.addCategory(row);
+        this.addCategory(row);
       }
     } else {
       // updating existing category
-      // this.updateCategory(row);
+      this.updateCategory(row);
     }
   }
 
@@ -166,7 +165,19 @@ class Categories extends Component {
       classes: 'k-body-cell',
       formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
       editCellClasses: 'k-edit-cell',
-      hidden: true
+      editor: {
+        type: Type.SELECT,
+        options: [
+          {
+            value: 'credit',
+            label: 'credit'
+          },
+          {
+            value: 'debit',
+            label: 'debit'
+          }
+        ]
+      }
     },{
       dataField: 'vatCategoryNo',
       text: 'Vat Category No',
@@ -193,7 +204,6 @@ class Categories extends Component {
   }
   render() {
     const {categories, apiCallInProgress, apiCallType} = this.state;
-
     
     const cellEdit = cellEditFactory({
       mode: 'click',
