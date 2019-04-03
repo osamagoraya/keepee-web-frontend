@@ -31,8 +31,8 @@ class Categories extends Component {
     }
     console.log("Fetching categories.");
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
-    sendAuthenticatedAsyncRequest(
-      "/getCategories",
+    sendAuthenticatedAsyncRequest(  
+      "/getCategoriesDetail",
       "POST", 
       {},
       (r) => {
@@ -42,38 +42,85 @@ class Categories extends Component {
     );
   }
 
+  onCategoryUpdate = (oldValue, newValue, row, column) => {
+    console.log("Category data updated",oldValue, newValue, row, column);
+  }
+
   render() {
     const {categories, apiCallInProgress, apiCallType} = this.state;
 
     const columns = [
       {
-        dataField: 'categoryId',
+        dataField: 'id',
         text: 'Id',
         headerClasses: 'k-header-cell',
         headerAlign: 'center',
         classes: 'k-body-cell',
-        headerStyle: { width: '10%' },
         style: {textAlign: 'center'},
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
-        editCellClasses: 'k-edit-cell'
+        editCellClasses: 'k-edit-cell',
+        hidden: true,
       }, {
-        dataField: 'categoryLabel',
+        dataField: 'name',
         text: 'Category',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
         editCellClasses: 'k-edit-cell'
       }, {
-        dataField: 'vatPercent',
-        text: 'VAT %',
+        dataField: 'group',
+        text: 'Group',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '10%' },
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
         editCellClasses: 'k-edit-cell'
       }, {
+        dataField: 'subGroup',
+        text: 'sub Group',
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editCellClasses: 'k-edit-cell'
+      },{
+        dataField: 'vat',
+        text: 'Vat %',
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editCellClasses: 'k-edit-cell'
+      },{
+        dataField: 'taxAdvances',
+        text: 'Tax Advances',
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editCellClasses: 'k-edit-cell'
+      },{
+        dataField: 'withHolding',
+        text: 'With holding',
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editCellClasses: 'k-edit-cell'
+      },{
         dataField: 'categoryNo',
-        text: 'Category No.',
+        text: 'Category No',
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editCellClasses: 'k-edit-cell'
+      },{
+        dataField: 'type',
+        text: 'Type',
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editCellClasses: 'k-edit-cell',
+        hidden: true
+      },{
+        dataField: 'vatCategoryNo',
+        text: 'Vat Category No',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
@@ -81,7 +128,9 @@ class Categories extends Component {
       },
     ];
     const cellEdit = cellEditFactory({
-      mode: 'click'
+      mode: 'click',
+      afterSaveCell: this.onCategoryUpdate,
+      blurToSave: true
     });
     return (
       <div className="canvas-container categories-container">
@@ -100,7 +149,7 @@ class Categories extends Component {
         : <span>
           <BootstrapTable 
             // caption={<CaptionElement className="a"/>} 
-            keyField='categoryId' 
+            keyField='id' 
             data={categories} 
             columns={columns} 
             bordered={false}
