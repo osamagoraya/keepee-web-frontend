@@ -83,7 +83,20 @@ const appRoutes = [
     to: "/settings",
     menubarComponent: undefined,
     icon: logoSettings,
-    menubarItems: []
+    menubarItems: [
+      {
+        label: "Category Settings",
+        path: "/settings/categories"
+      },
+      {
+        label: "Accountants Assignment",
+        path: "/settings/accountant-assigment"
+      },
+      {
+        label: "Unified Form",
+        path: "/settings/unified-form"
+      },
+    ]
   },
 ]
 

@@ -139,6 +139,19 @@ tr td:last-child .k-force {
   border-bottom-right-radius: 3px;
 }
 
+.k-edit-cell {
+  border: none !important;
+  margin: 0 !important;
+  padding-right: 4px !important;
+  padding-left: 4px !important;
+  /* padding-top: inherit !important; */
+  /* padding-bottom: inherit !important; */
+}
+/* 
+.table td .react-bootstrap-table-editing-cell {
+  border: none !important;
+} */
+
 /*
 * green-header
 */

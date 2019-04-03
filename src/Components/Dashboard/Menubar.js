@@ -109,9 +109,14 @@ class Menubar extends Component {
                   <ExpansionPanelSummary>
                     {item.label}
                   </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <item.component selectedUserId={selectedUserId} />
-                  </ExpansionPanelDetails>
+                  {
+                    item.component
+                    ? <ExpansionPanelDetails>
+                        <item.component selectedUserId={selectedUserId} />
+                      </ExpansionPanelDetails>
+                    : null
+                  }
+                  
               </ExpansionPanel>
             ))
           } else 
