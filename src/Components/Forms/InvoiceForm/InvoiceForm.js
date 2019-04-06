@@ -84,7 +84,7 @@ class InvoiceForm extends Component {
       jeDate: Yup.date().required("נדרש"),
       details: Yup.string().required("נדרש"),
       categoryId: Yup.string().required("נדרש"),
-      vendorName: Yup.string().required("נדרש"),
+      vendorName: Yup.string(),
       sum: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
       vat: Yup.number().typeError('חייב להיות מספר').required("נדרש"),
     })
@@ -154,45 +154,6 @@ class InvoiceForm extends Component {
               </div>
               <div>
                 <TextField
-                  type="number"
-                  placeholder="Sum"
-                  name="sum"
-                  value={values.sum}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  fullWidth={true} 
-                  containerClasses={commonTextfieldClasses}
-                  feedback={touched.sum && errors.sum ? errors.sum : null}
-                  />
-              </div>
-              <div>
-                <TextField
-                  type="text"
-                  placeholder="Vendor"
-                  name="vendorName"
-                  value={values.vendorName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  fullWidth={true} 
-                  containerClasses={commonTextfieldClasses}
-                  feedback={touched.vendorName && errors.vendorName ? errors.vendorName : null}
-                  />
-              </div>
-              <div>
-                <TextField
-                  type="text"
-                  placeholder="Details"
-                  name="details"
-                  value={values.details}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  fullWidth={true} 
-                  containerClasses={commonTextfieldClasses}
-                  feedback={touched.details && errors.details ? errors.details : null}
-                  />
-              </div>
-              <div>
-                <TextField
                   type="text"
                   placeholder="Reference One"
                   name="reference_1"
@@ -219,6 +180,19 @@ class InvoiceForm extends Component {
               </div>
               <div>
                 <TextField
+                  type="number"
+                  placeholder="Sum"
+                  name="sum"
+                  value={values.sum}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  fullWidth={true} 
+                  containerClasses={commonTextfieldClasses}
+                  feedback={touched.sum && errors.sum ? errors.sum : null}
+                  />
+              </div>
+              <div>
+                <TextField
                   type="text"
                   placeholder="VAT"
                   name="vat"
@@ -228,6 +202,32 @@ class InvoiceForm extends Component {
                   fullWidth={true} 
                   containerClasses={commonTextfieldClasses}
                   feedback={touched.vat && errors.vat ? errors.vat : null}
+                  />
+              </div>
+              <div>
+                <TextField
+                  type="text"
+                  placeholder="Details"
+                  name="details"
+                  value={values.details}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  fullWidth={true} 
+                  containerClasses={commonTextfieldClasses}
+                  feedback={touched.details && errors.details ? errors.details : null}
+                  />
+              </div>
+              <div>
+                <TextField
+                  type="text"
+                  placeholder="Vendor"
+                  name="vendorName"
+                  value={values.vendorName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  fullWidth={true} 
+                  containerClasses={commonTextfieldClasses}
+                  feedback={touched.vendorName && errors.vendorName ? errors.vendorName : null}
                   />
               </div>
             </form>
