@@ -33,7 +33,7 @@ class Vat extends Component {
         selectedVatId: vatId,
         selectedUserId: selectedUserId
       });
-      this.fetchBatchDetails(vatId, selectedUserId);
+      this.fetchVatReport(vatId, selectedUserId);
     }
   }
 

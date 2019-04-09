@@ -9,6 +9,7 @@ import Auth from '../../Services/Auth';
 import Batch from '../../Components/Batch/Batch';
 import AccountInquiry from '../../Components/AccountInquiry/AccountInquiry';
 import Vat from '../../Components/Vat/Vat';
+import IncomeTaxAdvances from '../../Components/IncomeTaxAdvances/IncomeTaxAdvances';
 import BusinessProfile from '../../Components/BusinessProfile/BusinessProfile';
 import Categories from '../../Components/Categories/Categories';
 
@@ -43,6 +44,7 @@ class Dashboard extends Component {
               <ProtectedRoute path="/workspace/batch/:batchId" component={(props) => <Batch selectedUserId={selectedUserId} {...props}/>} exact/>
               <ProtectedRoute path="/workspace/account-inquiry" component={(props) => <AccountInquiry selectedUserId={selectedUserId} {...props}/>}/>
               <ProtectedRoute path="/workspace/report/vat/:vatId" component={(props) => <Vat selectedUserId={selectedUserId} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/report/income-tax-advances/:itaId" component={(props) => <IncomeTaxAdvances selectedUserId={selectedUserId} {...props}/>} exact/>
               <ProtectedRoute path="/profile/business" component={(props) => <BusinessProfile selectedUserId={selectedUserId} {...props}/>} exact/>
               <ProtectedRoute path="/settings/categories" component={Categories} exact/>
             </Switch>

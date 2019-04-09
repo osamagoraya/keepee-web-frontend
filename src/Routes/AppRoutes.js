@@ -8,6 +8,7 @@ import InvoiceMenubarItems from '../Components/Dashboard/MenubarItems/InvoiceMen
 import BatchMenubarItems from '../Components/Dashboard/MenubarItems/BatchMenubarItems';
 import AccountInquiryFilters from '../Components/Dashboard/MenubarItems/AccountInquiryFilters';
 import VatMenubarItems from '../Components/Dashboard/MenubarItems/VatMenubarItems';
+import IncomeTaxAdvancesItems from '../Components/Dashboard/MenubarItems/IncomeTaxAdvancesItems';
 import Dummy from '../Components/Dummy';
 
 
@@ -41,7 +42,7 @@ const appRoutes = [
       {
         label: "Income Tax Advances",
         path: "/workspace/report/income-tax-advances",
-        component: Dummy
+        component: IncomeTaxAdvancesItems
       },
       {
         label: "P & L",

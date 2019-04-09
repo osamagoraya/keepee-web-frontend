@@ -6,6 +6,11 @@
   font-style: italic;
 }
 
+.k-divider {
+  border-bottom: 1px solid #bfbfbf;
+  margin: 10px 0;
+}
+
 .k-blue-button {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
   border-radius: 3px;
@@ -204,4 +209,7 @@ tr td:last-child .k-force {
 
 .k-invisible-table-row {
   height: 35px !important;
+}
+.k-invisible-table-spacey-row {
+  height: 70px !important;
 }
