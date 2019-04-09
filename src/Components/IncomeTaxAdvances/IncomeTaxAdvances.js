@@ -70,38 +70,38 @@ class IncomeTaxAdvances extends Component {
     return (
       <div className="canvas-container ita-container">
         <Grid container>
-          <Grid item md={2}></Grid>
-          <Grid item container md={8} >
+          <Grid item md={1}></Grid>
+          <Grid item container md={10} >
             <Grid item md={12}>
-              <Caption style={{paddingLeft: 20}}>04.2019</Caption>
+              <Caption style={{paddingLeft: 20}}>{report.month.split("-").join(".")}</Caption>
               <Divider />
             </Grid>
             <Grid item md={12}> 
               <InvisibleTable>
               <TableBody>
                 <TableRow height="-high">
-                  <TableCell align="right">{0}</TableCell>
+                  <TableCell align="right">{report.businessCycle}</TableCell>
                   <TableCell align="right">Business Cycle <CustomChip label="a" /></TableCell>
-                  <TableCell align="right">{0}</TableCell>
+                  <TableCell align="right">{report.advancesByBusinessCyclePercent}</TableCell>
                   <TableCell align="right">Advance by Business Cycle %<CustomChip label="d" /></TableCell>
                 </TableRow>
                 <TableRow height="-high">
-                  <TableCell align="right">{0}</TableCell>
+                  <TableCell align="right">{report.withholdingTax}</TableCell>
                   <TableCell align="right">Witholding Tax <CustomChip label="b" /></TableCell>
-                  <TableCell align="right">{0}</TableCell>
+                  <TableCell align="right">{report.withholdingTaxByAdvances}</TableCell>
                   <TableCell align="right">Witholding Tax by Advances <CustomChip label="e" /></TableCell>
                 </TableRow>
                 <TableRow height="-high">
-                  <TableCell align="right">{0}</TableCell>
+                  <TableCell align="right">{report.advances}</TableCell>
                   <TableCell align="right">Advances <CustomChip label="c" /></TableCell>
-                  <TableCell align="right">{0}</TableCell>
+                  <TableCell align="right">{report.totalPayment}</TableCell>
                   <TableCell align="right">Total Payment <CustomChip label="f" /></TableCell>
                 </TableRow>
               </TableBody>
               </InvisibleTable>
             </Grid>
           </Grid>
-          <Grid item md={2}></Grid>
+          <Grid item md={1}></Grid>
         </Grid>
       </div>
     );
