@@ -38,14 +38,13 @@ class IncomeTaxAdvances extends Component {
   }
 
   fetchItaReport(itaId, selectedUserId) {
-    return;
     if ( !itaId || !selectedUserId) {
       console.log("Incomplete information to fetch the ITA report", itaId, selectedUserId);
       return;
     }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
-      "/getVatReport",
+      "/getIncomeTaxReport",
       "POST", 
       {userId: selectedUserId, incomeTaxReportId: itaId},
       (r) => {
@@ -76,24 +75,23 @@ class IncomeTaxAdvances extends Component {
             <Grid item md={12}>
               <Caption style={{paddingLeft: 20}}>04.2019</Caption>
               <Divider />
-              {/* <hr /> */}
             </Grid>
             <Grid item md={12}> 
               <InvisibleTable>
               <TableBody>
-                <TableRow spacey>
+                <TableRow height="-high">
                   <TableCell align="right">{0}</TableCell>
                   <TableCell align="right">Business Cycle <CustomChip label="a" /></TableCell>
                   <TableCell align="right">{0}</TableCell>
                   <TableCell align="right">Advance by Business Cycle %<CustomChip label="d" /></TableCell>
                 </TableRow>
-                <TableRow spacey>
+                <TableRow height="-high">
                   <TableCell align="right">{0}</TableCell>
                   <TableCell align="right">Witholding Tax <CustomChip label="b" /></TableCell>
                   <TableCell align="right">{0}</TableCell>
                   <TableCell align="right">Witholding Tax by Advances <CustomChip label="e" /></TableCell>
                 </TableRow>
-                <TableRow spacey>
+                <TableRow height="-high">
                   <TableCell align="right">{0}</TableCell>
                   <TableCell align="right">Advances <CustomChip label="c" /></TableCell>
                   <TableCell align="right">{0}</TableCell>

@@ -26,7 +26,7 @@ export const InvisibleTable = (props) => (
 export const TableBody = MTableBody;
 export const TableHead = MTableHead;
 export const TableRow = (props) => (
-  <MTableRow classes={{root: props.spacey ? 'k-invisible-table-spacey-row' : 'k-invisible-table-row'}} {...props}>
+  <MTableRow classes={{root:  `k-invisible-table${props.height ? props.height : ''}-row`}} {...props}>
     {props.children}
   </MTableRow>
 );

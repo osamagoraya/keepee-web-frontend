@@ -1,5 +1,4 @@
 import React from 'react';
-import Moment from 'moment';
 import {withRouter} from 'react-router-dom';
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
 
