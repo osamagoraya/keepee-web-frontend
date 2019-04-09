@@ -58,13 +58,13 @@ class IncomeTaxAdvances extends Component {
   render() {
     const {apiCallInProgress, report, selectedUserId} = this.state;
     console.log("Rendering ITA report",apiCallInProgress, report, selectedUserId);
-    // if (apiCallInProgress){
-    //   return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
-    // } else if (!selectedUserId) {
-    //   return (<Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Selecting a user is mandatory </Caption>);
-    // } else if (!report){
-    //   return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> No report data </Caption>);
-    // }
+    if (apiCallInProgress){
+      return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
+    } else if (!selectedUserId) {
+      return (<Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Selecting a user is mandatory </Caption>);
+    } else if (!report){
+      return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> No report data </Caption>);
+    }
 
     const CustomChip = (props) => <Chip style={{color: "#827978", fontWeight: 600, marginLeft: 15}} label={props.label} as="div" />;
     return (
