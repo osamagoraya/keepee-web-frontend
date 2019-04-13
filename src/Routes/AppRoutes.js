@@ -10,6 +10,7 @@ import AccountInquiryFilters from '../Components/Dashboard/MenubarItems/AccountI
 import VatMenubarItems from '../Components/Dashboard/MenubarItems/VatMenubarItems';
 import IncomeTaxAdvancesItems from '../Components/Dashboard/MenubarItems/IncomeTaxAdvancesItems';
 import Dummy from '../Components/Dummy';
+import ProfitAndLossItems from '../Components/Dashboard/MenubarItems/ProfitAndLossItems';
 
 
 const appRoutes = [
@@ -47,7 +48,7 @@ const appRoutes = [
       {
         label: "P & L",
         path: "/workspace/report/profilt-and-loss",
-        component: Dummy
+        component: ProfitAndLossItems
       },
       {
         label: "Trial Balance",

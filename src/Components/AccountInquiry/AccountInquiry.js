@@ -12,7 +12,7 @@ import InvoiceDocumentModal from '../Invoice/InvoiceDocumentModal';
 import Button from '@material-ui/core/Button';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
-import GreenHeader from '../Common/GreenHeader';
+import ColoredHeader from '../Common/ColoredHeader';
 
 class AccountInquiry extends Component {
 
@@ -235,7 +235,7 @@ class AccountInquiry extends Component {
               const totalBalance = data.map(d => d.balance).reduce((sum, curr) => sum+curr);
               return (
                 <div className="k-table-container" key={i}>
-                  <GreenHeader leftLabel={k} rightLabel={`Balance ${totalBalance}`}/>
+                  <ColoredHeader leftLabel={k} rightLabel={`Balance ${totalBalance}`}/>
                   <BootstrapTable 
                   keyField='id' 
                   data={data} 

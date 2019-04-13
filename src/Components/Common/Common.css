@@ -161,13 +161,11 @@ tr td:last-child .k-force {
 * green-header
 */
 
-.k-green-header {
+.k-header {
   height: 30px;
   width: 100%;
   border-radius: 3px;
-  background-color: #94d3d2;
   /* opacity: 0.48; */
-  color: #707070;
   font-family: Heebo;
   font-size: 13px;
   font-weight: 700;
@@ -175,6 +173,16 @@ tr td:last-child .k-force {
   align-items: center;
   padding: 0 30px;
   justify-content: space-between;
+}
+
+.k-green-header {
+  background-color: #94d3d2;
+  color: #707070;
+}
+
+.k-grey-header {
+  background-color: #bfc0c3;
+  color: #707070;
 }
 
 /*

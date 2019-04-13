@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import {withRouter} from 'react-router-dom';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
-import GreenHeader from '../Common/GreenHeader';
+import ColoredHeader from '../Common/ColoredHeader';
 import Button from '../Common/Button';
 import {InvisibleTable, TableBody, TableHead, TableCell, TableRow} from '../Common/InvisibleTable';
 import './Vat.css'
@@ -79,7 +79,7 @@ class Vat extends Component {
           <Grid item md={2}></Grid>
           <Grid item container md={8} >
             <Grid item md={12}> 
-              <GreenHeader rightLabel="Deals"/>
+              <ColoredHeader rightLabel="Deals"/>
                 <InvisibleTable>
                 <TableHead>
                   <TableRow>
@@ -113,7 +113,7 @@ class Vat extends Component {
                 </InvisibleTable>
             </Grid>            
             <Grid item md={12} style={{marginTop: "2%"}}> 
-              <GreenHeader rightLabel="Input"/>
+              <ColoredHeader rightLabel="Input"/>
                 <InvisibleTable>
                 <TableHead>
                   <TableRow>

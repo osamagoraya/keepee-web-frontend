@@ -14,6 +14,7 @@ import BusinessProfile from '../../Components/BusinessProfile/BusinessProfile';
 import Categories from '../../Components/Categories/Categories';
 
 import ProtectedRoute from '../../Components/Routes/ProtectedRoute';
+import ProfitAndLoss from '../../Components/ProfitAndLoss/ProfitAndLoss';
 
 class Dashboard extends Component {
 
@@ -45,6 +46,7 @@ class Dashboard extends Component {
               <ProtectedRoute path="/workspace/account-inquiry" component={(props) => <AccountInquiry selectedUserId={selectedUserId} {...props}/>}/>
               <ProtectedRoute path="/workspace/report/vat/:vatId" component={(props) => <Vat selectedUserId={selectedUserId} {...props}/>} exact/>
               <ProtectedRoute path="/workspace/report/income-tax-advances/:itaId" component={(props) => <IncomeTaxAdvances selectedUserId={selectedUserId} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/report/profilt-and-loss/:pnlId" component={(props) => <ProfitAndLoss selectedUserId={selectedUserId} {...props}/>} exact/>
               <ProtectedRoute path="/profile/business" component={(props) => <BusinessProfile selectedUserId={selectedUserId} {...props}/>} exact/>
               <ProtectedRoute path="/settings/categories" component={Categories} exact/>
             </Switch>
