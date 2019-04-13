@@ -11,6 +11,7 @@ import VatMenubarItems from '../Components/Dashboard/MenubarItems/VatMenubarItem
 import IncomeTaxAdvancesItems from '../Components/Dashboard/MenubarItems/IncomeTaxAdvancesItems';
 import Dummy from '../Components/Dummy';
 import ProfitAndLossItems from '../Components/Dashboard/MenubarItems/ProfitAndLossItems';
+import TrialBalanceItems from '../Components/Dashboard/MenubarItems/TrialBalanceItems';
 
 
 const appRoutes = [
@@ -53,7 +54,7 @@ const appRoutes = [
       {
         label: "Trial Balance",
         path: "/workspace/report/trial-balance",
-        component: Dummy
+        component: TrialBalanceItems
       }
     ]
   },

@@ -4,9 +4,9 @@ import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestServi
 
 import MenuSubSectionList from './MenuSubSectionList';
 
-const localPath = "/workspace/report/profilt-and-loss";
+const localPath = "/workspace/report/trial-balance";
 
-class ProfitAndLossItems extends React.Component {
+class TrialBalanceItems extends React.Component {
   
   state = {
     listData: null,
@@ -32,7 +32,7 @@ class ProfitAndLossItems extends React.Component {
   fetchListData(selectedUserId) {
     // TODO: remove from here
     this.setState({
-      listData: this.profitAndLossFormatter([
+      listData: this.trialBalanceFormatter([
         {year: "2019", id: 4},
         {year: "2018", id: 3},
         {year: "2017", id: 2},
@@ -44,33 +44,33 @@ class ProfitAndLossItems extends React.Component {
     // remove till here
     
     if (selectedUserId === undefined || selectedUserId === null){
-      console.log("not fetching P&L reports, no selected user id found");
+      console.log("not fetching Trail Balance reports, no selected user id found");
       return;
     } else if (this.state.loading) {
-      console.log("not fetching P&L reports, request already sent");
+      console.log("not fetching Trail Balance&L reports, request already sent");
       return;
     } else {
-      console.log("fetching P&L reports for user id", selectedUserId);
+      console.log("fetching Trail Balance reports for user id", selectedUserId);
     }
     this.setState({listData: [], loading: true});
     sendAuthenticatedAsyncRequest(
-      "/getProfitAndLossReports",
+      "/getTrialBalanceReports",
       "POST",
       {userId: selectedUserId},
       (r) => this.setState({
-        listData: this.profitAndLossFormatter(JSON.parse(r.data.body)),
+        listData: this.trialBalanceFormatter(JSON.parse(r.data.body)),
         loading: false
       })
     );
   }
 
-  profitAndLossFormatter = (data) => {
+  trialBalanceFormatter = (data) => {
     if (!data) return [];
   
-    console.log("P&L Reports received",data);
-    return data.map(pnl => ({
-        label: pnl.year,
-        path: `${localPath}/${pnl.id}`
+    console.log("Trail Balance Reports received",data);
+    return data.map(tb => ({
+        label: tb.year,
+        path: `${localPath}/${tb.id}`
       })
     );
   }
@@ -82,10 +82,10 @@ class ProfitAndLossItems extends React.Component {
       !loading 
       ? listData !== null 
         ? <MenuSubSectionList listData={listData} />
-        : "No ProfitAndLoss Reports"
-      : "Requesting ProfitAndLoss Reports ..."
+        : "No Trail Balance Reports"
+      : "Requesting Trail Balance Reports ..."
     );
   }
 }
 
-export default withRouter(ProfitAndLossItems);
+export default withRouter(TrialBalanceItems);

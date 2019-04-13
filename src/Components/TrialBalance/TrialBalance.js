@@ -5,67 +5,66 @@ import {withRouter} from 'react-router-dom';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 
-import './ProfitAndLoss.css'
+import './TrialBalance.css'
 import Caption from '../Common/Caption';
 import Divider from '../Common/Divider';
 import ColoredHeader from '../Common/ColoredHeader';
 import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary} from '../Common/ExpansionPanel';
+import {BootstrapTable} from '../Common/Table';
 import {InvisibleTable, TableBody, TableCell, TableRow} from '../Common/InvisibleTable';
 
-class ProfitAndLoss extends Component {
+class TrialBalance extends Component {
 
   state = {
-    selectedPnlId: this.props.match.params.pnlId,
+    selectedTbId: this.props.match.params.tbId,
     apiCallInProgress: false,
     apiCallType: 'fetch',
     selectedUserId: 1, //TODO: this.props.selectedUserId
   }
 
   componentDidMount() {
-    this.fetchPnlReport(this.state.selectedPnlId, this.state.selectedUserId);
+    this.fetchPnlReport(this.state.selectedTbId, this.state.selectedUserId);
   }
   
   componentWillReceiveProps(nextProps) {
-    const {pnlId} = nextProps.match.params;
+    const {tbId} = nextProps.match.params;
     const {selectedUserId} = nextProps;
-    console.log("props received", pnlId, selectedUserId)
-    if (pnlId !== this.state.selectedItaId || selectedUserId !== this.state.selectedUserId){
-      console.log("updating state of ITA", pnlId, selectedUserId)
+    console.log("props received", tbId, selectedUserId)
+    if (tbId !== this.state.selectedItaId || selectedUserId !== this.state.selectedUserId){
+      console.log("updating state of ITA", tbId, selectedUserId)
       this.setState({
-        selectedPnlId: pnlId,
+        selectedTbId: tbId,
         selectedUserId: selectedUserId
       });
-      this.fetchPnlReport(pnlId, selectedUserId);
+      this.fetchPnlReport(tbId, selectedUserId);
     }
   }
 
-  fetchPnlReport(pnlId, selectedUserId) {
+  fetchPnlReport(tbId, selectedUserId) {
     // TODO: remove from here
     this.setState({
       apiCallInProgress: false, 
       apiCallType: 'none', 
       report: {
-        id: pnlId, 
-        year: "2019",
-        incomeFromServices: 500,
-        freeTaxIncomes: 230
+        id: tbId, 
+        year: "2019"
       }
     });
     
     return;
     // remove till here
 
-    if ( !pnlId || !selectedUserId) {
-      console.log("Incomplete information to fetch the PNL report", pnlId, selectedUserId);
+    if ( !tbId || !selectedUserId) {
+      console.log("Incomplete information to fetch the TB report", tbId, selectedUserId);
       return;
     }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
-      "/getProfileAndLossReport",
+      "/getTrialBalanceReport",
       "POST", 
-      {userId: selectedUserId, profitAndLossId: pnlId},
+      {userId: selectedUserId, trialBalanceId: tbId},
       (r) => {
-        console.log("response received PNL", r);
+        console.log("response received TB", r);
         this.setState({report: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
       },
       (r) => this.setState({apiCallInProgress: false, apiCallType: 'none'})
@@ -74,7 +73,7 @@ class ProfitAndLoss extends Component {
 
   render() {
     const {apiCallInProgress, report, selectedUserId} = this.state;
-    console.log("Rendering PNL report",apiCallInProgress, report, selectedUserId);
+    console.log("Rendering TB report",apiCallInProgress, report, selectedUserId);
     if (apiCallInProgress){
       return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
     } else if (!selectedUserId) {
@@ -84,7 +83,7 @@ class ProfitAndLoss extends Component {
     }
 
     return (
-      <div className="canvas-container ita-container">
+      <div className="canvas-container tb-container">
         <Grid container>
           <Grid item md={1}></Grid>
           <Grid item container md={10} >
@@ -93,45 +92,57 @@ class ProfitAndLoss extends Component {
               <Divider />
             </Grid>
             <Grid item md={2}></Grid>
-            <Grid item md={8}> 
+            <Grid item md={8}>
+              <BootstrapTable 
+                keyField='id' 
+                data={[]} 
+                columns={[
+                  {
+                    dataField: 'account',
+                    text: 'Account',
+                    headerClasses: 'k-header-cell',
+                    classes: 'k-body-cell',
+                    formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
+                  },
+                  {
+                    dataField: 'credit',
+                    text: 'Credit',
+                    headerClasses: 'k-header-cell',
+                    classes: 'k-body-cell',
+                    formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
+                  },
+                  {
+                    dataField: 'debit',
+                    text: 'Debit',
+                    headerClasses: 'k-header-cell',
+                    classes: 'k-body-cell',
+                    formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
+                  },
+                  {
+                    dataField: 'balance',
+                    text: 'Balance',
+                    headerClasses: 'k-header-cell',
+                    classes: 'k-body-cell',
+                    formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
+                  },
+                ]} 
+                bordered={false}
+                headerClasses="k-header-row"
+                />
               <ExpansionPanel>
                 <ExpansionPanelSummary>
-                  <ColoredHeader rightLabel="Income" />
+                  <ColoredHeader leftLabel="770" rightLabel="Banks" />
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                  <InvisibleTable>
-                    <TableBody>
-                      <TableRow >
-                        <TableCell align="right">{report.incomeFromServices}</TableCell>
-                        <TableCell align="right">Income From Services</TableCell>
-                      </TableRow>
-                      <TableRow >
-                        <TableCell align="right">{report.freeTaxIncomes}</TableCell>
-                        <TableCell align="right">Free Tax Incomes</TableCell>
-                      </TableRow>
-                      <TableRow >
-                        <TableCell align="right">{report.incomeFromServices + report.freeTaxIncomes}</TableCell>
-                        <TableCell align="right"><strong>Total Income</strong></TableCell>
-                      </TableRow>
-                    </TableBody>
-                    </InvisibleTable>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
               <ExpansionPanel>
                 <ExpansionPanelSummary>
-                  <ColoredHeader rightLabel="Sales Expense" />
+                  <ColoredHeader leftLabel="960" rightLabel="Income" />
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
-              <ExpansionPanel>
-                <ExpansionPanelSummary>
-                  <ColoredHeader rightLabel="General Expense" />
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-              <ColoredHeader rightLabel="Total" variant="grey" style={{marginTop: "12px"}}/>
             </Grid>
           </Grid>
           <Grid item md={1}></Grid>
@@ -142,4 +153,4 @@ class ProfitAndLoss extends Component {
 }
 
 
-export default withRouter(ProfitAndLoss);
+export default withRouter(TrialBalance);
