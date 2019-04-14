@@ -18,7 +18,7 @@ class ProfitAndLoss extends Component {
     selectedPnlYear: this.props.match.params.pnlYear,
     apiCallInProgress: false,
     apiCallType: 'fetch',
-    selectedUserId: 1, //TODO: this.props.selectedUserId
+    selectedUserId: this.props.selectedUserId
   }
 
   componentDidMount() {
@@ -40,7 +40,7 @@ class ProfitAndLoss extends Component {
   }
 
   fetchPnlReport(pnlYear, selectedUserId) {
-
+    console.log("fetching PNL report for ", selectedUserId, pnlYear)
     if ( !pnlYear || !selectedUserId) {
       console.log("Incomplete information to fetch the PNL report", pnlYear, selectedUserId);
       return;
@@ -51,32 +51,31 @@ class ProfitAndLoss extends Component {
       "POST", 
       {userId: selectedUserId, reportYear: pnlYear},
       (r) => {
-        console.log("response received PNL", r);
         this.setState({report: this.prepareReport(JSON.parse(r.data.body)), apiCallInProgress: false, apiCallType: 'none'})
       },
       (r) => this.setState({apiCallInProgress: false, apiCallType: 'none'})
     );
   }
 
-  // JE.category_id, C.name , "group", SUM ( JE.Sum) 
   prepareReport(reportData) {
     const groupedData = {};
     let totalSum = 0;
-    reportData.forEach(r => {
-      if (!groupedData[r.group])
-        groupedData[r.group] = { sum: 0, data: [] };
+    Object.keys(reportData).forEach(k => {
+      let sum = 0;
+      reportData[k].map(c => c.sum).forEach(s => sum += parseFloat(s,10));
+      totalSum += sum;
+      groupedData[k] = {
+        data: reportData[k],
+        sum: sum
+      }
+    });
 
-      groupedData[r.group].data.push(r);
-      groupedData[r.group].sum += r.sum; //TODO: verify if sum is the name of field which has category sum
-      // calculating total sum
-      totalSum += r.sum;
-    })
     return { totalSum, groupedData };
   }
 
   render() {
     const {apiCallInProgress, report, selectedUserId, selectedPnlYear} = this.state;
-    console.log("Rendering PNL report",apiCallInProgress, report, selectedUserId);
+
     if (apiCallInProgress){
       return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
     } else if (!selectedUserId) {
@@ -100,13 +99,13 @@ class ProfitAndLoss extends Component {
                 Object.keys(report.groupedData).map((groupKey, i) => (
                   <ExpansionPanel key={i}>
                     <ExpansionPanelSummary>
-                      <ColoredHeader rightLabel={groupKey} />
+                      <ColoredHeader rightLabel={groupKey.substring(0,1).toUpperCase() + groupKey.substring(1)} />
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
                       <InvisibleTable>
                         <TableBody>
                         {
-                          report.groupedData.groupKey.data.map((category, j) => (
+                          report.groupedData[groupKey].data.map((category, j) => (
                             <TableRow key={j}>
                               <TableCell align="right">{category.sum /* TODO: verify if sum is the key which has the sum for this category */}</TableCell>
                               <TableCell align="right">{category.name}</TableCell>
@@ -114,7 +113,7 @@ class ProfitAndLoss extends Component {
                           ))
                         }
                           <TableRow >
-                            <TableCell align="right">{report.groupedData.groupKey.sum}</TableCell>
+                            <TableCell align="right">{report.groupedData[groupKey].sum}</TableCell>
                             <TableCell align="right"><strong>Total {groupKey}</strong></TableCell>
                           </TableRow>
                         </TableBody>
