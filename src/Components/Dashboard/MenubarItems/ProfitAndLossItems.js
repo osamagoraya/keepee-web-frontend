@@ -30,18 +30,6 @@ class ProfitAndLossItems extends React.Component {
   }
 
   fetchListData(selectedUserId) {
-    // TODO: remove from here
-    this.setState({
-      listData: this.profitAndLossFormatter([
-        {year: "2019", id: 4},
-        {year: "2018", id: 3},
-        {year: "2017", id: 2},
-        {year: "2016", id: 1},
-      ]),
-      loading: false
-    });
-    return;
-    // remove till here
     
     if (selectedUserId === undefined || selectedUserId === null){
       console.log("not fetching P&L reports, no selected user id found");
@@ -54,7 +42,7 @@ class ProfitAndLossItems extends React.Component {
     }
     this.setState({listData: [], loading: true});
     sendAuthenticatedAsyncRequest(
-      "/getProfitAndLossReports",
+      "/profitAndLossReports",
       "POST",
       {userId: selectedUserId},
       (r) => this.setState({
@@ -69,8 +57,8 @@ class ProfitAndLossItems extends React.Component {
   
     console.log("P&L Reports received",data);
     return data.map(pnl => ({
-        label: pnl.year,
-        path: `${localPath}/${pnl.id}`
+        label: pnl.report,
+        path: `${localPath}/${pnl.report}`
       })
     );
   }

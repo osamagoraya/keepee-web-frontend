@@ -15,65 +15,67 @@ import {InvisibleTable, TableBody, TableCell, TableRow} from '../Common/Invisibl
 class ProfitAndLoss extends Component {
 
   state = {
-    selectedPnlId: this.props.match.params.pnlId,
+    selectedPnlYear: this.props.match.params.pnlYear,
     apiCallInProgress: false,
     apiCallType: 'fetch',
     selectedUserId: 1, //TODO: this.props.selectedUserId
   }
 
   componentDidMount() {
-    this.fetchPnlReport(this.state.selectedPnlId, this.state.selectedUserId);
+    this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId);
   }
   
   componentWillReceiveProps(nextProps) {
-    const {pnlId} = nextProps.match.params;
+    const {pnlYear} = nextProps.match.params;
     const {selectedUserId} = nextProps;
-    console.log("props received", pnlId, selectedUserId)
-    if (pnlId !== this.state.selectedItaId || selectedUserId !== this.state.selectedUserId){
-      console.log("updating state of ITA", pnlId, selectedUserId)
+    console.log("props received", pnlYear, selectedUserId)
+    if (pnlYear !== this.state.selectedItaId || selectedUserId !== this.state.selectedUserId){
+      console.log("updating state of ITA", pnlYear, selectedUserId)
       this.setState({
-        selectedPnlId: pnlId,
+        selectedPnlYear: pnlYear,
         selectedUserId: selectedUserId
       });
-      this.fetchPnlReport(pnlId, selectedUserId);
+      this.fetchPnlReport(pnlYear, selectedUserId);
     }
   }
 
-  fetchPnlReport(pnlId, selectedUserId) {
-    // TODO: remove from here
-    this.setState({
-      apiCallInProgress: false, 
-      apiCallType: 'none', 
-      report: {
-        id: pnlId, 
-        year: "2019",
-        incomeFromServices: 500,
-        freeTaxIncomes: 230
-      }
-    });
-    
-    return;
-    // remove till here
+  fetchPnlReport(pnlYear, selectedUserId) {
 
-    if ( !pnlId || !selectedUserId) {
-      console.log("Incomplete information to fetch the PNL report", pnlId, selectedUserId);
+    if ( !pnlYear || !selectedUserId) {
+      console.log("Incomplete information to fetch the PNL report", pnlYear, selectedUserId);
       return;
     }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
-      "/getProfileAndLossReport",
+      "/profitAndLossReport",
       "POST", 
-      {userId: selectedUserId, profitAndLossId: pnlId},
+      {userId: selectedUserId, reportYear: pnlYear},
       (r) => {
         console.log("response received PNL", r);
-        this.setState({report: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
+        this.setState({report: this.prepareReport(JSON.parse(r.data.body)), apiCallInProgress: false, apiCallType: 'none'})
       },
       (r) => this.setState({apiCallInProgress: false, apiCallType: 'none'})
     );
   }
 
+  // JE.category_id, C.name , "group", SUM ( JE.Sum) 
+  prepareReport(reportData) {
+    const groupedData = {};
+    let totalSum = 0;
+    reportData.forEach(r => {
+      if (!groupedData[r.group])
+        groupedData[r.group] = { sum: 0, data: [] };
+
+      groupedData[r.group].data.push(r);
+      groupedData[r.group].sum += r.sum; //TODO: verify if sum is the name of field which has category sum
+      // calculating total sum
+      totalSum += r.sum;
+    })
+    return { totalSum, groupedData };
+  }
+
   render() {
-    const {apiCallInProgress, report, selectedUserId} = this.state;
+    const {apiCallInProgress, report, selectedUserId, selectedPnlYear} = this.state;
     console.log("Rendering PNL report",apiCallInProgress, report, selectedUserId);
     if (apiCallInProgress){
       return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
@@ -89,49 +91,39 @@ class ProfitAndLoss extends Component {
           <Grid item md={1}></Grid>
           <Grid item container md={10} >
             <Grid item md={12}>
-              <Caption style={{paddingLeft: 20}}>{report.year}</Caption>
+              <Caption style={{paddingLeft: 20}}>{selectedPnlYear}</Caption>
               <Divider />
             </Grid>
             <Grid item md={2}></Grid>
             <Grid item md={8}> 
-              <ExpansionPanel>
-                <ExpansionPanelSummary>
-                  <ColoredHeader rightLabel="Income" />
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <InvisibleTable>
-                    <TableBody>
-                      <TableRow >
-                        <TableCell align="right">{report.incomeFromServices}</TableCell>
-                        <TableCell align="right">Income From Services</TableCell>
-                      </TableRow>
-                      <TableRow >
-                        <TableCell align="right">{report.freeTaxIncomes}</TableCell>
-                        <TableCell align="right">Free Tax Incomes</TableCell>
-                      </TableRow>
-                      <TableRow >
-                        <TableCell align="right">{report.incomeFromServices + report.freeTaxIncomes}</TableCell>
-                        <TableCell align="right"><strong>Total Income</strong></TableCell>
-                      </TableRow>
-                    </TableBody>
-                    </InvisibleTable>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-              <ExpansionPanel>
-                <ExpansionPanelSummary>
-                  <ColoredHeader rightLabel="Sales Expense" />
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-              <ExpansionPanel>
-                <ExpansionPanelSummary>
-                  <ColoredHeader rightLabel="General Expense" />
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-              <ColoredHeader rightLabel="Total" variant="grey" style={{marginTop: "12px"}}/>
+              {
+                Object.keys(report.groupedData).map((groupKey, i) => (
+                  <ExpansionPanel key={i}>
+                    <ExpansionPanelSummary>
+                      <ColoredHeader rightLabel={groupKey} />
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                      <InvisibleTable>
+                        <TableBody>
+                        {
+                          report.groupedData.groupKey.data.map((category, j) => (
+                            <TableRow key={j}>
+                              <TableCell align="right">{category.sum /* TODO: verify if sum is the key which has the sum for this category */}</TableCell>
+                              <TableCell align="right">{category.name}</TableCell>
+                            </TableRow>
+                          ))
+                        }
+                          <TableRow >
+                            <TableCell align="right">{report.groupedData.groupKey.sum}</TableCell>
+                            <TableCell align="right"><strong>Total {groupKey}</strong></TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </InvisibleTable>
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
+                ))
+              }
+              <ColoredHeader leftLabel={report.totalSum} rightLabel="Total" variant="grey" style={{marginTop: "12px"}}/>
             </Grid>
           </Grid>
           <Grid item md={1}></Grid>
