@@ -8,15 +8,66 @@ import * as Yup from 'yup';
 import Select from '../Common/Select';
 import TextField from '../Common/TextField';
 import Button from '../Common/Button';
+import Caption from '../Common/Caption';
 import './BusinessProfile.css';
+import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 
 class BusinessProfile extends React.Component {
+
+  state = {
+    selectedProfileId: this.props.match.params.profileId,
+    profile: null,
+    apiCallInProgress: false,
+    apiCallType: 'fetch',
+  }
+
+  componentDidMount() {
+    this.fetchProfileDetails(this.state.selectedProfileId);
+  }
+
+  componentWillReceiveProps(nextProps){
+    const {profileId} = nextProps.match.params;
+    if (profileId !== this.state.profile) {
+      this.setState({profileId}, this.fetchProfileDetails(profileId));
+    }
+  }
+
+  fetchProfileDetails = (profileId) => {
+    if (!profileId) {
+      console.log("No user id found to fetch details for", profileId,);
+      return;
+    }
+    this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
+    sendAuthenticatedAsyncRequest(
+      "/getUser",
+      "POST", 
+      {userId: profileId},
+      (r) => {
+        console.log("response received business profile", r);
+        this.setState({profile: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
+      },
+      (r) => this.setState({apiCallInProgress: false, apiCallType: 'none', profile: null})
+    );
+  }
 
   updateUser (values) {
     alert("user updated");
   }
 
+
   render () {
+    const {apiCallInProgress, profile, selectedProfileId} = this.state;
+
+    if (apiCallInProgress){
+      return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
+    } else if (!selectedProfileId) {
+      return (<Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Selecting a user is mandatory </Caption>);
+    } else if (!profile){
+      return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Could not fetch profile data </Caption>);
+    }
+    
+    console.log(profile);
+
     const commonTextfieldClasses = "little-bottom-spacer";
     return (
       <Grid container className="canvas-container bp-container" alignContent="flex-start" >
