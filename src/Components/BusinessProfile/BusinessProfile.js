@@ -46,12 +46,26 @@ class BusinessProfile extends React.Component {
         console.log("response received business profile", r);
         this.setState({profile: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
       },
-      (r) => this.setState({apiCallInProgress: false, apiCallType: 'none', profile: null})
+      (r) => {
+        this.setState({apiCallInProgress: false, apiCallType: 'none', profile: null});
+      }
     );
   }
 
   updateUser (values) {
-    alert("user updated");
+    values.userId = this.state.selectedProfileId;
+    sendAuthenticatedAsyncRequest(
+      "/updateUser",
+      "POST", 
+      values,
+      (r) => {
+        console.log("response received from update business profile", r);
+        this.setState({profile: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
+      },
+      (r) => {
+        this.setState({apiCallInProgress: false, apiCallType: 'none', profile: null});
+      }
+    );
   }
 
 
@@ -77,9 +91,9 @@ class BusinessProfile extends React.Component {
         <Grid item md={12}>
         <Formik
           initialValues={{ 
-            represantationOfVatIncomeReports: '', socialInsurance: '', assessingOfficerNumber: '', incomeTaxAdvances: '', reportingFrequency: '', 
-            withholdingFile: '', foundationYear: '', assessbusinessDomainingOfficerNumber: '', type: '', name: '', nId: '', birthDate: '',
-            email: '', address: '', vendorName: '', supervisedBy: 'Supervisor'
+            businessDomain: profile.businessDomain, represantationOfVatIncomeReports: profile.represantationOfVatIncomeReports, socialInsurance: profile.socialInsurance, assessingOfficerNumber: profile.assessingOfficerNumber, incomeTaxAdvances: profile.incomeTaxAdvacnes, reportingFrequency: profile.reportingFrequency, 
+            withHoldingFile: profile.withHoldingFile, foundationYear: profile.foundationYear, assessbusinessDomainingOfficerNumber: profile.assessbusinessDomainingOfficerNumber, type: profile.type, name: profile.name, nId: profile.nId, birthDate: profile.birthDate,
+            email: profile.email, address: profile.address, vendorName: profile.vendorName, supervisedBy: 'Supervisor'
           }}    
           onSubmit={(values,  { setSubmitting }) => {
             this.updateUser(values)
@@ -98,7 +112,7 @@ class BusinessProfile extends React.Component {
                     {type: "text", name: "assessingOfficerNumber", value: values.assessingOfficerNumber, label: "Assessing Officer Number"},
                     {type: "text", name: "incomeTaxAdvances", value: values.incomeTaxAdvances, label: "Income Tax Advances"},
                     {type: "text", name: "reportingFrequency", value: values.reportingFrequency, label: "Reporting Frequency"},
-                    {type: "text", name: "withholdingFile", value: values.withholdingFile, label: "Withholding File"},
+                    {type: "text", name: "withHoldingFile", value: values.withHoldingFile, label: "Withholding File"},
                     {type: "text", name: "foundationYear", value: values.foundationYear, label: "Foundation Year"},
                   ]
                 },{
@@ -111,7 +125,7 @@ class BusinessProfile extends React.Component {
                   columnLabel: "User Details",
                   fields: [
                     {type: "text", name: "name", value: values.name, label: "Full Name"},
-                    {type: "text", name: "nId", value: values.nId, label: "ID"},
+                    {type: "number", name: "nId", value: values.nId, label: "ID"},
                     {type: "date", name: "birthDate", value: values.birthDate, label: "Birth Date"},
                     {type: "text", name: "email", value: values.email, label: "Email"},
                     {type: "text", name: "address", value: values.address, label: "Address"},
