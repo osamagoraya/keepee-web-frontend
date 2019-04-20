@@ -7,6 +7,7 @@ import Select from '../../Common/Select';
 import TextField from '../../Common/TextField';
 
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
+import swal from 'sweetalert';
 
 class InvoiceForm extends Component {
     
@@ -63,7 +64,10 @@ class InvoiceForm extends Component {
       "POST", 
       {values: values},
       (r) => {
-        this.props.onSubmit();
+        r.data.body === '"Journal Entry Already Exists!"' 
+        ?  swal ( "Oops" ,  "Journal Entry With this data Already Exists!" ,  "error" )
+        : this.props.onSubmit();
+
       }
     );
   }
