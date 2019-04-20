@@ -131,6 +131,75 @@ class Batch extends Component {
     else return name;
   }
 
+  updateJE
+
+  updateJE(je) {
+    console.log("Updating journal entry:", je);
+    this.setState({apiCallInProgress: true, apiCallType: 'update'});
+    sendAuthenticatedAsyncRequest(  
+      "/updateOpenJournalEntry",
+      "POST", 
+      je,
+      (r) => {
+        console.log("JE updated", r);
+        this.setState({apiCallInProgress: false, apiCallType: 'none'})
+      },
+      (r) => {
+        console.log("JE update failed", r);
+        alert("JE update failed");
+        this.setState({apiCallInProgress: false, apiCallType: 'none'})
+      },
+    );
+  }
+
+  addJE(je) {
+    console.log("Adding journal entry:", je);
+    this.setState({apiCallInProgress: true, apiCallType: 'add'});
+    sendAuthenticatedAsyncRequest(  
+      "/saveInvoiceData",
+      "POST", 
+      je,
+      (r) => {
+        console.log("JE added", r);
+        const {batch} = this.state;
+        batch[batch.length-1].id = parseInt(r.data.body, 10);
+        this.setState({batch: batch, apiCallInProgress: false, apiCallType: 'none'})
+      },
+      (r) => {
+        console.log("JE addition failed", r);
+        alert("JE addition failed");
+        this.setState({apiCallInProgress: false, apiCallType: 'none'})
+      },
+    );
+  }
+
+  onJournalEntryUpdate = (oldValue, newValue, row, column) => {
+    console.log("Journal Entry updated",oldValue, newValue, row, column);
+    if (row.id === -1) {
+      if (!row.name || !row.vat || !row.categoryNo || !row.type){
+        console.log("incomplete data, not adding JE")
+      } else {
+        this.addCategory(row);
+      }
+    } else {
+      this.updateJE(row);
+    }
+  }
+
+  addRow = () => {
+    const {batch} = this.state;
+    if (batch.filter(i => i.id === -1).length > 0)
+      alert ("Please complete data for previously added JE");
+    else {
+      const emptyJE = {
+        reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', vat: '', sum: '', imageId: '', vendorName: '' 
+      }
+      
+      batch.push(emptyJE);
+
+      this.setState({ batch });
+    }
+  }
   
   render() {
     const {batch, apiCallInProgress, apiCallType} = this.state;
@@ -215,9 +284,14 @@ class Batch extends Component {
         headerStyle: { width: '5%' }
       }
     ];
-    const cellEdit = cellEditFactory({
-      mode: 'dbclick'
+
+
+    const cellEdit = cellEditFactory({ 
+      mode: 'click', 
+      afterSaveCell: this.onJournalEntryUpdate,
+      blurToSave: true
     });
+
     return (
       <div className="canvas-container batch-container">
       <Caption style={{
@@ -241,8 +315,8 @@ class Batch extends Component {
             bordered={false}
             headerClasses="k-header-row"
             wrapperClasses="k-table-container"
-            cellEdit={cellEdit}
-            /> 
+            cellEdit={batch.batchStatus === 'open' ? cellEdit : undefined}
+          /> 
             {
               batch.batchStatus === 'open'
               ? <InvoiceFormDialog onSubmit={() => this.fetchBatchDetails(batch.batchId)}/> // count not bumped on list view
