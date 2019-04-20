@@ -99,6 +99,7 @@ class MenuSubSectionFilters extends React.Component {
                 onChange={(selectedOption) => {
                   console.log("selected min cat", selectedOption);
                   setFieldValue('minCategory', selectedOption);
+                  setFieldValue('maxCategory', selectedOption);
                 }}
                 options={categories}
                 labelKey="categoryLabel"
