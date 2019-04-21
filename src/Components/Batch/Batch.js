@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 
-import {BootstrapTable, cellEditFactory} from '../Common/Table';
+import {BootstrapTable, cellEditFactory, Type} from '../Common/Table';
 import '../Batch/Batch.css'
 import Caption from '../Common/Caption';
 import ClipIcon from '@material-ui/icons/AttachFile';
@@ -19,7 +19,8 @@ import InvoiceDocumentModal from '../Invoice/InvoiceDocumentModal';
 class InvoiceFormDialog extends Component {
 
   state = {
-    isSubmitting: false
+    isSubmitting: false,
+    categories: null
   }
 
   formSubmitter = null;
@@ -73,10 +74,12 @@ class Batch extends Component {
     apiCallInProgress: false,
     apiCallType: 'fetch',
     batch: null,
+    categories: null
   }
 
   componentDidMount() {
     this.fetchBatchDetails(this.state.selectedBatchId, this.state.selectedUserId);
+    this.fetchCategories();
   }
   
   componentWillReceiveProps(nextProps) {
@@ -89,6 +92,20 @@ class Batch extends Component {
       });
       this.fetchBatchDetails(batchId, selectedUserId);
     }
+  }
+
+  fetchCategories() {
+    if (this.state.categories && this.state.categories.length !== 0){
+      console.log("not fetching categories for batch, they exist", this.state.categories);
+      return;
+    }
+
+    sendAuthenticatedAsyncRequest(
+      "/getCategories",
+      "POST", 
+      null,
+      (r) => this.setState({categories: JSON.parse(r.data.body)})
+    );
   }
 
   fetchBatchDetails(batchId, selectedUserId) {
@@ -130,8 +147,6 @@ class Batch extends Component {
     else if (name.length === 2) return "0"+name;
     else return name;
   }
-
-  updateJE
 
   updateJE(je) {
     console.log("Updating journal entry:", je);
@@ -179,7 +194,7 @@ class Batch extends Component {
       if (!row.name || !row.vat || !row.categoryNo || !row.type){
         console.log("incomplete data, not adding JE")
       } else {
-        this.addCategory(row);
+        this.addJE(row);
       }
     } else {
       this.updateJE(row);
@@ -188,11 +203,11 @@ class Batch extends Component {
 
   addRow = () => {
     const {batch} = this.state;
-    if (batch.filter(i => i.id === -1).length > 0)
+    if (batch.filter(je => je.id === -1).length > 0)
       alert ("Please complete data for previously added JE");
     else {
       const emptyJE = {
-        reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', vat: '', sum: '', imageId: '', vendorName: '' 
+        id: -1, reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', vat: '', sum: '', imageId: '', vendorName: '' 
       }
       
       batch.push(emptyJE);
@@ -202,8 +217,8 @@ class Batch extends Component {
   }
   
   render() {
-    const {batch, apiCallInProgress, apiCallType} = this.state;
-
+    const {batch, apiCallInProgress, apiCallType, categories} = this.state;
+  
     const columns = [
       {
         dataField: 'jeid',
@@ -213,27 +228,39 @@ class Batch extends Component {
         classes: 'k-body-cell',
         headerStyle: { width: '10%' },
         style: {textAlign: 'center'},
-        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editable: false,
       }, {
-        dataField: 'categoryLabel',
+        dataField: 'categoryId',
         text: 'Category',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
-        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
+        formatter: (cell, row, index) => <div className='k-force'>{
+          categories
+          ? categories.filter(c => c.categoryId === cell)[0].categoryLabel
+          : row.categoryLabel
+        }</div>,
+        editCellClasses: 'k-edit-cell',
+        editor: {
+          type: Type.SELECT,
+          options: categories ? categories.map(c => ({value: c.categoryId, label: c.categoryLabel})) : []
+        }
       }, {
         dataField: 'reference_one',
         text: 'Ref 1',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '10%' },
-        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editCellClasses: 'k-edit-cell',
       }, {
         dataField: 'reference_two',
         text: 'Ref 2',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '10%' },
-        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editCellClasses: 'k-edit-cell',
       },
       {
         dataField: 'jeDate',
@@ -241,27 +268,31 @@ class Batch extends Component {
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '10%' },
-        formatter: (cell, row, index) => <div className='k-force'>{Moment(cell).format("MM.DD.YY")}</div>
+        formatter: (cell, row, index) => <div className='k-force'>{Moment(cell).format("MM.DD.YY")}</div>,
+        editCellClasses: 'k-edit-cell',
       },{
         dataField: 'vendor',
         text: 'Vendor',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
-        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editCellClasses: 'k-edit-cell',
       },
       {
         dataField: 'details',
         text: 'Details',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
-        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editCellClasses: 'k-edit-cell',
       },
       {
         dataField: 'sum',
         text: 'Sum',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
-        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editCellClasses: 'k-edit-cell',
       },
       {
         dataField: 'imageType',
@@ -281,7 +312,8 @@ class Batch extends Component {
         },
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
-        headerStyle: { width: '5%' }
+        headerStyle: { width: '5%' },
+        editable: false
       }
     ];
 
