@@ -10,11 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import Button from '../Common/Button';
 
-import InvoiceForm from '../Forms/InvoiceForm/InvoiceForm';
-
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
-import Auth from '../../Services/Auth';
-import DismissableDialog from '../Common/DismissableDialog';
 import InvoiceDocumentModal from '../Invoice/InvoiceDocumentModal';
 
 
@@ -165,7 +161,9 @@ class Batch extends Component {
       (r) => {
         console.log("JE added", r);
         const {batch} = this.state;
-        batch.journal_entries[batch.journal_entries.length-1].id = parseInt(r.data.body, 10);
+        const response = JSON.parse(r.data.body);
+        batch.journal_entries[batch.journal_entries.length-1].id = response.id;
+        batch.journal_entries[batch.journal_entries.length-1].jeid = response.jeID;
         this.setState({batch: batch})
       },
       (r) => {
