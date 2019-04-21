@@ -6,6 +6,7 @@ import '../Batch/Batch.css'
 import Caption from '../Common/Caption';
 import ClipIcon from '@material-ui/icons/AttachFile';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import Button from '../Common/Button';
 
@@ -148,24 +149,48 @@ class Batch extends Component {
     else return name;
   }
 
+  deleteJE = (je) => {
+   
+    console.log("Deleting journal entry:", je);
+
+    if (je.id === -1) {
+      const {batch} = this.state;
+      batch.journal_entries.length = batch.journal_entries.length-1;
+      this.setState({batch});
+    }
+
+    sendAuthenticatedAsyncRequest(  
+      "/deleteJournalEntry",
+      "POST", 
+      {journalEntryId: je.id},
+      (r) => {
+        const {batch} = this.state;
+        batch.journal_entries = batch.journal_entries.filter(j => j.id !== je.id);
+        this.setState({batch})
+      },
+      (r) => {
+        alert("Unable to delete Journal Entry");
+      },
+    );
+
+  }
+
   updateJE(je) {
     console.log("Updating journal entry:", je);
-    this.setState({apiCallInProgress: true, apiCallType: 'update'});
     sendAuthenticatedAsyncRequest(  
       "/updateOpenJournalEntry",
       "POST", 
       je,
       (r) => {
         console.log("JE updated", r);
-        this.setState({apiCallInProgress: false, apiCallType: 'none'})
       },
       (r) => {
         console.log("JE update failed", r);
         alert("JE update failed");
-        this.setState({apiCallInProgress: false, apiCallType: 'none'})
       },
     );
   }
+  
 
   addJE(je) {
     console.log("Adding journal entry:", je);
@@ -181,7 +206,6 @@ class Batch extends Component {
       vendorName: je.vendor 
     }
     console.log("transformed JE", journalEntry)
-    this.setState({apiCallInProgress: true, apiCallType: 'add'});
     sendAuthenticatedAsyncRequest(  
       "/saveInvoiceData",
       "POST", 
@@ -189,24 +213,21 @@ class Batch extends Component {
       (r) => {
         console.log("JE added", r);
         const {batch} = this.state;
-        batch[batch.length-1].id = parseInt(r.data.body, 10);
-        this.setState({batch: batch, apiCallInProgress: false, apiCallType: 'none'})
+        batch.journal_entries[batch.journal_entries.length-1].id = parseInt(r.data.body, 10);
+        this.setState({batch: batch})
       },
       (r) => {
-        console.log("JE addition failed", r);
         alert("JE addition failed");
-        this.setState({apiCallInProgress: false, apiCallType: 'none'})
       },
     );
   }
 
   onJournalEntryUpdate = (oldValue, newValue, row, column) => {
-    console.log("Journal Entry updated",oldValue, newValue, row, column);
     if (row.id === -1) {
       if (row.categoryId)
         row.vat = this.getCategoryAttribute(row.categoryId, 'vatpercent', this.state.categories || []) || "0";
       if (!row.reference_one || !row.jeDate || !row.details || !row.categoryId || !row.categoryId || !row.sum || !row.vat){
-        console.log("incomplete data, not adding JE")
+        console.log("incomplete data, not adding JE");
       } else {
         this.addJE(row);
       }
@@ -223,9 +244,7 @@ class Batch extends Component {
       const emptyJE = {
         id: -1, jeid: '', reference_one: '', reference_two: '', jeDate: '', details: '', categoryId: '', vat: '', sum: '', imageType: '', vendor: '' 
       }
-      
       batch.journal_entries.push(emptyJE);
-
       this.setState({ batch });
     }
   }
@@ -240,7 +259,6 @@ class Batch extends Component {
   
   render() {
     const {batch, apiCallInProgress, apiCallType, categories} = this.state;
-    console.log(categories)
     const columns = [
       {
         dataField: 'jeid',
@@ -339,6 +357,21 @@ class Batch extends Component {
         classes: 'k-body-cell',
         headerStyle: { width: '5%' },
         editable: false
+      },
+      {
+        dataField: '',
+        text: '',
+        headerFormatter: (col, colIdx) => <DeleteIcon />,
+        formatter: (cell, row, index) => (
+          <div className='k-force' style={{padding: "8px 10px"}}>
+            <DeleteIcon onClick={() => this.deleteJE(row)} />
+          </div>
+        ),
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        headerStyle: { width: '5%' },
+        editable: false,
+        hidden: batch && batch.batchStatus !== 'open',
       }
     ];  
   
