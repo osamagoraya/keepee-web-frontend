@@ -163,7 +163,7 @@ class Batch extends Component {
         const {batch} = this.state;
         const response = JSON.parse(r.data.body);
         batch.journal_entries[batch.journal_entries.length-1].id = response.id;
-        batch.journal_entries[batch.journal_entries.length-1].jeid = response.jeID;
+        batch.journal_entries[batch.journal_entries.length-1].jeId = response.jeId;
         this.setState({batch: batch})
       },
       (r) => {
@@ -211,7 +211,7 @@ class Batch extends Component {
     const {batch, apiCallInProgress, apiCallType, categories} = this.state;
     const columns = [
       {
-        dataField: 'jeid',
+        dataField: 'jeId',
         text: 'JE',
         headerClasses: 'k-header-cell',
         headerAlign: 'center',
