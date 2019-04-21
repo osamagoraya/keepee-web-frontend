@@ -12,6 +12,7 @@ import Button from '../Common/Button';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 import InvoiceDocumentModal from '../Invoice/InvoiceDocumentModal';
+import swal from 'sweetalert';
 
 
 class Batch extends Component {
@@ -167,9 +168,10 @@ class Batch extends Component {
         batch.journal_entries[batch.journal_entries.length-1].id = response.id;
         batch.journal_entries[batch.journal_entries.length-1].jeId = response.jeId;
         this.setState({batch: batch})
+        swal ( "Success" ,  "Journal Entry Added Successfully!" ,  "success" )
       },
       (r) => {
-        alert("JE addition failed");
+        swal ( "Oops" ,  "Journal Entry insertion failed!" ,  "error" )
       },
     );
   }
