@@ -17,55 +17,6 @@ import Auth from '../../Services/Auth';
 import DismissableDialog from '../Common/DismissableDialog';
 import InvoiceDocumentModal from '../Invoice/InvoiceDocumentModal';
 
-class InvoiceFormDialog extends Component {
-
-  state = {
-    isSubmitting: false,
-    categories: null
-  }
-
-  formSubmitter = null;
-  bindSubmitForm(submitter) {
-    console.log("submitted updated");
-    this.formSubmitter = submitter ;
-  }
-
-
-  render () {
-    const {isSubmitting} = this.state;
-    const button = (
-      <Button className="left-bottom-fab-btn" fab onClick={() => this.refs["createJeDialog"].handleClickOpen() }>
-        <AddIcon />
-      </Button>
-    );
-    return (
-      <DismissableDialog
-        ref="createJeDialog"
-        openDialogButton={button}
-        title="Create Invoice"
-      >
-        <InvoiceForm 
-          onSubmit={() => {
-            this.setState({isSubmitting: false});
-            this.props.onSubmit();
-          }}
-          bindSubmitForm={this.bindSubmitForm.bind(this)}
-          loggedInUser={Auth.getLoggedInUser()}
-        />
-        <Button 
-            variant="blue" 
-            // disabled={isSubmitting} TODO: allow this, currently backend fails
-            disabled={true} 
-            onClick={(e) => {
-              this.setState({isSubmitting: true});
-              this.formSubmitter(e)}
-          }>
-            {isSubmitting ? "Creating ...": "continue"}
-          </Button>
-      </DismissableDialog>
-    );
-  }
-}
 
 class Batch extends Component {
 
@@ -157,6 +108,7 @@ class Batch extends Component {
       const {batch} = this.state;
       batch.journal_entries.length = batch.journal_entries.length-1;
       this.setState({batch});
+      return;
     }
 
     sendAuthenticatedAsyncRequest(  

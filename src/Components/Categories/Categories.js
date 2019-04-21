@@ -5,6 +5,7 @@ import {BootstrapTable, cellEditFactory, Type} from '../Common/Table';
 import Button from '../Common/Button';
 import Caption from '../Common/Caption';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 
@@ -82,6 +83,33 @@ class Categories extends Component {
         this.setState({apiCallInProgress: false, apiCallType: 'none'})
       },
     );
+  }
+
+  deleteCategory = (category) => {
+   
+    console.log("Deleting category:", category);
+
+    if (category.id === -1) {
+      const {categories} = this.state;
+      categories.shift();
+      this.setState({categories});
+      return;
+    }
+
+    sendAuthenticatedAsyncRequest(  
+      "/deleteCategory",
+      "POST", 
+      {categoryId: category.id},
+      (r) => {
+        const {categories} = this.state;
+        const updatedCategories = categories.filter(c => c.id !== category.id);
+        this.setState({categories: updatedCategories})
+      },
+      (r) => {
+        alert("Unable to delete Journal Entry");
+      },
+    );
+
   }
 
   onCategoryUpdate = (oldValue, newValue, row, column) => {
@@ -186,6 +214,20 @@ class Categories extends Component {
       formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
       editCellClasses: 'k-edit-cell'
     },
+    {
+      dataField: '',
+      text: '',
+      headerFormatter: (col, colIdx) => <DeleteIcon />,
+      formatter: (cell, row, index) => (
+        <div className='k-force' style={{padding: "8px 10px"}}>
+          <DeleteIcon onClick={() => this.deleteCategory(row)} />
+        </div>
+      ),
+      headerClasses: 'k-header-cell',
+      classes: 'k-body-cell',
+      headerStyle: { width: '5%' },
+      editable: false,
+    }
   ];
 
   addRow = () => {
