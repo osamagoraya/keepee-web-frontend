@@ -151,7 +151,9 @@ class Batch extends Component {
       vat: parseInt(je.vat,10), 
       sum: parseInt(je.sum,10), 
       imageId: '', 
-      vendorName: je.vendor 
+      vendorName: je.vendor,
+      userId : this.state.selectedUserId,
+      accountantId : ''
     }
     console.log("transformed JE", journalEntry)
     sendAuthenticatedAsyncRequest(  
