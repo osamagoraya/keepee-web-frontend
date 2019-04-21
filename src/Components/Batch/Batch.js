@@ -169,11 +169,23 @@ class Batch extends Component {
 
   addJE(je) {
     console.log("Adding journal entry:", je);
+    const journalEntry = {
+      reference_1: je.reference_one, 
+      reference_2: je.reference_two, 
+      jeDate: Moment(je.jeDate).format("YYYY-MM-DD"), 
+      details: je.details, 
+      categoryId: parseInt(je.categoryId, 10), 
+      vat: parseInt(je.vat,10), 
+      sum: parseInt(je.sum,10), 
+      imageId: '', 
+      vendorName: je.vendor 
+    }
+    console.log("transformed JE", journalEntry)
     this.setState({apiCallInProgress: true, apiCallType: 'add'});
     sendAuthenticatedAsyncRequest(  
       "/saveInvoiceData",
       "POST", 
-      je,
+      {values: journalEntry},
       (r) => {
         console.log("JE added", r);
         const {batch} = this.state;
@@ -191,7 +203,9 @@ class Batch extends Component {
   onJournalEntryUpdate = (oldValue, newValue, row, column) => {
     console.log("Journal Entry updated",oldValue, newValue, row, column);
     if (row.id === -1) {
-      if (!row.name || !row.vat || !row.categoryNo || !row.type){
+      if (row.categoryId)
+        row.vat = this.getCategoryAttribute(row.categoryId, 'vatpercent', this.state.categories || []) || "0";
+      if (!row.reference_one || !row.jeDate || !row.details || !row.categoryId || !row.categoryId || !row.sum || !row.vat){
         console.log("incomplete data, not adding JE")
       } else {
         this.addJE(row);
@@ -203,22 +217,30 @@ class Batch extends Component {
 
   addRow = () => {
     const {batch} = this.state;
-    if (batch.filter(je => je.id === -1).length > 0)
+    if (batch.journal_entries.filter(je => je.id === -1).length > 0)
       alert ("Please complete data for previously added JE");
     else {
       const emptyJE = {
-        id: -1, reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', vat: '', sum: '', imageId: '', vendorName: '' 
+        id: -1, jeid: '', reference_one: '', reference_two: '', jeDate: '', details: '', categoryId: '', vat: '', sum: '', imageType: '', vendor: '' 
       }
       
-      batch.push(emptyJE);
+      batch.journal_entries.push(emptyJE);
 
       this.setState({ batch });
     }
   }
+
+  getCategoryAttribute(categoryId, attribute, categories) {
+    const matchedCategories = categories.filter(c => c.categoryId === categoryId);
+    return (matchedCategories.length > 0
+      ? matchedCategories[0][attribute]
+      : null 
+    );
+  }
   
   render() {
     const {batch, apiCallInProgress, apiCallType, categories} = this.state;
-  
+    console.log(categories)
     const columns = [
       {
         dataField: 'jeid',
@@ -237,7 +259,7 @@ class Batch extends Component {
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>{
           categories
-          ? categories.filter(c => c.categoryId === cell)[0].categoryLabel
+          ? this.getCategoryAttribute(cell, 'categoryLabel', categories)
           : row.categoryLabel
         }</div>,
         editCellClasses: 'k-edit-cell',
@@ -299,25 +321,27 @@ class Batch extends Component {
         text: '',
         headerFormatter: (col, colIdx) => <ClipIcon />,
         formatter: (cell, row, index) => {
-          return (
-            <div className='k-force' style={{padding: "8px 10px"}}>
-              <InvoiceDocumentModal 
-                documentType={row.imageType}
-                documentPath={row.imageLink}
-                selectedImageId={row.id}
-                uniqueKey={`batchDoc${row.id}`}
-              />
-            </div>
-          );
+          if (row.imageType)
+            return (
+              <div className='k-force' style={{padding: "8px 10px"}}>
+                <InvoiceDocumentModal 
+                  documentType={row.imageType}
+                  documentPath={row.imageLink}
+                  selectedImageId={row.id}
+                  uniqueKey={`batchDoc${row.id}`}
+                />
+              </div>
+            );
+          else
+              return <div className='k-force'>N/A</div>
         },
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '5%' },
         editable: false
       }
-    ];
-
-
+    ];  
+  
     const cellEdit = cellEditFactory({ 
       mode: 'click', 
       afterSaveCell: this.onJournalEntryUpdate,
@@ -351,7 +375,9 @@ class Batch extends Component {
           /> 
             {
               batch.batchStatus === 'open'
-              ? <InvoiceFormDialog onSubmit={() => this.fetchBatchDetails(batch.batchId)}/> // count not bumped on list view
+              ? <Button className="left-bottom-fab-btn" fab onClick={this.addRow}>
+                  <AddIcon />
+                </Button>
               : null  
             }
             {
