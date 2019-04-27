@@ -16,64 +16,69 @@ import {InvisibleTable, TableBody, TableCell, TableRow} from '../Common/Invisibl
 class TrialBalance extends Component {
 
   state = {
-    selectedTbId: this.props.match.params.tbId,
+    selectedTrailBalanceYear: this.props.match.params.trailBalanceYear,
     apiCallInProgress: false,
     apiCallType: 'fetch',
-    selectedUserId: 1, //TODO: this.props.selectedUserId
+    selectedUserId: this.props.selectedUserId, //TODO: this.props.selectedUserId
   }
 
   componentDidMount() {
-    this.fetchPnlReport(this.state.selectedTbId, this.state.selectedUserId);
+    this.fetchTrailBalanceReport(this.state.selectedTrailBalanceYear, this.state.selectedUserId);
   }
   
   componentWillReceiveProps(nextProps) {
-    const {tbId} = nextProps.match.params;
+    const {trailBalanceYear} = nextProps.match.params;
     const {selectedUserId} = nextProps;
-    console.log("props received", tbId, selectedUserId)
-    if (tbId !== this.state.selectedItaId || selectedUserId !== this.state.selectedUserId){
-      console.log("updating state of ITA", tbId, selectedUserId)
+    console.log("props received", trailBalanceYear, selectedUserId)
+    if (trailBalanceYear !== this.state.selectedTrailBalanceYear || selectedUserId !== this.state.selectedUserId){
+      console.log("updating state of ITA", trailBalanceYear, selectedUserId)
       this.setState({
-        selectedTbId: tbId,
+        selectedTrailBalanceYear: trailBalanceYear,
         selectedUserId: selectedUserId
       });
-      this.fetchPnlReport(tbId, selectedUserId);
+      this.fetchTrailBalanceReport(trailBalanceYear, selectedUserId);
     }
   }
 
-  fetchPnlReport(tbId, selectedUserId) {
-    // TODO: remove from here
-    this.setState({
-      apiCallInProgress: false, 
-      apiCallType: 'none', 
-      report: {
-        id: tbId, 
-        year: "2019"
-      }
-    });
-    
-    return;
-    // remove till here
-
-    if ( !tbId || !selectedUserId) {
-      console.log("Incomplete information to fetch the TB report", tbId, selectedUserId);
+  fetchTrailBalanceReport(trailBalanceYear, selectedUserId) {
+    console.log("fetching PNL report for ", selectedUserId, trailBalanceYear)
+    if ( !trailBalanceYear || !selectedUserId) {
+      console.log("Incomplete information to fetch the TB report", trailBalanceYear, selectedUserId);
       return;
     }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
-      "/getTrialBalanceReport",
+      "/trialBalanceReport",
       "POST", 
-      {userId: selectedUserId, trialBalanceId: tbId},
+      {userId: selectedUserId, reportYear: trailBalanceYear},
       (r) => {
         console.log("response received TB", r);
-        this.setState({report: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
+        this.setState({report: this.prepareReport(JSON.parse(r.data.body)), apiCallInProgress: false, apiCallType: 'none'})
       },
       (r) => this.setState({apiCallInProgress: false, apiCallType: 'none'})
     );
   }
 
+  prepareReport(reportData) {
+    const groupedData = {};
+    let totalSum = 0;
+    Object.keys(reportData).forEach(k => {
+      let sum = 0;
+      reportData[k].map(c => c.sum).forEach(s => sum += parseFloat(s,10));
+      totalSum += sum;
+      groupedData[k] = {
+        data: reportData[k],
+        sum: sum
+      }
+    });
+
+    return { totalSum, groupedData };
+  }
+
+
   render() {
     const {apiCallInProgress, report, selectedUserId} = this.state;
-    console.log("Rendering TB report",apiCallInProgress, report, selectedUserId);
+
     if (apiCallInProgress){
       return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
     } else if (!selectedUserId) {
@@ -129,21 +134,38 @@ class TrialBalance extends Component {
                 bordered={false}
                 headerClasses="k-header-row"
                 />
-              <ExpansionPanel>
-                <ExpansionPanelSummary>
-                  <ColoredHeader leftLabel="770" rightLabel="Banks" />
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-              <ExpansionPanel>
-                <ExpansionPanelSummary>
-                  <ColoredHeader leftLabel="960" rightLabel="Income" />
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-            </Grid>
+               {
+                Object.keys(report.groupedData).map((groupKey, i) => (
+                  <ExpansionPanel key={i}>
+                    <ExpansionPanelSummary>
+                      <ColoredHeader rightLabel={groupKey.substring(0,1).toUpperCase() + groupKey.substring(1)} />
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                      <InvisibleTable>
+                        <TableBody>
+                        {
+                          report.groupedData[groupKey].data.map((category, j) => (
+                            <TableRow key={j}>
+                              <TableCell align="right">{category.name}</TableCell>
+                              <TableCell align="right">{category.type === "credit" ? category.sum : 0 /* TODO: verify if sum is the key which has the sum for this category */}</TableCell>
+                              <TableCell align="right">{category.type === "debit" ? category.sum : 0}</TableCell>
+                              <TableCell align="right">{category.sum}</TableCell>
+                            </TableRow>
+                          ))
+                        }
+                          <TableRow>
+                            <TableCell align="right"><strong>Total</strong></TableCell>
+                            <TableCell align="right"></TableCell>
+                            <TableCell align="right"></TableCell>
+                            <TableCell align="right">{report.groupedData[groupKey].sum}</TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </InvisibleTable>
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
+                ))
+              }
+           </Grid>
           </Grid>
           <Grid item md={1}></Grid>
         </Grid>

@@ -48,7 +48,7 @@ class Dashboard extends Component {
               <ProtectedRoute path="/workspace/report/vat/:vatId" component={(props) => <Vat selectedUserId={selectedUserId} {...props}/>} exact/>
               <ProtectedRoute path="/workspace/report/income-tax-advances/:itaId" component={(props) => <IncomeTaxAdvances selectedUserId={selectedUserId} {...props}/>} exact/>
               <ProtectedRoute path="/workspace/report/profilt-and-loss/:pnlYear" component={(props) => <ProfitAndLoss selectedUserId={selectedUserId} {...props}/>} exact/>
-              <ProtectedRoute path="/workspace/report/trial-balance/:tbId" component={(props) => <TrialBalance selectedUserId={selectedUserId} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/report/trial-balance/:trailBalanceYear" component={(props) => <TrialBalance selectedUserId={selectedUserId} {...props}/>} exact/>
               <ProtectedRoute path="/profile/business/:profileId" component={BusinessProfile} exact/>
               <ProtectedRoute path="/settings/categories" component={Categories} exact/>
             </Switch>

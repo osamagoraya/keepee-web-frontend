@@ -30,19 +30,6 @@ class TrialBalanceItems extends React.Component {
   }
 
   fetchListData(selectedUserId) {
-    // TODO: remove from here
-    this.setState({
-      listData: this.trialBalanceFormatter([
-        {year: "2019", id: 4},
-        {year: "2018", id: 3},
-        {year: "2017", id: 2},
-        {year: "2016", id: 1},
-      ]),
-      loading: false
-    });
-    return;
-    // remove till here
-    
     if (selectedUserId === undefined || selectedUserId === null){
       console.log("not fetching Trail Balance reports, no selected user id found");
       return;
@@ -54,7 +41,7 @@ class TrialBalanceItems extends React.Component {
     }
     this.setState({listData: [], loading: true});
     sendAuthenticatedAsyncRequest(
-      "/getTrialBalanceReports",
+      "/trialBalanceReports",
       "POST",
       {userId: selectedUserId},
       (r) => this.setState({
@@ -69,8 +56,8 @@ class TrialBalanceItems extends React.Component {
   
     console.log("Trail Balance Reports received",data);
     return data.map(tb => ({
-        label: tb.year,
-        path: `${localPath}/${tb.id}`
+        label: tb.report,
+        path: `${localPath}/${tb.report}`
       })
     );
   }
