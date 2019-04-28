@@ -52,3 +52,10 @@ export const ExpansionPanelDetails = withStyles(theme => ({
     backgroundColor: 'rgba(0,0,0,.03)',
   },
 }))(MuiExpansionPanelDetails);
+
+export const CompactExpansionPanelDetails = withStyles(theme => ({
+  root: {
+    padding: "0",
+    backgroundColor: 'rgb(248, 248, 248)',
+  },
+}))(MuiExpansionPanelDetails);
