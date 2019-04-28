@@ -9,7 +9,7 @@ import './TrialBalance.css'
 import Caption from '../Common/Caption';
 import Divider from '../Common/Divider';
 import ColoredHeader from '../Common/ColoredHeader';
-import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary} from '../Common/ExpansionPanel';
+import {ExpansionPanel, CompactExpansionPanelDetails, ExpansionPanelSummary} from '../Common/ExpansionPanel';
 import {BootstrapTable} from '../Common/Table';
 import {InvisibleTable, TableBody, TableCell, TableRow} from '../Common/InvisibleTable';
 
@@ -77,8 +77,7 @@ class TrialBalance extends Component {
 
 
   render() {
-    const {apiCallInProgress, report, selectedUserId} = this.state;
-
+    const {apiCallInProgress, report, selectedUserId, selectedTrailBalanceYear} = this.state;
     if (apiCallInProgress){
       return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
     } else if (!selectedUserId) {
@@ -93,7 +92,7 @@ class TrialBalance extends Component {
           <Grid item md={1}></Grid>
           <Grid item container md={10} >
             <Grid item md={12}>
-              <Caption style={{paddingLeft: 20}}>{report.year}</Caption>
+              <Caption style={{paddingLeft: 20}}>{selectedTrailBalanceYear}</Caption>
               <Divider />
             </Grid>
             <Grid item md={2}></Grid>
@@ -140,7 +139,7 @@ class TrialBalance extends Component {
                     <ExpansionPanelSummary>
                       <ColoredHeader rightLabel={groupKey.substring(0,1).toUpperCase() + groupKey.substring(1)} />
                     </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
+                    <CompactExpansionPanelDetails>
                       <InvisibleTable>
                         <TableBody>
                         {
@@ -161,7 +160,7 @@ class TrialBalance extends Component {
                           </TableRow>
                         </TableBody>
                       </InvisibleTable>
-                    </ExpansionPanelDetails>
+                    </CompactExpansionPanelDetails>
                   </ExpansionPanel>
                 ))
               }
