@@ -8,6 +8,8 @@ import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService'
 import Auth from '../../Services/Auth';
 import InvoiceForm from '../Forms/InvoiceForm/InvoiceForm';
 
+
+import InvoiceDocumentModal from './InvoiceDocumentModal';
 import InvoiceDocumentCard from './InvoiceDocumentCard';
 
 const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
@@ -119,13 +121,20 @@ class Invoice extends Component {
           </Grid>
           <Grid item sm={1}></Grid>
           <Grid item container sm={7} >
-              <InvoiceDocumentCard 
-                cardClassNames="document-box"
-                cardMediaStyle={{ transform: `rotate(${this.state.imageAngle}deg)`}}
-                documentType={selectedImageFileType}
-                documentPath={selectedImagePath}
-                selectedImageId={selectedImageID}
-              />
+            <InvoiceDocumentCard 
+              cardClassNames="document-box"
+              cardMediaStyle={{ transform: `rotate(${this.state.imageAngle}deg)`}}
+              documentType={selectedImageFileType}
+              documentPath={selectedImagePath}
+              selectedImageId={selectedImageID}
+            /> <br />
+
+                <InvoiceDocumentModal 
+                  documentType={selectedImageFileType}
+                  documentPath={selectedImagePath}
+                  selectedImageId={selectedImageID}
+                  uniqueKey={`invoicepopup${selectedImageID}`}
+                />
             <div className="doc-action-btn-box">
               <Button size="small" variant="grey" className="doc-action-btns" disabled={apiCallInProgress} onClick={() => this.updateImageStatus('/irrelevantPicture', 'irrelevant')}>
                 {apiCallInProgress 
