@@ -12,9 +12,13 @@ class InvoiceDocumentModal extends React.Component {
     const {documentType,uniqueKey } = this.props;
 
     const button = (
-      documentType === "image" 
-      ? <CameraIcon onClick={() => this.refs[uniqueKey].handleClickOpen() }/> 
-      : <FileIcon onClick={() => this.refs[uniqueKey].handleClickOpen() }/>
+      <span style={{cursor: 'pointer'}}>
+      {
+        documentType === "image" 
+        ? <CameraIcon onClick={() => this.refs[uniqueKey].handleClickOpen() }/> 
+        : <FileIcon onClick={() => this.refs[uniqueKey].handleClickOpen() }/>
+      }
+      </span>
     );
     return (
       <DismissableDialog
