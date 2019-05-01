@@ -57,7 +57,8 @@ class IncomeTaxAdvancesItems extends React.Component {
   
     return data.map(ita => ({
         label: ita.month.split("-").join("."),
-        path: `${localPath}/${ita.id}`
+        path: `${localPath}/${ita.id}`,
+        rawLabel: ita.month.split("-").join("."),
       })
     );
   }

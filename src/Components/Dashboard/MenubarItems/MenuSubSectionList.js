@@ -52,7 +52,7 @@ const ListItem = withStyles({
 class MenuSubSectionList extends React.Component {
   state = {
     selectedIndex: null,
-    listData: this.props.listData,
+    listData: this.props.listData
   };
 
   componentWillReceiveProps(nextProps) {
@@ -63,6 +63,13 @@ class MenuSubSectionList extends React.Component {
   handleListItemClick = (event, index) => {
     this.setState({ selectedIndex: index });
   };
+
+  filter = (e) => {
+    const {value} = e.target;
+    const {listData} = this.state;
+    listData.forEach(item => item.rawLabel.indexOf(value) >= 0 ? item.hide = false : item.hide = true)
+    this.setState({listData});
+  }
 
   render() {
     const { classes } = this.props;
@@ -76,11 +83,14 @@ class MenuSubSectionList extends React.Component {
           InputProps={{
             startAdornment: <InputAdornment position="start"><Search /></InputAdornment>,
           }}
+          onChange={this.filter}
         />
         {
           listData.length !== 0
           ? <List component="nav">
-            {listData.map((item,idx) => (
+            {listData.map((item,idx) => ( 
+              !item.hide 
+              ? 
               <span key={`item--${idx}`}>
                 <ListItem
                   component={Link}
@@ -93,6 +103,7 @@ class MenuSubSectionList extends React.Component {
                 </ListItem>
                 {idx === listData.length - 1 ? null : <Divider />}
               </span>
+              : null
             ))}
           </List>
           : <p>Nothing new here</p>

@@ -58,7 +58,8 @@ class ProfitAndLossItems extends React.Component {
     console.log("P&L Reports received",data);
     return data.map(pnl => ({
         label: pnl.report,
-        path: `${localPath}/${pnl.report}`
+        path: `${localPath}/${pnl.report}`,
+        rawLabel: pnl.report,
       })
     );
   }

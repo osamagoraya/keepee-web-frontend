@@ -57,7 +57,8 @@ class TrialBalanceItems extends React.Component {
     console.log("Trail Balance Reports received",data);
     return data.map(tb => ({
         label: tb.report,
-        path: `${localPath}/${tb.report}`
+        path: `${localPath}/${tb.report}`,
+        rawLabel: tb.report,
       })
     );
   }

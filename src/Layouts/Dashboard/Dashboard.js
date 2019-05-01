@@ -20,7 +20,7 @@ import TrialBalance from '../../Components/TrialBalance/TrialBalance';
 class Dashboard extends Component {
 
   state = {
-    selectedUserId: 2,
+    selectedUserId: null,
     loggedInUser: Auth.getLoggedInUser()
   }
 

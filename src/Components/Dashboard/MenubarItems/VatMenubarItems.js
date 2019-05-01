@@ -69,7 +69,8 @@ class VatMenubarItems extends React.Component {
     console.log("VAT Reports received",data);
     return data.map(vat => ({
         label: `${Moment(vat.startDate).format("MM.YY")} - ${Moment(vat.endDate).format("MM.YY")}`,
-        path: `${localPath}/${vat.id}`
+        path: `${localPath}/${vat.id}`,
+        rawLabel: `${Moment(vat.startDate).format("MM.YY")} - ${Moment(vat.endDate).format("MM.YY")}`,
       })
     );
   }

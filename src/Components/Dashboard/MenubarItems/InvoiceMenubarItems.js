@@ -73,7 +73,8 @@ class InvoiceMenubarItems extends React.Component {
     console.log("Images received",data);
     return data.map(image => ({
         label: imageName(image.imageLink),
-        path: `${localPath}/${image.imageId}/${image.imageType}/${imageStamp(image.imageLink)}`
+        path: `${localPath}/${image.imageId}/${image.imageType}/${imageStamp(image.imageLink)}`,
+        rawLabel: imageName(image.imageLink),
       })
     );
   }

@@ -80,7 +80,8 @@ class BatchMenubarItems extends React.Component {
       batch.batchNumber = data.length-idx;
       return {
         label: batch.batchStatus === 'open' ? batchNameWithDetails(batch) : batchName(batch),
-        path: `${localPath}/${batch.batchId}`
+        path: `${localPath}/${batch.batchId}`,
+        rawLabel: batchName(batch)
       };
     });
   }
