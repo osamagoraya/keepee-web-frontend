@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
+
 import {withRouter} from 'react-router-dom';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
@@ -9,6 +10,11 @@ import {InvisibleTable, TableBody, TableCell, TableRow} from '../Common/Invisibl
 import './IncomeTaxAdvances.css'
 import Caption from '../Common/Caption';
 import Divider from '../Common/Divider';
+
+import pdfMake from 'pdfmake/build/pdfmake';
+import vfsFonts from 'pdfmake/build/vfs_fonts';
+import {incomeTaxAdvancesDD} from '../../Reports/IncomeTaxAdvances/report';
+import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
 
 class IncomeTaxAdvances extends Component {
 
@@ -55,6 +61,12 @@ class IncomeTaxAdvances extends Component {
     );
   }
 
+  prepareAndDownloadPdf() {
+    const {vfs} = vfsFonts.pdfMake;
+  	pdfMake.vfs = vfs;
+    pdfMake.createPdf(incomeTaxAdvancesDD(this.state.report)).download(`IncomeTaxAdvancesReport - ${this.state.report.month}.pdf`);
+  }
+
   render() {
     const {apiCallInProgress, report, selectedUserId} = this.state;
     console.log("Rendering ITA report",apiCallInProgress, report, selectedUserId);
@@ -73,7 +85,9 @@ class IncomeTaxAdvances extends Component {
           <Grid item md={1}></Grid>
           <Grid item container md={10} >
             <Grid item md={12}>
-              <Caption style={{paddingLeft: 20}}>{report.month.split("-").join(".")}</Caption>
+              <Caption style={{paddingLeft: 20}}>
+                {report.month.split("-").join(".")} <PdfAndExcelDownloader onPdf={() => this.prepareAndDownloadPdf()}/> 
+              </Caption>
               <Divider />
             </Grid>
             <Grid item md={12}> 

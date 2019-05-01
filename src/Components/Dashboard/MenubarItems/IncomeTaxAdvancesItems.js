@@ -52,9 +52,9 @@ class IncomeTaxAdvancesItems extends React.Component {
   }
 
   incomeTaxAdvancesFormatter = (data) => {
+    console.log("Income tax advances Reports received",data);
     if (!data) return [];
   
-    console.log("Income tax advances Reports received",data);
     return data.map(ita => ({
         label: ita.month.split("-").join("."),
         path: `${localPath}/${ita.id}`

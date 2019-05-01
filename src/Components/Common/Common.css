@@ -221,3 +221,23 @@ tr td:last-child .k-force {
 .k-invisible-table-high-row {
   height: 70px !important;
 }
+
+/**
+* Download PDF button
+*/
+.download-options {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: #707070;
+  font-style: initial;
+}
+
+.download-button {
+  color: inherit !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: 400;
+  font-style: italic;
+  padding: 0 !important;
+}

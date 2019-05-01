@@ -19,19 +19,3 @@
   margin-bottom: 5px;
   letter-spacing: 0.5px;
 }
-
-.download-options {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  color: #707070;
-}
-
-.download-button {
-  color: inherit !important;
-  font-family: inherit !important;
-  font-size: inherit !important;
-  font-weight: 400;
-  font-style: italic;
-  padding: 0 !important;
-}

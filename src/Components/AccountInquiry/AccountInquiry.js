@@ -9,10 +9,10 @@ import './AccountInquiry.css'
 import Chip from '@material-ui/core/Chip';
 import ClipIcon from '@material-ui/icons/AttachFile';
 import InvoiceDocumentModal from '../Invoice/InvoiceDocumentModal';
-import Button from '@material-ui/core/Button';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 import ColoredHeader from '../Common/ColoredHeader';
+import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
 
 class AccountInquiry extends Component {
 
@@ -215,7 +215,7 @@ class AccountInquiry extends Component {
       <div className="canvas-container account-inquiry-container">
       <div className="category-chip-container">
         {this.categoryInformation(report, apiCallInProgress, isValid, selectedUserId)}
-        <div className="download-options" ><Button className="download-button">PDF</Button> | <Button className="download-button">XL</Button></div>
+        <PdfAndExcelDownloader />
       </div>
       {
         (apiCallInProgress && apiCallType === 'fetch') || (!report || Object.keys(report).length === 0)
