@@ -9,6 +9,10 @@ import Button from '../Common/Button';
 import {InvisibleTable, TableBody, TableHead, TableCell, TableRow} from '../Common/InvisibleTable';
 import './Vat.css'
 import Caption from '../Common/Caption';
+import pdfMake from 'pdfmake/build/pdfmake';
+import vfsFonts from 'pdfmake/build/vfs_fonts';
+import {vatDD} from '../../Reports/vatReport';
+import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
 
 class Vat extends Component {
 
@@ -55,6 +59,13 @@ class Vat extends Component {
     );
   }
 
+
+  prepareAndDownloadPdf() {
+    const {vfs} = vfsFonts.pdfMake;
+  	pdfMake.vfs = vfs;
+    pdfMake.createPdf(vatDD(this.state.report)).download(`VatReport - ${this.state.report.month}.pdf`);
+  }
+
   render() {
     const {apiCallInProgress, report, selectedUserId} = this.state;
     console.log("Rendering vat report",apiCallInProgress, report, selectedUserId);
@@ -78,7 +89,10 @@ class Vat extends Component {
         <Grid container>
           <Grid item md={2}></Grid>
           <Grid item container md={8} >
-            <Grid item md={12}> 
+            <Grid item md={12}>
+              <Caption style={{paddingLeft: 20}}>
+                <PdfAndExcelDownloader onPdf={() => this.prepareAndDownloadPdf()}/> 
+              </Caption>
               <ColoredHeader rightLabel="Deals"/>
                 <InvisibleTable>
                 <TableHead>
