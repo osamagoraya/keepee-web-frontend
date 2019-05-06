@@ -12,6 +12,9 @@ import InvoiceDocumentModal from '../Invoice/InvoiceDocumentModal';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 import ColoredHeader from '../Common/ColoredHeader';
+import pdfMake, { fonts } from 'pdfmake/build/pdfmake';
+import vfsFonts from 'pdfmake/build/vfs_fonts';
+import {accountInquiryDD} from '../../Reports/accountInquiries';
 import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
 
 class AccountInquiry extends Component {
@@ -22,6 +25,8 @@ class AccountInquiry extends Component {
     searchString: this.props.location.search,
     filters: queryString.parse(this.props.location.search),
     selectedUserId: this.props.selectedUserId,
+    selectedUserName: this.props.selectedUserName,
+    selectedUserNID: this.props.selectedUserNID,
     isValid: false
   }
 
@@ -108,6 +113,134 @@ class AccountInquiry extends Component {
         balance: balance
       }
     });
+  }
+
+  prepareAndDownloadPdf() {
+    const {vfs} = vfsFonts.pdfMake;
+    pdfMake.vfs = vfs;
+
+    // pdfMake.vfs.fonts = {
+    //   hebrew : {
+    //     normal : 'HeeboBold.ttf',
+    //     bold   : 'HeeboBlack.ttf',
+    //     italics : 'HeeboBold.ttf',
+    //     bolditalics : 'HeeboBold.ttf'
+    //   }
+    // }
+
+    let { report } = this.state;  
+    let data = Object.keys(report).map((k,i) => {
+      const data = this.prepareData(report[k]);
+      const totalBalance = data.map(d => d.balance).reduce((sum, curr) => sum+curr);   
+      return ( 
+                    [
+                      {
+                        style: 'input',
+                        table: {
+                          "dontBreakRows": true,
+                            widths: ['*','*'],
+                            heights: [20],
+                            margin: [0,0,0,0],
+                            body: [
+                                [
+                                    {
+                                        text: {text:k,alignment:'left',bold: true},
+                                        fillColor: '#94D3D2',
+                                        border: [false, false, false, false],
+                                        margin: [40,10]
+                                    },
+                                    {
+                                      text: {text:totalBalance,alignment:'right',bold: true},
+                                      fillColor: '#94D3D2',
+                                      border: [false, false, false, false],
+                                      margin: [40,10]
+                                  },
+                                ]
+                            ]
+                        }
+                      },
+                      data.map((row, j) => {
+                        return (
+                          {
+                            style: 'tableExample',
+                            "dontBreakRows": true,
+                            table: {
+                              "dontBreakRows": true,
+                                widths: [40,45,40,45,40,40,45,45,40,45],
+                                heights: [20],
+                              body: [
+                                [
+                                  {
+                                    text: {text:row.je_id,alignment:'center',bold: true,fontSize: 9},
+                                    fillColor: '#dbdada;',
+                                    border: [false, false, false, false],
+                                    margin: [0,10]
+                                  },
+                                  {
+                                    text: {text:row.movement_no,alignment:'center',bold: true,fontSize: 9},
+                                    fillColor: '#dbdada;',
+                                    border: [false, false, false, false],
+                                    margin: [0,10]
+                                  },
+                                  {
+                                    text: {text:row.batch_id,alignment:'center',bold: true,fontSize: 9},
+                                    fillColor: '#dbdada;',
+                                    border: [false, false, false, false],
+                                    margin: [0,10]
+                                  },
+                                  {
+                                    text: {text:row.reference_1,alignment:'center',bold: true,fontSize: 9},
+                                    fillColor: '#dbdada;',
+                                    border: [false, false, false, false],
+                                    margin: [0,10]
+                                  },
+                                  {
+                                    text: {text:row.je_date,alignment:'center',bold: true,fontSize: 9},
+                                    fillColor: '#dbdada;',
+                                    border: [false, false, false, false],
+                                    margin: [0,10]
+                                  },
+                                  {
+                                    text: {text:row.vendor_name,alignment:'center',bold: true,fontSize: 9},
+                                    fillColor: '#dbdada;',
+                                    border: [false, false, false, false],
+                                    margin: [0,10]
+                                  },
+                                  {
+                                    text: {text:row.details,alignment:'center',bold: true,fontSize: 9},
+                                    fillColor: '#dbdada;',
+                                    border: [false, false, false, false],
+                                    margin: [0,10]
+                                  },
+                                  {
+                                    text: {text:row.type === 'credit' ? row.sum : 0,alignment:'center',bold: true,fontSize: 9},
+                                    fillColor: '#dbdada;',
+                                    border: [false, false, false, false],
+                                    margin: [0,10]
+                                  },
+                                  {
+                                    text: {text:row.type === 'debit' ? row.sum : 0,alignment:'center',bold: true,fontSize: 9},
+                                    fillColor: '#dbdada;',
+                                    border: [false, false, false, false],
+                                    margin: [0,10]
+                                  },
+                                  {
+                                    text: {text:row.sum,alignment:'center',bold: true,fontSize: 9},
+                                    fillColor: '#dbdada;',
+                                    border: [false, false, false, false],
+                                    margin: [0,10]
+                                  },
+                                ]
+                              ]
+                            }
+                          }
+                        )
+                      }),
+                ]
+                  )
+              }
+    );
+    pdfMake.createPdf(accountInquiryDD(data,this.state.selectedUserName,this.state.selectedUserNID)).download(`Account Inquiries.pdf`);
   }
 
   render() {
@@ -215,7 +348,7 @@ class AccountInquiry extends Component {
       <div className="canvas-container account-inquiry-container">
       <div className="category-chip-container">
         {this.categoryInformation(report, apiCallInProgress, isValid, selectedUserId)}
-        <PdfAndExcelDownloader />
+        <PdfAndExcelDownloader onPdf={() => this.prepareAndDownloadPdf()}/>
       </div>
       {
         (apiCallInProgress && apiCallType === 'fetch') || (!report || Object.keys(report).length === 0)
