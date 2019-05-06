@@ -12,6 +12,10 @@ import ColoredHeader from '../Common/ColoredHeader';
 import {ExpansionPanel, CompactExpansionPanelDetails, ExpansionPanelSummary} from '../Common/ExpansionPanel';
 import {BootstrapTable} from '../Common/Table';
 import {InvisibleTable, TableBody, TableCell, TableRow} from '../Common/InvisibleTable';
+import pdfMake, { fonts } from 'pdfmake/build/pdfmake';
+import vfsFonts from 'pdfmake/build/vfs_fonts';
+import {tbDD} from '../../Reports/trialBalance';
+import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
 
 class TrialBalance extends Component {
 
@@ -19,29 +23,32 @@ class TrialBalance extends Component {
     selectedTrailBalanceYear: this.props.match.params.trailBalanceYear,
     apiCallInProgress: false,
     apiCallType: 'fetch',
-    selectedUserId: this.props.selectedUserId, //TODO: this.props.selectedUserId
+    selectedUserId: this.props.selectedUserId,
+    selectedUserName : this.props.selectedUserName
   }
 
   componentDidMount() {
-    this.fetchTrailBalanceReport(this.state.selectedTrailBalanceYear, this.state.selectedUserId);
+    this.fetchTrailBalanceReport(this.state.selectedTrailBalanceYear, this.state.selectedUserId,this.state.selectedUserName);
   }
   
   componentWillReceiveProps(nextProps) {
     const {trailBalanceYear} = nextProps.match.params;
     const {selectedUserId} = nextProps;
-    console.log("props received", trailBalanceYear, selectedUserId)
+    const {selectedUserName} = nextProps;
+    console.log("props received", trailBalanceYear, selectedUserId, selectedUserName)
     if (trailBalanceYear !== this.state.selectedTrailBalanceYear || selectedUserId !== this.state.selectedUserId){
       console.log("updating state of ITA", trailBalanceYear, selectedUserId)
       this.setState({
         selectedTrailBalanceYear: trailBalanceYear,
-        selectedUserId: selectedUserId
+        selectedUserId: selectedUserId,
+        selectedUserName: selectedUserName
       });
-      this.fetchTrailBalanceReport(trailBalanceYear, selectedUserId);
+      this.fetchTrailBalanceReport(trailBalanceYear, selectedUserId, selectedUserName);
     }
   }
 
-  fetchTrailBalanceReport(trailBalanceYear, selectedUserId) {
-    console.log("fetching PNL report for ", selectedUserId, trailBalanceYear)
+  fetchTrailBalanceReport(trailBalanceYear, selectedUserId, selectedUserName) {
+    console.log("fetching PNL report for ", selectedUserId, trailBalanceYear, selectedUserName)
     if ( !trailBalanceYear || !selectedUserId) {
       console.log("Incomplete information to fetch the TB report", trailBalanceYear, selectedUserId);
       return;
@@ -75,6 +82,132 @@ class TrialBalance extends Component {
     return { totalSum, groupedData };
   }
 
+  prepareAndDownloadPdf() {
+    const {vfs} = vfsFonts.pdfMake;
+    pdfMake.vfs = vfs;
+
+    // pdfMake.vfs.fonts = {
+    //   hebrew : {
+    //     normal : 'HeeboBold.ttf',
+    //     bold   : 'HeeboBlack.ttf',
+    //     italics : 'HeeboBold.ttf',
+    //     bolditalics : 'HeeboBold.ttf'
+    //   }
+    // }
+
+    let { report } = this.state;  
+    let data = Object.keys(report.groupedData).map(function(groupKey, i)
+                {    
+                  return ( 
+                    [
+                      {
+                        style: 'input',
+                        "dontBreakRows": true,
+                        table: {
+                          widths: [140,'*'],
+                          heights: [20],
+                          margin: [0,0,0,0],
+                          unbreakable: true,
+                          "dontBreakRows": true,
+                            body: [
+                                [
+                                  {
+                                    text: {text:report.groupedData[groupKey].sum,alignment:'left',bold: true},
+                                    fillColor: '#94D3D2',
+                                    border: [false, false, false, false],
+                                    margin: [15,10]
+                                  },
+                                  {
+                                    text: {text:groupKey.substring(0,1).toUpperCase() + groupKey.substring(1),alignment:'right',bold: true},
+                                    fillColor: '#94D3D2',
+                                    border: [false, false, false, false],
+                                    margin: [40,10]
+                                  },
+                                ]
+                            ]
+                        }
+                      },
+                      report.groupedData[groupKey].data.map((category, j) => {
+                        return ([
+                          {
+                            style: 'tableExample',
+                            "dontBreakRows": true,
+                            unbreakable: true,
+                            table: {
+                                widths: [140,'*','*','*'],
+                                "dontBreakRows": true,
+                                heights: [10,10],
+                              body: [
+                                [
+                                  {
+                                    text: {text:category.name,alignment:'center'},
+                                    border: [false, false, false, false],
+                                    fillColor: '#ffffff',
+                                    margin: [5,10]
+                                  },
+                                  {
+                                    text: {text: category.type === "credit" ? category.sum : 0 ,alignment:'center',color: '#c4c0c0'},
+                                    fillColor: '#ffffff',
+                                    border: [false, false, false, false],
+                                    margin: [5,10]
+                                  },
+                                  {
+                                    text: {text: category.type === "debit" ? category.sum : 0 ,alignment:'center',color: '#c4c0c0'},
+                                    fillColor: '#ffffff',
+							                      border: [false, false, false, false],
+							                      margin: [5,10]
+                                  },
+                                  {
+                                    text: {text:category.sum,alignment:'center'},
+                                    fillColor: '#ffffff',
+                                    border: [false, false, false, false],
+                                    margin: [5,10]
+                                  },
+                                ]
+                              ]
+                            }
+                          }
+                        ])
+                      }),
+                      { 
+                      style: 'tableExample',
+                      "dontBreakRows": true,
+                      table: {
+                        "dontBreakRows": true,
+                        widths: [140,'*','*','*'],
+                        heights: [20],
+                        body: [
+                          [
+                            {
+                              text: {text:'Total '+ groupKey,alignment:'center',bold: true},
+                              colSpan: 2,
+                              border: [false, false, false, false],
+                              margin: [5,5]
+                            },
+                            {
+                              border: [false, false, false, false],
+                              text: ''
+                            },
+                            {
+                              border: [false, false, false, false],
+                              text: ''
+                            },
+                            {
+                              text: {text:report.groupedData[groupKey].sum,alignment:'center',color: '#796f6f',bold: true},
+                              border: [false, false, false, false],
+                              margin: [5,5]
+                            },
+                            
+                          ]
+                        ]
+                      },
+                      }, // Total
+                ]
+                  )
+              }
+    );
+    pdfMake.createPdf(tbDD(data,this.state.selectedUserName,this.state.selectedTrailBalanceYear)).download(`TrialBalance - ${this.state.selectedTrailBalanceYear}.pdf`);
+  }
 
   render() {
     const {apiCallInProgress, report, selectedUserId, selectedTrailBalanceYear} = this.state;
@@ -92,7 +225,9 @@ class TrialBalance extends Component {
           <Grid item md={1}></Grid>
           <Grid item container md={10} >
             <Grid item md={12}>
-              <Caption style={{paddingLeft: 20}}>{selectedTrailBalanceYear}</Caption>
+              <Caption style={{paddingLeft: 20}}>
+              {selectedTrailBalanceYear} <PdfAndExcelDownloader onPdf={() => this.prepareAndDownloadPdf()}/>
+              </Caption>
               <Divider />
             </Grid>
             <Grid item md={2}></Grid>

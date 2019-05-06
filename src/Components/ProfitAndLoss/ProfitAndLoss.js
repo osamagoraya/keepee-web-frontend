@@ -11,6 +11,10 @@ import Divider from '../Common/Divider';
 import ColoredHeader from '../Common/ColoredHeader';
 import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary} from '../Common/ExpansionPanel';
 import {InvisibleTable, TableBody, TableCell, TableRow} from '../Common/InvisibleTable';
+import pdfMake, { fonts } from 'pdfmake/build/pdfmake';
+import vfsFonts from 'pdfmake/build/vfs_fonts';
+import {PnlDD} from '../../Reports/PnlReport';
+import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
 
 class ProfitAndLoss extends Component {
 
@@ -18,31 +22,34 @@ class ProfitAndLoss extends Component {
     selectedPnlYear: this.props.match.params.pnlYear,
     apiCallInProgress: false,
     apiCallType: 'fetch',
-    selectedUserId: this.props.selectedUserId
+    selectedUserId: this.props.selectedUserId,
+    selectedUserName: this.props.selectedUserName
   }
 
   componentDidMount() {
-    this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId);
+    this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId, this.state.selectedUserName);
   }
   
   componentWillReceiveProps(nextProps) {
     const {pnlYear} = nextProps.match.params;
     const {selectedUserId} = nextProps;
-    console.log("props received", pnlYear, selectedUserId)
+    const {selectedUserName} = nextProps;
+    console.log("props received", pnlYear, selectedUserId, selectedUserName)
     if (pnlYear !== this.state.selectedItaId || selectedUserId !== this.state.selectedUserId){
       console.log("updating state of ITA", pnlYear, selectedUserId)
       this.setState({
         selectedPnlYear: pnlYear,
-        selectedUserId: selectedUserId
+        selectedUserId: selectedUserId,
+        selectedUserName: selectedUserName
       });
-      this.fetchPnlReport(pnlYear, selectedUserId);
+      this.fetchPnlReport(pnlYear, selectedUserId, selectedUserName);
     }
   }
 
-  fetchPnlReport(pnlYear, selectedUserId) {
-    console.log("fetching PNL report for ", selectedUserId, pnlYear)
+  fetchPnlReport(pnlYear, selectedUserId, selectedUserName) {
+    console.log("fetching PNL report for ", selectedUserId, pnlYear, selectedUserName)
     if ( !pnlYear || !selectedUserId) {
-      console.log("Incomplete information to fetch the PNL report", pnlYear, selectedUserId);
+      console.log("Incomplete information to fetch the PNL report", pnlYear, selectedUserId, selectedUserName);
       return;
     }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
@@ -73,6 +80,114 @@ class ProfitAndLoss extends Component {
     return { totalSum, groupedData };
   }
 
+  prepareAndDownloadPdf() {
+    const {vfs} = vfsFonts.pdfMake;
+    pdfMake.vfs = vfs;
+
+    // pdfMake.vfs.fonts = {
+    //   hebrew : {
+    //     normal : 'HeeboBold.ttf',
+    //     bold   : 'HeeboBlack.ttf',
+    //     italics : 'HeeboBold.ttf',
+    //     bolditalics : 'HeeboBold.ttf'
+    //   }
+    // }
+
+    let { report } = this.state;  
+    let data = Object.keys(report.groupedData).map(function(groupKey, i)
+                {    
+                  return ( 
+                    [
+                      {
+                        style: 'input',
+                        table: {
+                            widths: ['*'],
+                            heights: [20],
+                            margin: [0,0,0,0],
+                            body: [
+                                [
+                                    {
+                                        text: {text:groupKey.substring(0,1).toUpperCase() + groupKey.substring(1),alignment:'right',bold: true},
+                                        fillColor: '#94D3D2',
+                                        border: [false, false, false, false],
+                                        margin: [40,10]
+                                    },
+                                ]
+                            ]
+                        }
+                      },
+                      report.groupedData[groupKey].data.map((category, j) => {
+                        return ([
+                          {
+                            style: 'tableExample',
+                            table: {
+                                widths: [40,'*','*','*'],
+                                heights: [10,10],
+                              body: [
+                                [
+                                  {
+                                    border: [false, false, false, false],
+                                    text : ''
+                                  },
+                                  {
+                                    text: {text:category.sum,alignment:'center',color: '#c4c0c0'},
+                                    fillColor: '#ffffff',
+                                    border: [false, false, false, true],
+                                    margin: [5,5]
+                                  },
+                                  {
+                                    text: {text:category.name,alignment:'center'},
+                                    colSpan: 2,
+                                    border: [false, false, false, false],
+                                    margin: [5,5]
+                                  },
+                                  {
+                                    
+                                  },
+                                  
+                                ]
+                              ]
+                            }
+                          }
+                        ])
+                      }),
+                      { 
+                      style: 'tableExample',
+                      table: {
+                          widths: [40,'*','*','*'],
+                          heights: [10,10],
+                        body: [
+                          [
+                            {
+                              border: [false, false, false, false],
+                              text : ''
+                            },
+                            {
+                              text: {text:report.groupedData[groupKey].sum,alignment:'center',color: '#796f6f',bold: true},
+                              border: [false, false, false, false],
+                              margin: [5,5]
+                            },
+                            {
+                              text: {text:'Total '+ groupKey,alignment:'center',bold: true},
+                              colSpan: 2,
+                              border: [false, false, false, false],
+                              margin: [5,5]
+                            },
+                            {
+                              
+                            },
+                            
+                          ]
+                        ]
+                      },
+                      }, // Total
+                ]
+                  )
+              }
+    );
+    pdfMake.createPdf(PnlDD(data, this.state.selectedUserName, this.state.selectedPnlYear)).download(`ProfitnLoss - ${this.state.selectedPnlYear}.pdf`);
+  }
+
   render() {
     const {apiCallInProgress, report, selectedUserId, selectedPnlYear} = this.state;
 
@@ -90,7 +205,9 @@ class ProfitAndLoss extends Component {
           <Grid item md={1}></Grid>
           <Grid item container md={10} >
             <Grid item md={12}>
-              <Caption style={{paddingLeft: 20}}>{selectedPnlYear}</Caption>
+              <Caption style={{paddingLeft: 20}}>
+              {selectedPnlYear} <PdfAndExcelDownloader onPdf={() => this.prepareAndDownloadPdf()}/>
+              </Caption>
               <Divider />
             </Grid>
             <Grid item md={2}></Grid>

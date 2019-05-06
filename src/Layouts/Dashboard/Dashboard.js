@@ -21,11 +21,12 @@ class Dashboard extends Component {
 
   state = {
     selectedUserId: null,
+    selectedUserName: null,
     loggedInUser: Auth.getLoggedInUser()
   }
 
   render () {
-    const {selectedUserId, loggedInUser} = this.state;
+    const {selectedUserId, loggedInUser, selectedUserName} = this.state;
     // console.log("rendering dashboard", this.state);
 
     return (
@@ -38,17 +39,17 @@ class Dashboard extends Component {
         </div>
         <div style={content} className="full-height">
           {/* TODO: remove user from state and store in redux */}
-          <Topbar onUserChange={(selectedUserId) => this.setState({selectedUserId})} loggedInUser={loggedInUser}/>
+          <Topbar onUserChange={(selectedUserId, selectedUserName) => this.setState({selectedUserId,selectedUserName})} loggedInUser={loggedInUser}/>
           <div style={canvas}>
             <Switch>
               {/* TODO: move these routes in AppRoute or something similar? */}
-              <ProtectedRoute path="/workspace/invoice/:imageId/:imageType/:imageStamp" component={(props) => <Invoice selectedUserId={selectedUserId} {...props}/>} exact />
-              <ProtectedRoute path="/workspace/batch/:batchId" component={(props) => <Batch selectedUserId={selectedUserId} {...props}/>} exact/>
-              <ProtectedRoute path="/workspace/account-inquiry" component={(props) => <AccountInquiry selectedUserId={selectedUserId} {...props}/>}/>
-              <ProtectedRoute path="/workspace/report/vat/:vatId" component={(props) => <Vat selectedUserId={selectedUserId} {...props}/>} exact/>
-              <ProtectedRoute path="/workspace/report/income-tax-advances/:itaId" component={(props) => <IncomeTaxAdvances selectedUserId={selectedUserId} {...props}/>} exact/>
-              <ProtectedRoute path="/workspace/report/profilt-and-loss/:pnlYear" component={(props) => <ProfitAndLoss selectedUserId={selectedUserId} {...props}/>} exact/>
-              <ProtectedRoute path="/workspace/report/trial-balance/:trailBalanceYear" component={(props) => <TrialBalance selectedUserId={selectedUserId} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/invoice/:imageId/:imageType/:imageStamp" component={(props) => <Invoice selectedUserId={selectedUserId} selectedUserName={selectedUserName} {...props}/>} exact />
+              <ProtectedRoute path="/workspace/batch/:batchId" component={(props) => <Batch selectedUserId={selectedUserId} selectedUserName={selectedUserName} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/account-inquiry" component={(props) => <AccountInquiry selectedUserId={selectedUserId} selectedUserName={selectedUserName} {...props}/>}/>
+              <ProtectedRoute path="/workspace/report/vat/:vatId" component={(props) => <Vat selectedUserId={selectedUserId} selectedUserName={selectedUserName} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/report/income-tax-advances/:itaId" component={(props) => <IncomeTaxAdvances selectedUserId={selectedUserId} selectedUserName={selectedUserName} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/report/profilt-and-loss/:pnlYear" component={(props) => <ProfitAndLoss selectedUserId={selectedUserId} selectedUserName={selectedUserName} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/report/trial-balance/:trailBalanceYear" component={(props) => <TrialBalance selectedUserId={selectedUserId} selectedUserName={selectedUserName} {...props}/>} exact/>
               <ProtectedRoute path="/profile/business/:profileId" component={BusinessProfile} exact/>
               <ProtectedRoute path="/settings/categories" component={Categories} exact/>
             </Switch>

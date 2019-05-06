@@ -31,6 +31,7 @@ class Topbar extends React.Component {
   state = {
     userList: null,
     selectedUserID: null,
+    selectedUserName : null,
     isLoadingUsers: true
   }
 
@@ -69,8 +70,8 @@ class Topbar extends React.Component {
   handleSelect = (selectedOption) => {
     // console.log("handle select",selectedOption);
     if(selectedOption.value){
-      this.setState({ selectedUserID: selectedOption.value});
-      this.props.onUserChange(selectedOption.value);
+      this.setState({ selectedUserID: selectedOption.value, selectedUserName: selectedOption.label});
+      this.props.onUserChange(selectedOption.value, selectedOption.label);
       this.props.history.push("/");
     }
   }

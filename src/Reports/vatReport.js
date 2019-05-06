@@ -1,4 +1,4 @@
-export const vatDD = (data) => ({
+export const vatDD = (data,businessName,reportPeriod) => ({
   // background color of whole document
   // background color of whole document
   background: function () {
@@ -13,8 +13,8 @@ export const vatDD = (data) => ({
     };
 },
 content: [
-    {text: 'Vat Report', style: 'header'},
-    
+    {text: businessName, style: 'header', alignment: 'right'},
+    {text: reportPeriod, style: 'header', alignment: 'left'},
     {
         style: 'tableExample',
         table: {

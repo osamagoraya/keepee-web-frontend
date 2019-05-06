@@ -64,7 +64,7 @@ class IncomeTaxAdvances extends Component {
   prepareAndDownloadPdf() {
     const {vfs} = vfsFonts.pdfMake;
   	pdfMake.vfs = vfs;
-    pdfMake.createPdf(incomeTaxAdvancesDD(this.state.report)).download(`IncomeTaxAdvancesReport - ${this.state.report.month}.pdf`);
+    pdfMake.createPdf(incomeTaxAdvancesDD(this.state.report,`${this.state.report.month.split("-").join(".")}`)).download(`IncomeTaxAdvancesReport - ${this.state.report.month}.pdf`);
   }
 
   render() {

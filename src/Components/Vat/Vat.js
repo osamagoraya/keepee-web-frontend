@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Moment from 'moment';
 
 import Grid from '@material-ui/core/Grid';
 import {withRouter} from 'react-router-dom';
@@ -20,30 +21,33 @@ class Vat extends Component {
     selectedVatId: this.props.match.params.vatId,
     apiCallInProgress: false,
     apiCallType: 'fetch',
-    selectedUserId: this.props.selectedUserId
+    selectedUserId: this.props.selectedUserId,
+    selectedUserName: this.props.selectedUserName
   }
 
   componentDidMount() {
-    this.fetchVatReport(this.state.selectedVatId, this.state.selectedUserId);
+    this.fetchVatReport(this.state.selectedVatId, this.state.selectedUserId, this.state.selectedUserName);
   }
   
   componentWillReceiveProps(nextProps) {
     const {vatId} = nextProps.match.params;
     const {selectedUserId} = nextProps;
-    console.log("props received", vatId, selectedUserId)
+    const {selectedUserName} = nextProps;
+    console.log("props received", vatId, selectedUserId, selectedUserName)
     if (vatId !== this.state.selectedVatId || selectedUserId !== this.state.selectedUserId){
       console.log("updating state of vat", vatId, selectedUserId)
       this.setState({
         selectedVatId: vatId,
-        selectedUserId: selectedUserId
+        selectedUserId: selectedUserId,
+        selectedUserName : selectedUserName
       });
-      this.fetchVatReport(vatId, selectedUserId);
+      this.fetchVatReport(vatId, selectedUserId, selectedUserName);
     }
   }
 
-  fetchVatReport(vatId, selectedUserId) {
+  fetchVatReport(vatId, selectedUserId, selectedUserName) {
     if ( !vatId || !selectedUserId) {
-      console.log("Incomplete information to fetch the VAT report", vatId, selectedUserId);
+      console.log("Incomplete information to fetch the VAT report", vatId, selectedUserId, selectedUserName);
       return;
     }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
@@ -63,7 +67,7 @@ class Vat extends Component {
   prepareAndDownloadPdf() {
     const {vfs} = vfsFonts.pdfMake;
   	pdfMake.vfs = vfs;
-    pdfMake.createPdf(vatDD(this.state.report)).download(`VatReport - ${this.state.report.month}.pdf`);
+    pdfMake.createPdf(vatDD(this.state.report,this.state.selectedUserName,`${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}`)).download(`VatReport - ${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}.pdf`);
   }
 
   render() {
