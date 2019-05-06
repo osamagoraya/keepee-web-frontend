@@ -1,4 +1,4 @@
-export const PnlDD = (data,businessName,reportYear) => ({
+export const PnlDD = (data,businessName,reportYear, userNID) => ({
 
     
     background: function () {
@@ -13,7 +13,7 @@ export const PnlDD = (data,businessName,reportYear) => ({
 	    };
     },
 	content: [
-        {text: businessName, style: 'header', margin: [5,0],alignment:"right"},
+        {text: businessName + " - " + userNID, style: 'header', margin: [5,0],alignment:"right"},
 		{text: reportYear, style: 'header', margin: [5,0]},
 		{
 			style: 'tableExample',

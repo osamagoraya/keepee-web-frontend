@@ -1,4 +1,4 @@
-export const tbDD = (data,businessName,reportYear) => ({
+export const tbDD = (data,businessName,reportYear,UserNID) => ({
     // background color of whole document
     background: function () {
         return {
@@ -12,7 +12,7 @@ export const tbDD = (data,businessName,reportYear) => ({
 	    };
     },
 	content: [
-        {text: businessName, style: 'header', margin: [5,0],alignment:"right"},
+        {text: businessName + " - " + UserNID, style: 'header', margin: [5,0],alignment:"right"},
 		{text: reportYear, style: 'header', margin: [5,0]},
 		{
             style: 'tableExample',

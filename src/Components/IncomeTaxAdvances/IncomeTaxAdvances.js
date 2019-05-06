@@ -22,11 +22,13 @@ class IncomeTaxAdvances extends Component {
     selectedItaId: this.props.match.params.itaId,
     apiCallInProgress: false,
     apiCallType: 'fetch',
-    selectedUserId: this.props.selectedUserId
+    selectedUserId: this.props.selectedUserId,
+    selectedUserName : this.props.selectedUserName,
+    selectedUserNID : this.props.selectedUserNID
   }
 
   componentDidMount() {
-    this.fetchItaReport(this.state.selectedItaId, this.state.selectedUserId);
+    this.fetchItaReport(this.state.selectedItaId, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
   }
   
   componentWillReceiveProps(nextProps) {
@@ -43,9 +45,9 @@ class IncomeTaxAdvances extends Component {
     }
   }
 
-  fetchItaReport(itaId, selectedUserId) {
+  fetchItaReport(itaId, selectedUserId, selectedUserName, selectedUserNID) {
     if ( !itaId || !selectedUserId) {
-      console.log("Incomplete information to fetch the ITA report", itaId, selectedUserId);
+      console.log("Incomplete information to fetch the ITA report", itaId, selectedUserId, selectedUserName, selectedUserNID);
       return;
     }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
@@ -64,7 +66,7 @@ class IncomeTaxAdvances extends Component {
   prepareAndDownloadPdf() {
     const {vfs} = vfsFonts.pdfMake;
   	pdfMake.vfs = vfs;
-    pdfMake.createPdf(incomeTaxAdvancesDD(this.state.report,`${this.state.report.month.split("-").join(".")}`)).download(`IncomeTaxAdvancesReport - ${this.state.report.month}.pdf`);
+    pdfMake.createPdf(incomeTaxAdvancesDD(this.state.report,`${this.state.report.month.split("-").join(".")}`,this.state.selectedUserName,this.state.selectedUserNID)).download(`IncomeTaxAdvancesReport - ${this.state.report.month}.pdf`);
   }
 
   render() {

@@ -22,32 +22,35 @@ class Vat extends Component {
     apiCallInProgress: false,
     apiCallType: 'fetch',
     selectedUserId: this.props.selectedUserId,
-    selectedUserName: this.props.selectedUserName
+    selectedUserName: this.props.selectedUserName,
+    selectedUserNID : this.props.selectedUserNID
   }
 
   componentDidMount() {
-    this.fetchVatReport(this.state.selectedVatId, this.state.selectedUserId, this.state.selectedUserName);
+    this.fetchVatReport(this.state.selectedVatId, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
   }
   
   componentWillReceiveProps(nextProps) {
     const {vatId} = nextProps.match.params;
     const {selectedUserId} = nextProps;
     const {selectedUserName} = nextProps;
-    console.log("props received", vatId, selectedUserId, selectedUserName)
+    const {selectedUserNID} = nextProps;
+    console.log("props received", vatId, selectedUserId, selectedUserName, selectedUserNID)
     if (vatId !== this.state.selectedVatId || selectedUserId !== this.state.selectedUserId){
       console.log("updating state of vat", vatId, selectedUserId)
       this.setState({
         selectedVatId: vatId,
         selectedUserId: selectedUserId,
-        selectedUserName : selectedUserName
+        selectedUserName : selectedUserName,
+        selectedUserNID: selectedUserNID
       });
-      this.fetchVatReport(vatId, selectedUserId, selectedUserName);
+      this.fetchVatReport(vatId, selectedUserId, selectedUserName, selectedUserNID);
     }
   }
 
-  fetchVatReport(vatId, selectedUserId, selectedUserName) {
+  fetchVatReport(vatId, selectedUserId, selectedUserName, selectedUserNID) {
     if ( !vatId || !selectedUserId) {
-      console.log("Incomplete information to fetch the VAT report", vatId, selectedUserId, selectedUserName);
+      console.log("Incomplete information to fetch the VAT report", vatId, selectedUserId, selectedUserName, selectedUserNID);
       return;
     }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
@@ -67,7 +70,7 @@ class Vat extends Component {
   prepareAndDownloadPdf() {
     const {vfs} = vfsFonts.pdfMake;
   	pdfMake.vfs = vfs;
-    pdfMake.createPdf(vatDD(this.state.report,this.state.selectedUserName,`${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}`)).download(`VatReport - ${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}.pdf`);
+    pdfMake.createPdf(vatDD(this.state.report,this.state.selectedUserName,`${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}`, this.state.selectedUserNID)).download(`VatReport - ${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}.pdf`);
   }
 
   render() {

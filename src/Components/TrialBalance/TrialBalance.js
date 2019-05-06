@@ -24,31 +24,34 @@ class TrialBalance extends Component {
     apiCallInProgress: false,
     apiCallType: 'fetch',
     selectedUserId: this.props.selectedUserId,
-    selectedUserName : this.props.selectedUserName
+    selectedUserName : this.props.selectedUserName,
+    selectedUserNID  : this.props.selectedUserNID
   }
 
   componentDidMount() {
-    this.fetchTrailBalanceReport(this.state.selectedTrailBalanceYear, this.state.selectedUserId,this.state.selectedUserName);
+    this.fetchTrailBalanceReport(this.state.selectedTrailBalanceYear, this.state.selectedUserId,this.state.selectedUserName, this.props.selectedUserNID);
   }
   
   componentWillReceiveProps(nextProps) {
     const {trailBalanceYear} = nextProps.match.params;
     const {selectedUserId} = nextProps;
     const {selectedUserName} = nextProps;
-    console.log("props received", trailBalanceYear, selectedUserId, selectedUserName)
+    const {selectedUserNID}  = nextProps;
+    console.log("props received", trailBalanceYear, selectedUserId, selectedUserName, selectedUserNID)
     if (trailBalanceYear !== this.state.selectedTrailBalanceYear || selectedUserId !== this.state.selectedUserId){
       console.log("updating state of ITA", trailBalanceYear, selectedUserId)
       this.setState({
         selectedTrailBalanceYear: trailBalanceYear,
         selectedUserId: selectedUserId,
-        selectedUserName: selectedUserName
+        selectedUserName: selectedUserName,
+        selectedUserNID: selectedUserNID
       });
-      this.fetchTrailBalanceReport(trailBalanceYear, selectedUserId, selectedUserName);
+      this.fetchTrailBalanceReport(trailBalanceYear, selectedUserId, selectedUserName, selectedUserNID);
     }
   }
 
-  fetchTrailBalanceReport(trailBalanceYear, selectedUserId, selectedUserName) {
-    console.log("fetching PNL report for ", selectedUserId, trailBalanceYear, selectedUserName)
+  fetchTrailBalanceReport(trailBalanceYear, selectedUserId, selectedUserName, selectedUserNID) {
+    console.log("fetching PNL report for ", selectedUserId, trailBalanceYear, selectedUserName, selectedUserNID)
     if ( !trailBalanceYear || !selectedUserId) {
       console.log("Incomplete information to fetch the TB report", trailBalanceYear, selectedUserId);
       return;
@@ -206,7 +209,7 @@ class TrialBalance extends Component {
                   )
               }
     );
-    pdfMake.createPdf(tbDD(data,this.state.selectedUserName,this.state.selectedTrailBalanceYear)).download(`TrialBalance - ${this.state.selectedTrailBalanceYear}.pdf`);
+    pdfMake.createPdf(tbDD(data,this.state.selectedUserName,this.state.selectedTrailBalanceYear, this.state.selectedUserNID)).download(`TrialBalance - ${this.state.selectedTrailBalanceYear}.pdf`);
   }
 
   render() {

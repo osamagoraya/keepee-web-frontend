@@ -23,31 +23,34 @@ class ProfitAndLoss extends Component {
     apiCallInProgress: false,
     apiCallType: 'fetch',
     selectedUserId: this.props.selectedUserId,
-    selectedUserName: this.props.selectedUserName
+    selectedUserName: this.props.selectedUserName,
+    selectedUserNID: this.props.selectedUserNID
   }
 
   componentDidMount() {
-    this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId, this.state.selectedUserName);
+    this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
   }
   
   componentWillReceiveProps(nextProps) {
     const {pnlYear} = nextProps.match.params;
     const {selectedUserId} = nextProps;
     const {selectedUserName} = nextProps;
-    console.log("props received", pnlYear, selectedUserId, selectedUserName)
+    const {selectedUserNID} = nextProps;
+    console.log("props received", pnlYear, selectedUserId, selectedUserName, selectedUserNID)
     if (pnlYear !== this.state.selectedItaId || selectedUserId !== this.state.selectedUserId){
       console.log("updating state of ITA", pnlYear, selectedUserId)
       this.setState({
         selectedPnlYear: pnlYear,
         selectedUserId: selectedUserId,
-        selectedUserName: selectedUserName
+        selectedUserName: selectedUserName,
+        selectedUserNID: selectedUserNID
       });
-      this.fetchPnlReport(pnlYear, selectedUserId, selectedUserName);
+      this.fetchPnlReport(pnlYear, selectedUserId, selectedUserName, selectedUserNID);
     }
   }
 
-  fetchPnlReport(pnlYear, selectedUserId, selectedUserName) {
-    console.log("fetching PNL report for ", selectedUserId, pnlYear, selectedUserName)
+  fetchPnlReport(pnlYear, selectedUserId, selectedUserName, selectedUserNID) {
+    console.log("fetching PNL report for ", selectedUserId, pnlYear, selectedUserName,selectedUserNID)
     if ( !pnlYear || !selectedUserId) {
       console.log("Incomplete information to fetch the PNL report", pnlYear, selectedUserId, selectedUserName);
       return;
@@ -185,7 +188,7 @@ class ProfitAndLoss extends Component {
                   )
               }
     );
-    pdfMake.createPdf(PnlDD(data, this.state.selectedUserName, this.state.selectedPnlYear)).download(`ProfitnLoss - ${this.state.selectedPnlYear}.pdf`);
+    pdfMake.createPdf(PnlDD(data, this.state.selectedUserName, this.state.selectedPnlYear, this.state.selectedUserNID)).download(`ProfitnLoss - ${this.state.selectedPnlYear}.pdf`);
   }
 
   render() {

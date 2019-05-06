@@ -5,7 +5,7 @@ import d from './d.jpg';
 import e from './e.jpg';
 import f from './f.jpg';
 
-export const incomeTaxAdvancesDD = (data,reportPeriod) => ({
+export const incomeTaxAdvancesDD = (data,reportPeriod,businessName,userNID) => ({
   // background color of whole document
   background: function () {
       return {
@@ -24,6 +24,7 @@ export const incomeTaxAdvancesDD = (data,reportPeriod) => ({
     subject: 'Income tax advances report prepared by Keepee',
   },
   content: [
+    {text: businessName + " - " + userNID, margin: [10,0,0,2], fontSize: 15, color: '#707070', alignment: 'right'},
     {text: reportPeriod, margin: [10,0,0,2], fontSize: 15, color: '#707070'},
     
     {
