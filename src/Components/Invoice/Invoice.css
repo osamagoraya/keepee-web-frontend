@@ -1,14 +1,14 @@
 .document-box {
-  height: 70%;
-  width: 70%;
-  max-height: 500px;
+  height: 80%;
+  width: 80%;
+  max-height: 80%;
 }
 
 .doc-action-btn-box {
   display: block;
   width: 70%;
   height: 10%;
-  margin-top: -12%;
+  margin-top: -7%;
 }
 
 .doc-action-btns {
