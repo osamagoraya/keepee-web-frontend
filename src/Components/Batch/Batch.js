@@ -262,8 +262,11 @@ class Batch extends Component {
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '10%' },
-        formatter: (cell, row, index) => <div className='k-force'>{Moment(cell).format("MM.DD.YY")}</div>,
+        formatter: (cell, row, index) => <div className='k-force'>{Moment(cell).format("DD.MM.YY")}</div>,
         editCellClasses: 'k-edit-cell',
+        editor: {
+          type: Type.DATE,
+        }
       },{
         dataField: 'vendor',
         text: 'Vendor',
