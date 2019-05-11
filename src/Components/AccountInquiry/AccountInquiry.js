@@ -8,6 +8,9 @@ import {BootstrapTable} from '../Common/Table';
 import './AccountInquiry.css'
 import Chip from '@material-ui/core/Chip';
 import ClipIcon from '@material-ui/icons/AttachFile';
+import FixJe from '@material-ui/icons/Cached';
+import Redo from '@material-ui/icons/Redo';
+import Done from '@material-ui/icons/Done';
 import InvoiceDocumentModal from '../Invoice/InvoiceDocumentModal';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
@@ -16,6 +19,8 @@ import pdfMake, { fonts } from 'pdfmake/build/pdfmake';
 import vfsFonts from 'pdfmake/build/vfs_fonts';
 import {accountInquiryDD} from '../../Reports/accountInquiries';
 import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
+import { Button, IconButton } from '@material-ui/core';
+import swal from 'sweetalert';
 
 class AccountInquiry extends Component {
 
@@ -243,6 +248,22 @@ class AccountInquiry extends Component {
     pdfMake.createPdf(accountInquiryDD(data,this.state.selectedUserName,this.state.selectedUserNID)).download(`Account Inquiries.pdf`);
   }
 
+  fixJournalEntry = (jeId,isFixed) => {
+    if(isFixed === 'yes'){
+      swal("Fix Journal Entry", "This journal entry : "+jeId+" is already Fixed!", "info");
+      return;
+    }
+    sendAuthenticatedAsyncRequest(
+      "/fixJournalEntry",
+      "POST", 
+      {
+        jeId: jeId
+      },
+      (r) => swal ( "Success" ,  "Journal Entry Fixed!" ,  "success" ),
+      (r) => swal ( "Oops" ,  "Journal Entry insertion failed!" ,  "error" )
+    );
+  } 
+
   render() {
     const {apiCallInProgress, apiCallType, report, isValid, selectedUserId} = this.state;
     console.log("rendering account inquiry: ", report);
@@ -337,6 +358,29 @@ class AccountInquiry extends Component {
               />
             </div>
           );
+        },
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        headerStyle: { width: '5%' }
+      },
+      {
+        dataField: 'fixJE',
+        text : '',
+        headerFormatter: (col, colIdx) => <FixJe />,
+        formatter: (cell, row, index) => {
+          let jeId = row.je_id;
+          return (
+            
+            <div className='k-force' style={{padding: "8px 10px"}}>
+                    {row.is_fixed === 'no' ? <Redo /> : <Done/> }
+            </div>
+          );
+        },
+        events: {
+          onClick: (e, column, columnIndex, row, rowIndex) => {
+            this.fixJournalEntry(row.je_id,row.is_fixed)
+            row.is_fixed = 'yes';
+          }
         },
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
