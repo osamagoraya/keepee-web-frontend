@@ -1,4 +1,5 @@
 import React from 'react';
+import Moment from 'moment';
 import {withRouter} from 'react-router-dom';
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
 
@@ -55,12 +56,29 @@ class IncomeTaxAdvancesItems extends React.Component {
     console.log("Income tax advances Reports received",data);
     if (!data) return [];
   
-    return data.map(ita => ({
-        label: ita.month.split("-").join("."),
-        path: `${localPath}/${ita.id}`,
-        rawLabel: ita.month.split("-").join("."),
+    // return data.map(ita => ({
+    //     label: ita.month.split("-").join("."),
+    //     path: `${localPath}/${ita.id}`,
+    //     rawLabel: ita.month.split("-").join("."),
+    //   })
+    // );
+
+    if(data.type == "2 month") {
+      return data.reports.map(incomeTax => ({
+        label: `${Moment(incomeTax.startDate.split('-').reverse().join('.')).format("MM.YY")} - ${Moment(incomeTax.endDate.split('-').reverse().join('.')).format("MM.YY")}`,
+        path: `${localPath}/${incomeTax.startDate}/${incomeTax.endDate}`,
+        rawLabel: `${Moment(incomeTax.startDate.split('-').reverse().join('.')).format("MM.YY")} - ${Moment(incomeTax.endDate.split('-').reverse().join('.')).format("MM.YY")}`,
       })
     );
+    }
+    else {
+      return data.reports.map(incomeTax => ({
+        label: `${Moment(incomeTax.startDate.split('-').reverse().join('.')).format("MM.YY")}`,
+        path: `${localPath}/${incomeTax.startDate}/${incomeTax.endDate}`,
+        rawLabel: `${Moment(incomeTax.startDate.split('-').reverse().join('.')).format("MM.YY")}`,
+      })
+    );
+    }
   }
 
   render (){
