@@ -109,13 +109,18 @@ class AccountInquiry extends Component {
   }
 
   prepareData(data) {
+    let prevBalance = 0;
     return data.map(d => {
       let balance = d.type === "debit" ? -1 * parseFloat(d.sum): parseFloat(d.sum);
+      prevBalance = prevBalance + balance;
+
+      console.log("prev",prevBalance);
+      console.log("bal",balance);
       return {
         ...d,
-        credit: d.type === "credit" ? balance: 0,
-        debit: d.type === "debit" ? balance: 0,
-        balance: balance
+        credit: d.type === "credit" ? Math.round(balance * 100) / 100: 0,
+        debit: d.type === "debit" ? Math.round(balance * 100) / 100: 0,
+        balance: Math.round(prevBalance * 100) / 100
       }
     });
   }
@@ -136,7 +141,13 @@ class AccountInquiry extends Component {
     let { report } = this.state;  
     let data = Object.keys(report).map((k,i) => {
       const data = this.prepareData(report[k]);
-      const totalBalance = data.map(d => d.balance).reduce((sum, curr) => sum+curr);   
+      const lastIndex = data.length - 1;
+      const totalBalance = data.map((d,index) => {
+            if(index == lastIndex)
+              { 
+                return parseFloat(d.balance);
+              }
+      });  
       return ( 
                     [
                       {
@@ -155,7 +166,7 @@ class AccountInquiry extends Component {
                                         margin: [40,10]
                                     },
                                     {
-                                      text: {text:totalBalance,alignment:'right',bold: true},
+                                      text: {text:totalBalance[lastIndex],alignment:'right',bold: true},
                                       fillColor: '#94D3D2',
                                       border: [false, false, false, false],
                                       margin: [40,10]
@@ -218,19 +229,19 @@ class AccountInquiry extends Component {
                                     margin: [0,10]
                                   },
                                   {
-                                    text: {text:row.type === 'credit' ? row.sum : 0,alignment:'center',bold: true,fontSize: 9},
+                                    text: {text:row.type === 'credit' ? row.credit : 0,alignment:'center',bold: true,fontSize: 9},
                                     fillColor: '#dbdada;',
                                     border: [false, false, false, false],
                                     margin: [0,10]
                                   },
                                   {
-                                    text: {text:row.type === 'debit' ? row.sum : 0,alignment:'center',bold: true,fontSize: 9},
+                                    text: {text:row.type === 'debit' ? row.debit : 0,alignment:'center',bold: true,fontSize: 9},
                                     fillColor: '#dbdada;',
                                     border: [false, false, false, false],
                                     margin: [0,10]
                                   },
                                   {
-                                    text: {text:row.sum,alignment:'center',bold: true,fontSize: 9},
+                                    text: {text:row.balance,alignment:'center',bold: true,fontSize: 9},
                                     fillColor: '#dbdada;',
                                     border: [false, false, false, false],
                                     margin: [0,10]
@@ -307,7 +318,7 @@ class AccountInquiry extends Component {
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         headerStyle: { width: '10%' },
-        formatter: (cell, row, index) => <div className='k-force'>{Moment(cell).format("MM.DD.YY")}</div>
+        formatter: (cell, row, index) => <div className='k-force'>{Moment(cell).format("DD.MM.YYYY")}</div>
       },{
         dataField: 'vendor_name',
         text: 'Vendor',
@@ -368,7 +379,6 @@ class AccountInquiry extends Component {
         text : '',
         headerFormatter: (col, colIdx) => <FixJe />,
         formatter: (cell, row, index) => {
-          let jeId = row.je_id;
           return (
             
             <div className='k-force' style={{padding: "8px 10px"}}>
@@ -409,10 +419,16 @@ class AccountInquiry extends Component {
           {
             Object.keys(report).map((k,i) => {
               const data = this.prepareData(report[k]);
-              const totalBalance = data.map(d => d.balance).reduce((sum, curr) => sum+curr);
+              const lastIndex = data.length - 1;
+              const totalBalance = data.map((d,index) => {
+                  if(index == lastIndex)
+                    { 
+                       return parseFloat(d.balance);
+                    }
+              });
               return (
                 <div className="k-table-container" key={i}>
-                  <ColoredHeader leftLabel={k} rightLabel={`Balance ${totalBalance}`}/>
+                  <ColoredHeader leftLabel={k} rightLabel={`Balance ${Math.round(totalBalance[lastIndex] * 100) / 100}`}/>
                   <BootstrapTable 
                   keyField='id' 
                   data={data} 
