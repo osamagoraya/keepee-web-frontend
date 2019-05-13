@@ -83,24 +83,8 @@ class Invoice extends Component {
 
     return (
       <Grid container className="canvas-container">
-        <Grid item container sm={2} direction="column" justify="flex-end" alignItems="center">
-          <Button className="bottom-btn-container" 
-            variant="blue" 
-            disabled={apiCallInProgress} 
-            onClick={(e) => {
-              this.setState({apiCallInProgress: true, apiCallType: 'invoice'});
-              this.formSubmitter(e)}
-          }>
-            {apiCallInProgress 
-            ? apiCallType === 'invoice' 
-              ? "submitting ..."
-              : "continue"
-            : "continue"
-            }
-          </Button>
-        </Grid>
-        <Grid item container sm={10} style={{paddingTop:"8%"}}>
-          <Grid item container sm={4} direction="column" alignItems="center" >
+        <Grid item container sm={10}>
+          <Grid item container sm={4} style={{paddingTop:"5%"}} direction="column" alignItems="flex-end" >
             <InvoiceForm 
               imageId={selectedImageID} 
               selectedUserId={selectedUserId} 
@@ -118,9 +102,22 @@ class Invoice extends Component {
               loggedInUser={loggedInUser}
               formStyle={{width: "75%"}}
             />
+            <Button className="bottom-btn-container" 
+            variant="blue" 
+            disabled={apiCallInProgress} 
+            onClick={(e) => {
+              this.setState({apiCallInProgress: true, apiCallType: 'invoice'});
+              this.formSubmitter(e)}
+          }>
+            {apiCallInProgress 
+            ? apiCallType === 'invoice' 
+              ? "submitting ..."
+              : "continue"
+            : "continue"
+            }
+          </Button>
           </Grid>
-          <Grid item sm={1}></Grid>
-          <Grid item container sm={7} >
+          <Grid item container sm={7} style={{ marginTop: "3%", justifyContent: "flex-end"}}>
             <InvoiceDocumentCard 
               cardClassNames="document-box"
               cardMediaStyle={{ transform: `rotate(${this.state.imageAngle}deg)`}}
