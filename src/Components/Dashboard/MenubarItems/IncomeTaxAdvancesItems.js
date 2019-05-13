@@ -66,7 +66,7 @@ class IncomeTaxAdvancesItems extends React.Component {
     if(data.type == "2 month") {
       return data.reports.map(incomeTax => ({
         label: `${Moment(incomeTax.startDate.split('-').reverse().join('.')).format("MM.YY")} - ${Moment(incomeTax.endDate.split('-').reverse().join('.')).format("MM.YY")}`,
-        path: `${localPath}/${incomeTax.startDate}/${incomeTax.endDate}`,
+        path: `${localPath}/${incomeTax.startDate}/${incomeTax.endDate}/${Moment(incomeTax.startDate.split('-').reverse().join('.')).format("MM.YY")} - ${Moment(incomeTax.endDate.split('-').reverse().join('.')).format("MM.YY")}`,
         rawLabel: `${Moment(incomeTax.startDate.split('-').reverse().join('.')).format("MM.YY")} - ${Moment(incomeTax.endDate.split('-').reverse().join('.')).format("MM.YY")}`,
       })
     );
@@ -74,7 +74,7 @@ class IncomeTaxAdvancesItems extends React.Component {
     else {
       return data.reports.map(incomeTax => ({
         label: `${Moment(incomeTax.startDate.split('-').reverse().join('.')).format("MM.YY")}`,
-        path: `${localPath}/${incomeTax.startDate}/${incomeTax.endDate}`,
+        path: `${localPath}/${incomeTax.startDate}/${incomeTax.endDate}/${Moment(incomeTax.startDate.split('-').reverse().join('.')).format("MM.YY")}`,
         rawLabel: `${Moment(incomeTax.startDate.split('-').reverse().join('.')).format("MM.YY")}`,
       })
     );

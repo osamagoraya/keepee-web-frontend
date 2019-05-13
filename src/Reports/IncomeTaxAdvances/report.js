@@ -91,7 +91,7 @@ export const incomeTaxAdvancesDD = (data,reportPeriod,businessName,userNID) => (
                             {
                                 fillColor: 'white',
                                 border: [false,false,false,true],
-                                text : {text: data.advancesByBusinessCyclePercent, alignment : 'right', color: '#828389'}
+                                text : {text: data.advancesByBusinessCycle, alignment : 'right', color: '#828389'}
                             },
                             {
                               border: [false,false,false,false],
@@ -148,7 +148,7 @@ export const incomeTaxAdvancesDD = (data,reportPeriod,businessName,userNID) => (
                             {
                                 fillColor: 'white',
                                 border: [false,false,false,true],
-                                text : {text: data.withholdingTax, alignment : 'right', color: '#828389'}
+                                text : {text: data.withHoldingTax, alignment : 'right', color: '#828389'}
                             },
                             {
                               border: [false,false,false,false],
@@ -260,7 +260,7 @@ export const incomeTaxAdvancesDD = (data,reportPeriod,businessName,userNID) => (
                             {
                                 fillColor: 'white',
                                 border: [false,false,false,true],
-                                text : {text: data.totalPayment, alignment : 'right',color: '#828389' }
+                                text : {text: data.totalPayments, alignment : 'right',color: '#828389' }
                             },
                             {
                               border: [false,false,false,false],

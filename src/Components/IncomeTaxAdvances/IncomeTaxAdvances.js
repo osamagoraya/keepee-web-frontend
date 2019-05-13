@@ -19,7 +19,9 @@ import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
 class IncomeTaxAdvances extends Component {
 
   state = {
-    selectedItaId: this.props.match.params.itaId,
+    selectedStartDate: this.props.match.params.startDate,
+    selectedEndDate: this.props.match.params.endDate,
+    reportTitle : this.props.match.params.reportTitle,
     apiCallInProgress: false,
     apiCallType: 'fetch',
     selectedUserId: this.props.selectedUserId,
@@ -28,35 +30,41 @@ class IncomeTaxAdvances extends Component {
   }
 
   componentDidMount() {
-    this.fetchItaReport(this.state.selectedItaId, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
+    this.fetchItaReport(this.state.selectedStartDate,this.state.selectedEndDate, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
   }
   
   componentWillReceiveProps(nextProps) {
-    const {itaId} = nextProps.match.params;
+    const {selectedStartDate} = nextProps.match.params;
+    const {selectedEndDate} = nextProps.match.params;
+    const {reportTitle} = nextProps.match.params;
     const {selectedUserId} = nextProps;
-    console.log("props received", itaId, selectedUserId)
-    if (itaId !== this.state.selectedItaId || selectedUserId !== this.state.selectedUserId){
-      console.log("updating state of ITA", itaId, selectedUserId)
+
+    console.log("props received", selectedUserId,selectedStartDate,selectedEndDate)
+    if (selectedStartDate !== this.state.selectedStartDate || selectedUserId !== this.state.selectedUserId || selectedEndDate !== this.state.selectedEndDate ){
+      console.log("updating state of ITA", selectedStartDate, selectedEndDate, selectedUserId)
       this.setState({
-        selectedItaId: itaId,
-        selectedUserId: selectedUserId
+        selectedStartDate: selectedStartDate,
+        selectedEndDate: selectedEndDate,
+        selectedUserId: selectedUserId,
+        reportTitle: reportTitle
       });
-      this.fetchItaReport(itaId, selectedUserId);
+      this.fetchItaReport(selectedStartDate,selectedEndDate,selectedUserId);
     }
   }
 
-  fetchItaReport(itaId, selectedUserId, selectedUserName, selectedUserNID) {
-    if ( !itaId || !selectedUserId) {
-      console.log("Incomplete information to fetch the ITA report", itaId, selectedUserId, selectedUserName, selectedUserNID);
+  fetchItaReport(selectedStartDate,selectedEndDate,selectedUserId, selectedUserName, selectedUserNID) {
+    if ( !selectedStartDate || !selectedEndDate || !selectedUserId) {
+      console.log("Incomplete information to fetch the ITA report", selectedStartDate,selectedEndDate, selectedUserId, selectedUserName, selectedUserNID);
       return;
     }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
       "/getIncomeTaxReport",
       "POST", 
-      {userId: selectedUserId, incomeTaxReportId: itaId},
+      {userId: selectedUserId, startDate: selectedStartDate, endDate: selectedEndDate},
       (r) => {
         console.log("response received ITA", r);
+        
         this.setState({report: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
       },
       (r) => this.setState({apiCallInProgress: false, apiCallType: 'none'})
@@ -66,11 +74,12 @@ class IncomeTaxAdvances extends Component {
   prepareAndDownloadPdf() {
     const {vfs} = vfsFonts.pdfMake;
   	pdfMake.vfs = vfs;
-    pdfMake.createPdf(incomeTaxAdvancesDD(this.state.report,`${this.state.report.month.split("-").join(".")}`,this.state.selectedUserName,this.state.selectedUserNID)).download(`IncomeTaxAdvancesReport - ${this.state.report.month}.pdf`);
+    pdfMake.createPdf(incomeTaxAdvancesDD(this.state.report,this.state.reportTitle,this.state.selectedUserName,this.state.selectedUserNID)).download(`IncomeTaxAdvancesReport - ${this.state.report.month}.pdf`);
   }
 
   render() {
-    const {apiCallInProgress, report, selectedUserId} = this.state;
+    const {apiCallInProgress, report, selectedUserId, reportTitle} = this.state;
+
     console.log("Rendering ITA report",apiCallInProgress, report, selectedUserId);
     if (apiCallInProgress){
       return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
@@ -88,7 +97,7 @@ class IncomeTaxAdvances extends Component {
           <Grid item container md={10} >
             <Grid item md={12}>
               <Caption style={{paddingLeft: 20}}>
-                {report.month.split("-").join(".")} <PdfAndExcelDownloader onPdf={() => this.prepareAndDownloadPdf()}/> 
+                {this.state.reportTitle} <PdfAndExcelDownloader onPdf={() => this.prepareAndDownloadPdf()}/> 
               </Caption>
               <Divider />
             </Grid>
@@ -96,21 +105,21 @@ class IncomeTaxAdvances extends Component {
               <InvisibleTable>
               <TableBody>
                 <TableRow height="-high">
-                  <TableCell align="right">{report.businessCycle}</TableCell>
+                  <TableCell align="right">{Math.round(report.businessCycle)}</TableCell>
                   <TableCell align="right">Business Cycle <CustomChip label="a" /></TableCell>
-                  <TableCell align="right">{report.advancesByBusinessCyclePercent}</TableCell>
+                  <TableCell align="right">{Math.round(report.advancesByBusinessCycle)}</TableCell>
                   <TableCell align="right">Advance by Business Cycle %<CustomChip label="d" /></TableCell>
                 </TableRow>
                 <TableRow height="-high">
-                  <TableCell align="right">{report.withholdingTax}</TableCell>
+                  <TableCell align="right">{Math.round(report.withHoldingTax)}</TableCell>
                   <TableCell align="right">Witholding Tax <CustomChip label="b" /></TableCell>
-                  <TableCell align="right">{report.withholdingTaxByAdvances}</TableCell>
+                  <TableCell align="right">{Math.round(report.withholdingTaxByAdvances)}</TableCell>
                   <TableCell align="right">Witholding Tax by Advances <CustomChip label="e" /></TableCell>
                 </TableRow>
                 <TableRow height="-high">
-                  <TableCell align="right">{report.advances}</TableCell>
+                  <TableCell align="right">{Math.round(report.advances)}</TableCell>
                   <TableCell align="right">Advances <CustomChip label="c" /></TableCell>
-                  <TableCell align="right">{report.totalPayment}</TableCell>
+                  <TableCell align="right">{Math.round(report.totalPayments)}</TableCell>
                   <TableCell align="right">Total Payment <CustomChip label="f" /></TableCell>
                 </TableRow>
               </TableBody>
