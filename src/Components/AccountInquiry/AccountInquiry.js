@@ -264,15 +264,29 @@ class AccountInquiry extends Component {
       swal("Fix Journal Entry", "This journal entry : "+jeId+" is already Fixed!", "info");
       return;
     }
-    sendAuthenticatedAsyncRequest(
-      "/fixJournalEntry",
-      "POST", 
-      {
-        jeId: jeId
-      },
-      (r) => swal ( "Success" ,  "Journal Entry Fixed!" ,  "success" ),
-      (r) => swal ( "Oops" ,  "Journal Entry insertion failed!" ,  "error" )
-    );
+    swal({
+      title: "Are you sure?",
+      text: "Your about to nullify the effect of this journal entry!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willFixJournalEntry) => {
+      if (willFixJournalEntry) {
+        sendAuthenticatedAsyncRequest(
+          "/fixJournalEntry",
+          "POST", 
+          {
+            jeId: jeId
+          },
+          (r) => swal ( "Success" ,  "Journal Entry Fixed!" ,  "success" ),
+          (r) => swal ( "Oops" ,  "Journal Entry fixation failed!" ,  "error" )
+        );
+      } else {
+        swal("Operation Stop!");
+      }
+    });
+    
   } 
 
   render() {

@@ -107,20 +107,34 @@ class Batch extends Component {
       this.setState({batch});
       return;
     }
-
-    sendAuthenticatedAsyncRequest(  
-      "/deleteJournalEntry",
-      "POST", 
-      {journalEntryId: je.id},
-      (r) => {
-        const {batch} = this.state;
-        batch.journal_entries = batch.journal_entries.filter(j => j.id !== je.id);
-        this.setState({batch})
-      },
-      (r) => {
-        alert("Unable to delete Journal Entry");
-      },
-    );
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this JE!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        sendAuthenticatedAsyncRequest(  
+          "/deleteJournalEntry",
+          "POST", 
+          {journalEntryId: je.id},
+          (r) => {
+            const {batch} = this.state;
+            batch.journal_entries = batch.journal_entries.filter(j => j.id !== je.id);
+            swal ( "Success" ,  "Journal entry deleted!" ,  "success" );
+            this.setState({batch});
+          },
+          (r) => {
+            alert("Unable to delete Journal Entry");
+          },
+        );
+      } else {
+        swal("Your Journal Entry is safe!");
+      }
+    });
+    
 
   }
 
