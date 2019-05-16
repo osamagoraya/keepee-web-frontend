@@ -82,57 +82,66 @@ class Invoice extends Component {
 
 
     return (
-      <Grid container className="canvas-container">
-        <Grid item container sm={10}>
-          <Grid item container sm={4} style={{paddingTop:"5%"}} direction="column" alignItems="flex-end" >
-            <InvoiceForm 
-              imageId={selectedImageID} 
-              selectedUserId={selectedUserId} 
-              isUserIdRequired={true}
-              onSubmit={() => {
-                this.setState({apiCallInProgress: false, apiCallType: 'none'});
-                this.props.history.push("/workspace/invoice")}
-              }
-              onValidationFailed={() => {
-                // TODO: Sending a warning, please change this method
-                if (apiCallInProgress)
-                  this.setState({apiCallInProgress: false, apiCallType: 'none'})}
-              }
-              bindSubmitForm={this.bindSubmitForm.bind(this)}
-              loggedInUser={loggedInUser}
-              formStyle={{width: "75%"}}
-            />
-            <Button className="bottom-btn-container" 
-            variant="blue" 
-            disabled={apiCallInProgress} 
-            onClick={(e) => {
-              this.setState({apiCallInProgress: true, apiCallType: 'invoice'});
-              this.formSubmitter(e)}
-          }>
-            {apiCallInProgress 
-            ? apiCallType === 'invoice' 
-              ? "submitting ..."
-              : "continue"
-            : "continue"
-            }
-          </Button>
-          </Grid>
-          <Grid item container sm={7} style={{ marginTop: "3%", justifyContent: "flex-end"}}>
-            <InvoiceDocumentCard 
-              cardClassNames="document-box"
-              cardMediaStyle={{ transform: `rotate(${this.state.imageAngle}deg)`}}
-              documentType={selectedImageFileType}
-              documentPath={selectedImagePath}
-              selectedImageId={selectedImageID}
-            /> <br />
-
-                <InvoiceDocumentModal 
-                  documentType={selectedImageFileType}
-                  documentPath={selectedImagePath}
-                  selectedImageId={selectedImageID}
-                  uniqueKey={`invoicepopup${selectedImageID}`}
-                />
-            <div className="doc-action-btn-box">
+      <Grid container className="canvas-container" style={{ flexWrap: 'nowrap !important'}}>
+          <Grid item container sm={3} direction="column">
+            <Grid item container style = {{ flexBasis: '85%'}}>
+              <Grid item sm={12}>
+              <InvoiceForm 
+                imageId={selectedImageID} 
+                selectedUserId={selectedUserId} 
+                isUserIdRequired={true}
+                onSubmit={() => {
+                  this.setState({apiCallInProgress: false, apiCallType: 'none'});
+                  this.props.history.push("/workspace/invoice")}
+                }
+                onValidationFailed={() => {
+                  // TODO: Sending a warning, please change this method
+                  if (apiCallInProgress)
+                    this.setState({apiCallInProgress: false, apiCallType: 'none'})}
+                }
+                bindSubmitForm={this.bindSubmitForm.bind(this)}
+                loggedInUser={loggedInUser}
+                formStyle={{width: "75%",marginLeft: '13%',marginTop: '20%'}}
+              />
+              </Grid>
+            </Grid>
+            <Grid item container style = {{ flexBasis: '15%', justifyContent: 'space-around',alignContent: 'space-around'}}>
+                <Grid item sm={12} style = {{ flexBasis: '60%',marginLeft: '-15%'}}>
+                    <Button className="bottom-btn-container" 
+                    variant="blue" 
+                    disabled={apiCallInProgress} 
+                    onClick={(e) => {
+                      this.setState({apiCallInProgress: true, apiCallType: 'invoice'});
+                      this.formSubmitter(e)}
+                  }>
+                    {apiCallInProgress 
+                    ? apiCallType === 'invoice' 
+                      ? "submitting ..."
+                      : "continue"
+                    : "continue"
+                    }
+                    </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          <Grid item container sm={9} direction="column" style={{ flexWrap: 'nowrap'}}>
+              <Grid item container direction="column" style = {{ flexBasis: '90%'}}>
+              <InvoiceDocumentCard 
+                cardClassNames="document-box"
+                cardMediaStyle={{ transform: `rotate(${this.state.imageAngle}deg)`,maxHeight: '470px'}}
+                documentType={selectedImageFileType}
+                documentPath={selectedImagePath}
+                selectedImageId={selectedImageID}
+              />
+                 <InvoiceDocumentModal 
+                    documentType={selectedImageFileType}
+                    documentPath={selectedImagePath}
+                    selectedImageId={selectedImageID}
+                    uniqueKey={`invoicepopup${selectedImageID}`}
+                  />
+              </Grid>
+              <Grid item container style={{ flexBasis: '5%', alignItems: 'center'}}>
+                <div className="doc-action-btn-box">
               <Button size="small" variant="grey" className="doc-action-btns" disabled={apiCallInProgress} onClick={() => this.updateImageStatus('/irrelevantPicture', 'irrelevant')}>
                 {apiCallInProgress 
                   ? apiCallType === 'irrelevant' 
@@ -153,8 +162,8 @@ class Invoice extends Component {
                 <img src={iconRotate} alt="Not Found"/>
               </Button>
             </div>
+              </Grid>
           </Grid>
-        </Grid>
         {/* <Grid item sm={6}>
         </Grid> */}
       </Grid>

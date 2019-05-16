@@ -1,22 +1,23 @@
 import React from 'react';
-
+import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 
 const verticallyCenteredImage = {
   display: "inline-block",
   height: "100%",
-  verticalAlign: "middle"
+  verticalAlign: "middle",
 }
 
 class InvoiceDocumentCard extends React.Component {
   render () {
     const {cardClassNames,cardMediaStyle,documentType,documentPath,selectedImageId } = this.props;
     return (
-      <Card className={cardClassNames}>
-        <div style={{ height: '100%'}}>
+      <Card className={cardClassNames} style={{ overflow: "hidden"}}>
+        <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}} className="Test">
           <span style={verticallyCenteredImage}></span>
         { selectedImageId && documentType === "image" 
-        ? <img style={cardMediaStyle} src={documentPath} alt="beautoful"/>
+        ? 
+            <img class="img-responsive" style={cardMediaStyle} src={documentPath} alt="beautiful"/>
         : selectedImageId && documentType === "pdf" 
           ? <embed src={documentPath} type="application/pdf" style={{width: "100%", height: "100%"}}  /> 
           : <div>בחר תמונה</div>
