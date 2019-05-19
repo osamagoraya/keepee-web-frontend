@@ -60,12 +60,51 @@ class Vat extends Component {
       {userId: selectedUserId, vatReportId: vatId},
       (r) => {
         console.log("response received VAT", r);
-        this.setState({report: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
+        this.setState({report: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'});
       },
       (r) => this.setState({apiCallInProgress: false, apiCallType: 'none'})
     );
   }
 
+  confirmVatReport(){
+    let { selectedVatId } = this.state;
+    if(!selectedVatId){
+      console.log("Incomplete information to confirm the VAT report with id: ", selectedVatId);
+      return;
+    }
+    sendAuthenticatedAsyncRequest(
+      "/confirmVatReport",
+      "POST",
+      {vatReportId : selectedVatId},
+      (r) => {
+        console.log("response received: ", r);
+        this.setState({apiCallInProgress: false, apiCallType: 'none'});
+        this.props.history.push("/workspace/report/vat");
+      },
+      (r) => this.setState({apiCallInProgress: false, apiCallType: 'none'})
+    );
+  }
+
+  reOpenVatReport(){
+    let { selectedVatId, selectedUserId } = this.state; 
+    let vatReportStartDate = this.state.report.start_date;
+
+    if(!selectedVatId || !selectedUserId || !vatReportStartDate){
+      console.log("Incomplete information to close the VAT report with id: ", selectedVatId,selectedUserId,vatReportStartDate);
+      return;
+    }
+    sendAuthenticatedAsyncRequest(
+      "/reopenVatReport",
+      "POST",
+      {vatReportId : selectedVatId , vatReportStartDate : vatReportStartDate, userId: selectedUserId },
+      (r) => {
+        console.log("response received: ", r);
+        this.setState({apiCallInProgress: false, apiCallType: 'none'});
+        this.props.history.push("/workspace/report/vat");
+      },
+      (r) => this.setState({apiCallInProgress: false, apiCallType: 'none'})
+    );
+  }
 
   prepareAndDownloadPdf() {
     const {vfs} = vfsFonts.pdfMake;
@@ -74,9 +113,9 @@ class Vat extends Component {
   }
 
   render() {
-    const {apiCallInProgress, report, selectedUserId} = this.state;
+    const {apiCallInProgress,apiCallType, report, selectedUserId} = this.state;
     console.log("Rendering vat report",apiCallInProgress, report, selectedUserId);
-    if (apiCallInProgress){
+    if (apiCallInProgress && apiCallType == 'fetch'){
       return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
     } else if (!selectedUserId) {
       return (<Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Selecting a user is mandatory </Caption>);
@@ -167,8 +206,38 @@ class Vat extends Component {
                 </InvisibleTable>
             </Grid>            
             <Grid item md={12} container spacing={24} style={{marginTop: "2%"}}>
-              <Grid item md={2}><Button variant="blue" className="vat-button" size="small">Confirm</Button></Grid>
-              <Grid item md={2}><Button variant="red" className="vat-button" size="small">Cancel</Button></Grid>
+              <Grid item md={2}>
+                  { report.status == "open" ?
+                  <Button 
+                      variant="blue" 
+                      className="vat-button" 
+                      size="small"
+                      disabled={apiCallInProgress} 
+                      onClick={(e) => {
+                      this.setState({apiCallInProgress: true, apiCallType: 'confirm'});
+                      this.confirmVatReport()}
+                      }
+                  >
+                    {
+                      apiCallInProgress ? apiCallType === 'confirm' ? "closing..." : "confirm" : "confirm"
+                    }
+                  </Button> : 
+                  <Button 
+                      variant="red" 
+                      className="vat-button" 
+                      size="small"
+                      disabled={apiCallInProgress} 
+                      onClick={(e) => {
+                      this.setState({apiCallInProgress: true, apiCallType: 'confirm'});
+                      this.reOpenVatReport()}
+                      }
+                  >
+                      {
+                      apiCallInProgress ? apiCallType === 'reopen' ? "reopening..." : "reopen" : "reopen"
+                    }
+                  </Button>
+                  }
+              </Grid>
             </Grid> 
           </Grid>
           <Grid item md={2}></Grid>
