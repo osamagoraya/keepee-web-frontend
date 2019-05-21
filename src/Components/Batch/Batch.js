@@ -185,7 +185,7 @@ class Batch extends Component {
         swal ( "Success" ,  "Journal Entry Added Successfully!" ,  "success" )
       },
       (r) => {
-        swal ( "Oops" ,  "Journal Entry insertion failed!" ,  "error" )
+        swal ( "Oops" ,  "Journal Entry Exists Already!" ,  "error" )
       },
     );
   }

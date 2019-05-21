@@ -16,7 +16,7 @@ class InvoiceDocumentModal extends React.Component {
       {
         documentType === "image" 
         ? <CameraIcon onClick={() => this.refs[uniqueKey].handleClickOpen() }/> 
-        : <FileIcon onClick={() => this.refs[uniqueKey].handleClickOpen() }/>
+        : documentType === "pdf" ? <FileIcon onClick={() => this.refs[uniqueKey].handleClickOpen() }/> : "N/A"
       }
       </span>
     );
