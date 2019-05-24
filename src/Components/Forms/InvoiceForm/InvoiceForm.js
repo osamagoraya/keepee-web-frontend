@@ -77,7 +77,7 @@ class InvoiceForm extends Component {
   // bindFormSubmitter(submitter) {
   //   this.formSubmitter = submitter ;
   // }
-  
+
   render(){
     const {bindSubmitForm, onValidationFailed} = this.props;
     const { categories, selectedImageID} = this.state;
@@ -94,12 +94,13 @@ class InvoiceForm extends Component {
     })
 
     const commonTextfieldClasses = "bottom-spacer";
-
+    let vatpercent;
     return (
+      
       <Formik
         initialValues={{ 
           reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', 
-          vat: '', sum: '', imageId: selectedImageID || '', vendorName: '' 
+          vat: '', sum: '', imageId: selectedImageID || '', vendorName: '', vatpercent : ''
         }}    
         onSubmit={(values,  { setSubmitting }) => {
           this.uploadInvoice(values)
@@ -128,6 +129,16 @@ class InvoiceForm extends Component {
                 />
               </div>
               <div> 
+                <input
+                  name="vatPercent"
+                  type="hidden"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.vatpercent}
+                  variant="filled"
+                />
+              </div>
+              <div> 
                 <TextField
                   type="date"
                   placeholder="Date"
@@ -145,7 +156,7 @@ class InvoiceForm extends Component {
                   value={values.category}
                   onChange={(selectedOption) => {
                       setFieldValue('categoryId', selectedOption.categoryId)
-                      setFieldValue('vat', selectedOption.vatpercent)
+                      setFieldValue('vatpercent',selectedOption.vatpercent)
                   }}
                   options={categories}
                   labelKey="categoryLabel"
@@ -188,7 +199,11 @@ class InvoiceForm extends Component {
                   placeholder="Sum"
                   name="sum"
                   value={values.sum}
-                  onChange={handleChange}
+                  onChange={e => {
+                    handleChange(e);
+                     const vatAmount =  e.target.value*(1-1/(1+0.17))*(values.vatpercent/100);
+                     setFieldValue('vat',Math.round(vatAmount))
+                }}
                   onBlur={handleBlur}
                   fullWidth={true} 
                   containerClasses={commonTextfieldClasses}
