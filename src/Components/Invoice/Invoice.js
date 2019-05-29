@@ -105,7 +105,7 @@ class Invoice extends Component {
               />
               </Grid>
             </Grid>
-            <Grid item container style = {{ flexBasis: '15%', justifyContent: 'space-around',alignContent: 'space-around'}}>
+            <Grid item container style = {{ flexBasis: '10%', justifyContent: 'space-around',alignContent: 'space-around'}}>
                 <Grid item sm={12} style = {{ flexBasis: '60%',marginLeft: '-15%'}}>
                     <Button className="bottom-btn-container" 
                     variant="blue" 

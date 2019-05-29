@@ -7,3 +7,15 @@
 .vat-button {
   width: 100%;
 }
+
+.vat-modal-button {
+    color: white !important;
+    margin-right: 2% !important;
+}
+
+.vat-detail-modal-size {
+  height: 80%;
+  width: 70%;
+  max-width: 70% !important;
+  background-color: #f8f8f8 !important;
+}

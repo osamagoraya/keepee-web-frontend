@@ -14,6 +14,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import vfsFonts from 'pdfmake/build/vfs_fonts';
 import {vatDD} from '../../Reports/vatReport';
 import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
+import VatDetailModal from './VatDetailModal';
 
 class Vat extends Component {
 
@@ -23,7 +24,9 @@ class Vat extends Component {
     apiCallType: 'fetch',
     selectedUserId: this.props.selectedUserId,
     selectedUserName: this.props.selectedUserName,
-    selectedUserNID : this.props.selectedUserNID
+    selectedUserNID : this.props.selectedUserNID,
+    detailModalOpen : false,
+    selectedField: null
   }
 
   componentDidMount() {
@@ -112,7 +115,16 @@ class Vat extends Component {
     pdfMake.createPdf(vatDD(this.state.report,this.state.selectedUserName,`${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}`, this.state.selectedUserNID)).download(`VatReport - ${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}.pdf`);
   }
 
+  handleClickOpen = (field) => {
+    this.setState({detailModalOpen : true, selectedField: field});
+  };
+
+  handleClose = () => {
+    this.setState({detailModalOpen : false});
+  };
+
   render() {
+
     const {apiCallInProgress,apiCallType, report, selectedUserId} = this.state;
     console.log("Rendering vat report",apiCallInProgress, report, selectedUserId);
     if (apiCallInProgress && apiCallType == 'fetch'){
@@ -129,6 +141,8 @@ class Vat extends Component {
     const field5 = Math.round(parseFloat(report.equipment_deal));
     const field6 = Math.round(parseFloat(report.others_deal));
     const field7 = Math.round((field3 - (field5 + field6)).toFixed(2));
+
+    
 
     return (
       <div className="canvas-container vat-container">
@@ -150,8 +164,8 @@ class Vat extends Component {
                 </TableHead>
                 <TableBody>
                   <TableRow >
-                    <TableCell align="right">{field3}</TableCell>
-                    <TableCell align="center">{field2}</TableCell>
+                    <TableCell onClick={() => this.handleClickOpen('dealSeventeenTax')} align="right">{field3}</TableCell>
+                    <TableCell onClick={() => this.handleClickOpen('dealSeventeen')} align="center">{field2}</TableCell>
                     <TableCell align="right">Deals 17%</TableCell>
                   </TableRow>
                   <TableRow >
@@ -161,7 +175,7 @@ class Vat extends Component {
                   </TableRow>
                   <TableRow >
                     <TableCell align="right">0</TableCell>
-                    <TableCell align="center">{field1}</TableCell>
+                    <TableCell onClick={() => this.handleClickOpen('dealZero')} align="center">{field1}</TableCell>
                     <TableCell align="right">Deals 0%</TableCell>
                   </TableRow>
                   <TableRow >
@@ -186,8 +200,8 @@ class Vat extends Component {
                 <TableBody>
                   <TableRow >
                     <TableCell align="right">{field5 + field6}</TableCell>
-                    <TableCell align="center">{field6}</TableCell>
-                    <TableCell align="center">{field5}</TableCell>
+                    <TableCell onClick={() => this.handleClickOpen('othersDeal')} align="center">{field6}</TableCell>
+                    <TableCell onClick={() => this.handleClickOpen('equipmentDeal')} align="center">{field5}</TableCell>
                     <TableCell align="right">Deals 17%</TableCell>
                   </TableRow>
                   <TableRow >
@@ -242,7 +256,9 @@ class Vat extends Component {
           </Grid>
           <Grid item md={2}></Grid>
         </Grid>
+        <VatDetailModal open={this.state.detailModalOpen} field={this.state.selectedField} vatReportId={this.state.selectedVatId} />
       </div>
+      
     );
   }
 }
