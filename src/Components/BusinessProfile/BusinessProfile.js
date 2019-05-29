@@ -2,7 +2,6 @@ import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import { Formik } from 'formik'
-import * as Yup from 'yup';
 
 
 import Select from '../Common/Select';
