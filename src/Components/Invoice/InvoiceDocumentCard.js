@@ -16,7 +16,7 @@ class InvoiceDocumentCard extends React.Component {
           <span style={verticallyCenteredImage}></span>
         { selectedImageId && documentType === "image" 
         ? 
-            <img class="img-responsive" style={cardMediaStyle} src={documentPath} alt="beautiful"/>
+            <img className="img-responsive" style={cardMediaStyle} src={documentPath} alt="beautiful"/>
         : selectedImageId && documentType === "pdf" 
           ? <embed src={documentPath} type="application/pdf" style={{width: "100%", height: "100%"}}  /> 
           : <div>בחר תמונה</div>

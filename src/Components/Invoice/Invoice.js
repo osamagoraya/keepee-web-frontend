@@ -90,6 +90,8 @@ class Invoice extends Component {
                 imageId={selectedImageID} 
                 selectedUserId={selectedUserId} 
                 isUserIdRequired={true}
+                isJournalEntryPassed={false}
+                journalEntry={null}
                 onSubmit={() => {
                   this.setState({apiCallInProgress: false, apiCallType: 'none'});
                   this.props.history.push("/workspace/invoice")}

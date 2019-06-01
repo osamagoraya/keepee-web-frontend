@@ -14,6 +14,10 @@ import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService'
 import InvoiceDocumentModal from '../Invoice/InvoiceDocumentModal';
 import swal from 'sweetalert';
 
+import FileIcon from '@material-ui/icons/Description';
+import CameraIcon from '@material-ui/icons/CameraAlt';
+
+import JournalEntryModal from './JournalEntryModal';
 
 class Batch extends Component {
 
@@ -23,9 +27,18 @@ class Batch extends Component {
     apiCallInProgress: false,
     apiCallType: 'fetch',
     batch: null,
-    categories: null
+    categories: null,
+    selectedJournalEntry: null,
+    openJournalEntryModal: false
   }
 
+  openJournalEntryModal = () => {
+    this.setState({openJournalEntryModal : true});
+  }
+  closeJournalEntryModal = () => {
+    this.props.history.push("/workspace/batch/"+this.state.selectedBatchId);
+    this.setState({openJournalEntryModal: false});
+  }
   componentDidMount() {
     this.fetchBatchDetails(this.state.selectedBatchId, this.state.selectedUserId);
     this.fetchCategories();
@@ -158,8 +171,8 @@ class Batch extends Component {
   addJE(je) {
     console.log("Adding journal entry:", je);
     const journalEntry = {
-      reference_1: je.reference_one, 
-      reference_2: je.reference_two, 
+      reference_1: je.reference_1, 
+      reference_2: je.reference_2, 
       jeDate: Moment(je.jeDate).format("YYYY-MM-DD"), 
       details: je.details, 
       categoryId: parseInt(je.categoryId, 10), 
@@ -210,7 +223,7 @@ class Batch extends Component {
       alert ("Please complete data for previously added JE");
     else {
       const emptyJE = {
-        id: -1, jeid: '', reference_one: '', reference_two: '', jeDate: '', details: '', categoryId: '', vat: '', sum: '', imageType: '', vendor: '' 
+        id: -1, jeid: '', reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', vat: '', sum: '', imageType: '', vendorName: '' 
       }
       batch.journal_entries.push(emptyJE);
       this.setState({ batch });
@@ -254,7 +267,7 @@ class Batch extends Component {
           options: categories ? categories.map(c => ({value: c.categoryId, label: c.categoryLabel})) : []
         }
       }, {
-        dataField: 'reference_one',
+        dataField: 'reference_1',
         text: 'Ref 1',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
@@ -262,7 +275,7 @@ class Batch extends Component {
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
         editCellClasses: 'k-edit-cell',
       }, {
-        dataField: 'reference_two',
+        dataField: 'reference_2',
         text: 'Ref 2',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
@@ -282,7 +295,7 @@ class Batch extends Component {
           type: Type.DATE,
         }
       },{
-        dataField: 'vendor',
+        dataField: 'vendorName',
         text: 'Vendor',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
@@ -313,12 +326,17 @@ class Batch extends Component {
           if (row.imageType)
             return (
               <div className='k-force' style={{padding: "8px 10px"}}>
-                <InvoiceDocumentModal 
-                  documentType={row.imageType}
-                  documentPath={row.imageLink}
-                  selectedImageId={row.id}
-                  uniqueKey={`batchDoc${row.id}`}
-                />
+                <span style={{cursor: 'pointer'}}>
+                {
+                  row.imageType === "image" 
+                  ? <CameraIcon onClick={() => {
+                        this.setState({ selectedJournalEntry: row, openJournalEntryModal: true})
+                  }}/> 
+                  : row.imageType === "pdf" ? <FileIcon onClick={() => {
+                        this.setState({ selectedJournalEntry: row, openJournalEntryModal: true})
+                  }}/> : "N/A"
+                }
+                </span>
               </div>
             );
           else
@@ -395,6 +413,15 @@ class Batch extends Component {
               : null  
             }
           </span>
+      }
+      { this.state.selectedJournalEntry !== null ?
+      <JournalEntryModal 
+            open={this.state.openJournalEntryModal} 
+            journalEntry={this.state.selectedJournalEntry}
+            selectedUserId={this.state.selectedUserId}
+            closeJournalEntryModal={this.closeJournalEntryModal}
+      />
+      : ''
       }
       </div>
     );

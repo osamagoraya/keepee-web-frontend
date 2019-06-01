@@ -17,20 +17,25 @@ class InvoiceForm extends Component {
       selectedImageID: this.props.imageId,
       selectedUserId: this.props.selectedUserId,
       loggedInUser: this.props.loggedInUser,
-      categories: []
+      categories: [],
+      journalEntryPassed: this.props.isJournalEntryPassed, // EDIT MODE IF TRUE
+      journalEntry: this.props.journalEntry
     }
   }
 
   componentDidMount() {
+    console.log("passed JE",this.state.journalEntry)
     this.fetchCategories();
   }
   
   componentWillReceiveProps(nextProps,nextContext) { 
-  if (nextProps.imageId !== this.state.selectedImageID){
+  if (nextProps.imageId !== this.state.selectedImageID || nextProps.journalEntry !== this.state.journalEntry){
       this.setState({
         selectedImageID: nextProps.imageId,
         selectedUserId: nextProps.selectedUserId,
-        loggedInUser: nextProps.loggedInUser
+        loggedInUser: nextProps.loggedInUser,
+        journalEntry: nextProps.journalEntry,
+        journalEntryPassed: nextProps.isJournalEntryPassed
       });
     }
   }
@@ -72,6 +77,31 @@ class InvoiceForm extends Component {
     );
   }
 
+  updateInvoiceData = (values) => {
+    console.log("modal update",values);
+    const {selectedUserId,loggedInUser} = this.state;
+    if (!selectedUserId){
+      alert ("No client id present, please select a client first");
+      return;
+    }
+    values.userId = selectedUserId ? selectedUserId : 0;
+    values.accountantId = loggedInUser.userId;
+    
+    sendAuthenticatedAsyncRequest(
+      "/updateOpenJournalEntry",
+      "POST", 
+      values,
+      (r) => {
+        console.log("JE updated", r);
+        swal ( "Success" ,  "Journal Entry Updated Successfully!" ,  "success" )
+        this.props.setApiCallForBatchJEModal();
+      },
+      (r) => {
+        console.log("JE update failed", r);
+        swal ( "Success" ,  "Journal Entry Update Failed!" ,  "error" )
+      },
+    );
+  }
   // To enable form submitting from outside form tag. Can't put this in state. Causes too many renders and depth exceeds
   // formSubmitter = null;
   // bindFormSubmitter(submitter) {
@@ -94,16 +124,17 @@ class InvoiceForm extends Component {
     })
 
     const commonTextfieldClasses = "bottom-spacer";
-
+    let { journalEntryPassed, journalEntry} = this.state;
     return (
       <Formik
-        initialValues={{ 
-          reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', 
-          vat: '', sum: '', imageId: selectedImageID || '', vendorName: '' 
-        }}    
+        initialValues={ journalEntryPassed ? { 
+          id: journalEntry.id, jeId: journalEntry.jeId, reference_1: journalEntry.reference_1, reference_2: journalEntry.reference_2, jeDate: journalEntry.jeDate, details: journalEntry.details, categoryId: journalEntry.categoryId, 
+          vat: journalEntry.vat, sum: journalEntry.sum, imageId: selectedImageID || '', vendorName: journalEntry.vendorName , category : { categoryLabel: journalEntry.categoryLabel, categoryId: journalEntry.categoryId}
+        } : { reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', 
+        vat: '', sum: '', imageId: selectedImageID || '', vendorName: '' }}
         onSubmit={(values,  { setSubmitting }) => {
-          this.uploadInvoice(values)
-          setSubmitting(false);
+          journalEntryPassed ? this.updateInvoiceData(values) : this.uploadInvoice(values)
+         setSubmitting(false);
         }}
         enableReinitialize={true}
         validationSchema={validationSchema} 
@@ -144,6 +175,7 @@ class InvoiceForm extends Component {
                 <Select
                   value={values.category}
                   onChange={(selectedOption) => {
+                      setFieldValue('category',selectedOption)
                       setFieldValue('categoryId', selectedOption.categoryId)
                       setFieldValue('vat', selectedOption.vatpercent)
                   }}
