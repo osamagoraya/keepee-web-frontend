@@ -37,6 +37,11 @@
 .k-fab {
   width: 38px !important;
   height: 38px !important;
+}
+
+.k-fab-modal {
+  width: 38px !important;
+  height: 38px !important;
   margin-left: 75% !important;
 }
 

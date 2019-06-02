@@ -133,7 +133,7 @@ render (){
               </Grid>
               <Grid item container style={{ flexBasis: '5%', alignItems: 'center'}}>
                 <div className="doc-action-btn-box"> 
-                    <Button fab onClick={this.transformImage} className="k-fab">
+                    <Button fab onClick={this.transformImage} className="k-fab-modal">
                       <img src={iconRotate} alt="Not Found"/>
                     </Button>
                     <Button
