@@ -83,7 +83,7 @@ class Invoice extends Component {
 
     return (
       <Grid container className="canvas-container" style={{ flexWrap: 'nowrap !important'}}>
-          <Grid item container sm={3} direction="column">
+          <Grid item container sm={3} direction="column" style={{ flexWrap: 'nowrap'}}>
             <Grid item container style = {{ flexBasis: '85%'}}>
               <Grid item sm={12}>
               <InvoiceForm 
@@ -142,7 +142,7 @@ class Invoice extends Component {
                     uniqueKey={`invoicepopup${selectedImageID}`}
                   />
               </Grid>
-              <Grid item container style={{ flexBasis: '5%', alignItems: 'center'}}>
+              <Grid item container style={{ flexBasis: '5%', alignItems: 'center', marginTop: '-1%'}}>
                 <div className="doc-action-btn-box">
               <Button size="small" variant="grey" className="doc-action-btns" disabled={apiCallInProgress} onClick={() => this.updateImageStatus('/irrelevantPicture', 'irrelevant')}>
                 {apiCallInProgress 
