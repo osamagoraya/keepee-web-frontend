@@ -95,7 +95,7 @@ render (){
             </Grid>
             <Grid item container style = {{ flexBasis: '10%', justifyContent: 'space-around',alignContent: 'space-around'}}>
                 <Grid item sm={12} style = {{ flexBasis: '60%',marginLeft: '-15%'}}>
-                    <Button className="bottom-btn-container" 
+                {  this.props.batchStatus === "open"  ?  <Button className="bottom-btn-container" 
                     variant="blue" 
                     disabled={apiCallInProgress} 
                     onClick={(e) => {
@@ -108,7 +108,8 @@ render (){
                       : "continue"
                     : "continue"
                     }
-                    </Button>
+                    </Button> : ''
+                }
                 </Grid>
               </Grid>
             </Grid>

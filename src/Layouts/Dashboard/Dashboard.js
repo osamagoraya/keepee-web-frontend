@@ -62,7 +62,7 @@ class Dashboard extends Component {
 }
 
 const canvas = {
-  width: "79%",
+  width: "85%",
   height: "78.3vh",
   boxShadow: '0 3 6 rgba(0, 0, 0, 0.04)',
   borderRadius: 3,
