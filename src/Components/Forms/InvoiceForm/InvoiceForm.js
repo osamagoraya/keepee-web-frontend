@@ -131,7 +131,7 @@ class InvoiceForm extends Component {
           id: journalEntry.id, jeId: journalEntry.jeId, reference_1: journalEntry.reference_1, reference_2: journalEntry.reference_2, jeDate: journalEntry.jeDate, details: journalEntry.details, categoryId: journalEntry.categoryId, 
           vat: journalEntry.vat, sum: journalEntry.sum, imageId: selectedImageID || '', vendorName: journalEntry.vendorName , category : { categoryLabel: journalEntry.categoryLabel, categoryId: journalEntry.categoryId}
         } : { reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', 
-        vat: '', sum: '', imageId: selectedImageID || '', vendorName: '' }}
+        vat: '', sum: '', imageId: selectedImageID || '', vendorName: '', vatAmount: '' }}
         onSubmit={(values,  { setSubmitting }) => {
           journalEntryPassed ? this.updateInvoiceData(values) : this.uploadInvoice(values)
          setSubmitting(false);
@@ -178,6 +178,7 @@ class InvoiceForm extends Component {
                       setFieldValue('category',selectedOption)
                       setFieldValue('categoryId', selectedOption.categoryId)
                       setFieldValue('vat', selectedOption.vatpercent)
+                      setFieldValue('vatAmount',Math.round(values.sum*(1-1/(1+0.17))*(selectedOption.vatpercent/100)));
                   }}
                   options={categories}
                   labelKey="categoryLabel"
@@ -220,7 +221,10 @@ class InvoiceForm extends Component {
                   placeholder="Sum"
                   name="sum"
                   value={values.sum}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setFieldValue('vatAmount',Math.round(e.target.value*(1-1/(1+0.17))*(values.vat/100)));
+                  }}
                   onBlur={handleBlur}
                   fullWidth={true} 
                   containerClasses={commonTextfieldClasses}
@@ -233,11 +237,30 @@ class InvoiceForm extends Component {
                   placeholder="VAT"
                   name="vat"
                   value={values.vat}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setFieldValue('vatAmount',Math.round(values.sum*(1-1/(1+0.17))*(e.target.value/100)));
+                  }}
                   onBlur={handleBlur}
                   fullWidth={true} 
                   containerClasses={commonTextfieldClasses}
                   feedback={touched.vat && errors.vat ? errors.vat : null}
+                  />
+              </div>
+              <div>
+                <TextField
+                  type="text"
+                  placeholder="VAT Amount"
+                  name="vatAmount"
+                  value={values.vatAmount}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setFieldValue('vat',Math.round((e.target.value*100)/(values.sum*(1-1/(1+0.17)))))
+                  }}
+                  onBlur={handleBlur}
+                  fullWidth={true} 
+                  containerClasses={commonTextfieldClasses}
+                  feedback={touched.vatAmount && errors.vatAmount ? errors.vatAmount : null}
                   />
               </div>
               <div>
