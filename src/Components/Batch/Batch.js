@@ -319,6 +319,14 @@ class Batch extends Component {
         editCellClasses: 'k-edit-cell',
       },
       {
+        dataField: 'vat',
+        text: 'Vat',
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        editCellClasses: 'k-edit-cell',
+      },
+      {
         dataField: 'imageType',
         text: '',
         headerFormatter: (col, colIdx) => <ClipIcon />,
@@ -420,6 +428,7 @@ class Batch extends Component {
             journalEntry={this.state.selectedJournalEntry}
             selectedUserId={this.state.selectedUserId}
             closeJournalEntryModal={this.closeJournalEntryModal}
+            batchStatus={batch.batchStatus}
       />
       : ''
       }

@@ -92,7 +92,7 @@ class BusinessProfile extends React.Component {
           initialValues={{ 
             businessDomain: profile.businessDomain, represantationOfVatIncomeReports: profile.represantationOfVatIncomeReports, socialInsurance: profile.socialInsurance, assessingOfficerNumber: profile.assessingOfficerNumber, incomeTaxAdvances: profile.incomeTaxAdvacnes, reportingFrequency: profile.reportingFrequency, 
             withHoldingFile: profile.withHoldingFile, foundationYear: profile.foundationYear, assessbusinessDomainingOfficerNumber: profile.assessbusinessDomainingOfficerNumber, type: profile.type, name: profile.name, nId: profile.nId, birthDate: profile.birthDate,
-            email: profile.email, address: profile.address, vendorName: profile.vendorName, supervisedBy: 'Supervisor'
+            email: profile.email, address: profile.address, vendorName: profile.vendorName, supervisedBy: 'Supervisor', vatReportStart: profile.vatReportStart
           }}    
           onSubmit={(values,  { setSubmitting }) => {
             this.updateUser(values)
@@ -108,6 +108,7 @@ class BusinessProfile extends React.Component {
                   fields: [
                     {type: "text", name: "represantationOfVatIncomeReports", value: values.represantationOfVatIncomeReports, label: "Representation of VAT and Income TAX"},
                     {type: "text", name: "socialInsurance", value: values.socialInsurance, label: "Representation of Social Insurance"},
+                    {type: "date", name: "vatReportStart", value: values.vatReportStart, label: "Vat Report Start"},
                     {type: "text", name: "assessingOfficerNumber", value: values.assessingOfficerNumber, label: "Assessing Officer Number"},
                     {type: "text", name: "incomeTaxAdvances", value: values.incomeTaxAdvances, label: "Income Tax Advances"},
                     {type: "text", name: "reportingFrequency", value: values.reportingFrequency, label: "Reporting Frequency"},
