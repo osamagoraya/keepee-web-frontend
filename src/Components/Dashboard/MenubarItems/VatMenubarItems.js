@@ -5,6 +5,7 @@ import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestServi
 
 import MenuSubSectionList from './MenuSubSectionList';
 
+import swal from 'sweetalert';
 const localPath = "/workspace/report/vat";
 
 class VatMenubarItems extends React.Component {
@@ -59,7 +60,11 @@ class VatMenubarItems extends React.Component {
       (r) => this.setState({
         listData: this.vatListItemFormatter(JSON.parse(r.data.body)),
         loading: false
-      })
+      }),
+      (r) => {
+        console.log("Yeah",r);
+        swal("Error","Please Set Vat Report Start Period Before fetch Vat Report", "error");
+      }
     );
   }
 
