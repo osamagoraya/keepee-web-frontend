@@ -207,8 +207,8 @@ class Batch extends Component {
     if (row.id === -1) {
       if (row.categoryId)
         row.vat = this.getCategoryAttribute(row.categoryId, 'vatpercent', this.state.categories || []) || "0";
-      if (!row.reference_one || !row.jeDate || !row.details || !row.categoryId || !row.categoryId || !row.sum || !row.vat){
-        console.log("incomplete data, not adding JE");
+      if (!row.reference_1 || !row.jeDate || !row.details || !row.categoryId || !row.sum || !row.vat){
+        console.log("incomplete data, not adding JE : ", row);
       } else {
         this.addJE(row);
       }
