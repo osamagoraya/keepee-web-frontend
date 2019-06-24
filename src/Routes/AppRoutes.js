@@ -12,6 +12,7 @@ import IncomeTaxAdvancesItems from '../Components/Dashboard/MenubarItems/IncomeT
 import ProfitAndLossItems from '../Components/Dashboard/MenubarItems/ProfitAndLossItems';
 import TrialBalanceItems from '../Components/Dashboard/MenubarItems/TrialBalanceItems';
 import BusinessProfileItems from '../Components/Dashboard/MenubarItems/BusinessProfileItems';
+import UnifiedFormItems from '../Components/Dashboard/MenubarItems/UnifiedFormItems';
 
 
 const appRoutes = [
@@ -97,7 +98,8 @@ const appRoutes = [
       },
       {
         label: "Unified Form",
-        path: "/settings/unified-form"
+        path: "/settings/unified-form",
+        component : UnifiedFormItems
       },
     ]
   },

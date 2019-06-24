@@ -17,6 +17,8 @@ import ProtectedRoute from '../../Components/Routes/ProtectedRoute';
 import ProfitAndLoss from '../../Components/ProfitAndLoss/ProfitAndLoss';
 import TrialBalance from '../../Components/TrialBalance/TrialBalance';
 
+import UnifiedForm from '../../Components/UnifiedForm/UnifiedForm';
+
 class Dashboard extends Component {
 
   state = {
@@ -53,6 +55,7 @@ class Dashboard extends Component {
               <ProtectedRoute path="/workspace/report/trial-balance/:trailBalanceYear" component={(props) => <TrialBalance selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>} exact/>
               <ProtectedRoute path="/profile/business/:profileId" component={BusinessProfile} exact/>
               <ProtectedRoute path="/settings/categories" component={Categories} exact/>
+              <ProtectedRoute path="/settings/unified-form/:clientId" component={UnifiedForm} exact/>
             </Switch>
           </div>
         </div>

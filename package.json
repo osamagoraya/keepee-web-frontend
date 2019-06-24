@@ -14,6 +14,7 @@
     "fontkit": "^1.8.0",
     "formik": "^1.5.1",
     "increase-memory-limit": "^1.0.6",
+    "jszip": "^3.2.1",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "pdfmake": "^0.1.55",
