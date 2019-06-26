@@ -73,6 +73,9 @@ class InvoiceForm extends Component {
         ?  swal ( "Oops" ,  "Journal Entry With this data Already Exists!" ,  "error" )
         : this.props.onSubmit();
 
+      },
+      (r) => {
+        swal ( "Oops" ,  "Journal Entry With this data Already Exists!" ,  "error" );
       }
     );
   }
@@ -145,6 +148,7 @@ class InvoiceForm extends Component {
           if (Object.keys(errors).length !== 0){
             onValidationFailed();
           }
+          let vatVal = 0;
           return (
             <form onSubmit={handleSubmit} style={this.props.formStyle}>
               {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
@@ -197,7 +201,7 @@ class InvoiceForm extends Component {
                   value={values.reference_1}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  fullWidth={true} 
+                  fullWidth={true}
                   containerClasses={commonTextfieldClasses}
                   feedback={touched.reference_1 && errors.reference_1 ? errors.reference_1 : null}
                   />
@@ -243,6 +247,7 @@ class InvoiceForm extends Component {
                   }}
                   onBlur={handleBlur}
                   fullWidth={true} 
+                  disabled={values.vat > 0 ? false : true}
                   containerClasses={commonTextfieldClasses}
                   feedback={touched.vat && errors.vat ? errors.vat : null}
                   />
@@ -258,7 +263,8 @@ class InvoiceForm extends Component {
                     setFieldValue('vat',Math.round((e.target.value*100)/(values.sum*(1-1/(1+0.17)))))
                   }}
                   onBlur={handleBlur}
-                  fullWidth={true} 
+                  fullWidth={true}
+                  disabled={values.vat > 0 ? false : true}
                   containerClasses={commonTextfieldClasses}
                   feedback={touched.vatAmount && errors.vatAmount ? errors.vatAmount : null}
                   />

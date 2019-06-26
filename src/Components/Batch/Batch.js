@@ -307,7 +307,11 @@ class Batch extends Component {
         text: 'Details',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
-        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
+        formatter: (cell, row, index) => {
+          return (
+          <div className='k-force'>{cell}</div>
+          );
+        },
         editCellClasses: 'k-edit-cell',
       },
       {
@@ -323,8 +327,12 @@ class Batch extends Component {
         text: 'Vat',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
-        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
-        editCellClasses: 'k-edit-cell',
+        formatter: (cell, row, index) => {
+          return (
+            <div className='k-force'>{cell}</div>
+          );
+        },
+        editCellClasses: 'k-edit-cell'
       },
       {
         dataField: 'imageType',
