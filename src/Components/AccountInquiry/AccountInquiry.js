@@ -280,7 +280,9 @@ class AccountInquiry extends Component {
             jeId: jeId
           },
           (r) => swal ( "Success" ,  "Journal Entry Fixed!" ,  "success" ),
-          (r) => swal ( "Oops" ,  "Journal Entry fixation failed!" ,  "error" )
+          (r) => {
+            swal ( "Oops" ,  "Journal Entry Cannot Be Fixed.May Be Fixed Already!" ,  "error" )
+          }
         );
       } else {
         swal("Operation Stop!");

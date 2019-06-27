@@ -153,7 +153,12 @@ class Batch extends Component {
 
   updateJE(je) {
     console.log("Updating journal entry:", je);
-    sendAuthenticatedAsyncRequest(  
+    if(je.vatPercent < 1) {
+      je.vat = 0.00;
+      swal("Info" , "Cannot Update vat amount for JE with vat% 0!","info");
+      return;
+    }
+      sendAuthenticatedAsyncRequest(  
       "/updateOpenJournalEntry",
       "POST", 
       je,
@@ -329,7 +334,7 @@ class Batch extends Component {
         classes: 'k-body-cell',
         formatter: (cell, row, index) => {
           return (
-            <div className='k-force'>{cell}</div>
+            <div className='k-force'>{row.vat}</div>
           );
         },
         editCellClasses: 'k-edit-cell'
