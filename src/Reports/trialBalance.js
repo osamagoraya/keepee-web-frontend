@@ -1,5 +1,27 @@
+let writeTextToDataURL = function(text, color='black', top=1, bottom=13, size = "1px Roboto, sans-serif", height = 3, width = 100)
+  {
+    var x = document.createElement("CANVAS");
+    var context = x.getContext("2d");
+  
+    x.height = height;
+    x.width = width;
+  
+  
+    context.fillStyle = color;
+    context.font = "bold 12px Heebo";
+    context.textBaseline = "top";
+    context.beginPath();
+    context.fillText(text, top, bottom,700);
+    context.scale(2, 2)
+    context.closePath();
+    context.fill();
+  
+  
+    return x.toDataURL();
+  }
+
 export const tbDD = (data,businessName,reportYear,UserNID) => ({
-    // background color of whole document
+	// background color of whole document
     background: function () {
         return {
 	        canvas: [
@@ -12,7 +34,11 @@ export const tbDD = (data,businessName,reportYear,UserNID) => ({
 	    };
     },
 	content: [
-        {text: businessName + " - " + UserNID, style: 'header', margin: [5,0],alignment:"right"},
+        {
+			image: writeTextToDataURL(businessName + " - " + UserNID,'black', 1, 1, "15px Heebo", 20,140), 
+			margin: [5,0],
+			alignment:"right"
+		},
 		{text: reportYear, style: 'header', margin: [5,0]},
 		{
             style: 'tableExample',
@@ -37,34 +63,30 @@ export const tbDD = (data,businessName,reportYear,UserNID) => ({
 		{
 			style: 'tableExample',
 			table: {
-			    widths: [140,'*','*','*'],
+			    widths: ['*','*','*','*'],
                 heights: [20],
                 unbreakable: true,
 				body: [
 					[
 						{
-							text: {text:'Account',alignment:'left',bold: true},
+							image:  writeTextToDataURL("חשבון",'black', 5, 1, "15px Heebo", 20),
 							fillColor: '#dbdada;',
-							border: [false, false, false, false],
-							margin: [15,10]
+							border: [false, false, false, false]
 						},
 						{
-							text: {text:'Credit',alignment:'center',bold: true},
+							image:  writeTextToDataURL("אשראי",'black', 75, 1, "15px Heebo", 20,120),
 							fillColor: '#dbdada;',
-							border: [false, false, false, false],
-							margin: [5,10]
+							border: [false, false, false, false]
 						},
 						{
-							text: {text:'Debit',alignment:'center',bold: true},
+							image:  writeTextToDataURL("חיוב",'black', 65, 1, "15px Heebo", 20),
 							fillColor: '#dbdada;',
-							border: [false, false, false, false],
-							margin: [5,10]
+							border: [false, false, false, false]
 						},
 						{
-							text: {text:'Balance',alignment:'center',bold: true},
+							image:  writeTextToDataURL("איזון",'black', 55, 1, "15px Heebo", 20),
 							fillColor: '#dbdada;',
-							border: [false, false, false, false],
-							margin: [5,10]
+							border: [false, false, false, false]
 						},
 					]
 				]

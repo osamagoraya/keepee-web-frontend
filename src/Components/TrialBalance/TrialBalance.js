@@ -85,18 +85,33 @@ class TrialBalance extends Component {
     return { totalSum, groupedData };
   }
 
+ 
+
   prepareAndDownloadPdf() {
     const {vfs} = vfsFonts.pdfMake;
     pdfMake.vfs = vfs;
 
-    // pdfMake.vfs.fonts = {
-    //   hebrew : {
-    //     normal : 'HeeboBold.ttf',
-    //     bold   : 'HeeboBlack.ttf',
-    //     italics : 'HeeboBold.ttf',
-    //     bolditalics : 'HeeboBold.ttf'
-    //   }
-    // }
+    let writeTextToDataURL = function(text, color='black', top=1, bottom=13, size = "1px Roboto, sans-serif", height = 3, width = 100)
+  {
+    var x = document.createElement("CANVAS");
+    var context = x.getContext("2d");
+  
+    x.height = 10;
+    x.width = 350;
+  
+  
+    context.fillStyle = color;
+    context.font = "bold 12px Heebo";
+    context.textBaseline = "top";
+    context.beginPath();
+    context.fillText(text, top, bottom,700);
+    context.scale(2, 2)
+    context.closePath();
+    context.fill();
+  
+  
+    return x.toDataURL();
+  }
 
     let { report } = this.state;  
     let data = Object.keys(report.groupedData).map(function(groupKey, i)
@@ -121,10 +136,10 @@ class TrialBalance extends Component {
                                     margin: [15,10]
                                   },
                                   {
-                                    text: {text:groupKey.substring(0,1).toUpperCase() + groupKey.substring(1),alignment:'right',bold: true},
+                                    image: writeTextToDataURL(groupKey.substring(0,1).toUpperCase() + groupKey.substring(1), 'black', 220, 1, "15px Heebo", 20),
                                     fillColor: '#94D3D2',
                                     border: [false, false, false, false],
-                                    margin: [40,10]
+                                    margin:[0,10]
                                   },
                                 ]
                             ]
@@ -137,13 +152,13 @@ class TrialBalance extends Component {
                             "dontBreakRows": true,
                             unbreakable: true,
                             table: {
-                                widths: [140,'*','*','*'],
+                                widths: [180,'*','*','*'],
                                 "dontBreakRows": true,
                                 heights: [10,10],
                               body: [
                                 [
                                   {
-                                    text: {text:category.name,alignment:'center'},
+                                    image: writeTextToDataURL(category.name, 'black', 1, 1, "15px Heebo", 20),
                                     border: [false, false, false, false],
                                     fillColor: '#ffffff',
                                     margin: [5,10]
@@ -182,7 +197,7 @@ class TrialBalance extends Component {
                         body: [
                           [
                             {
-                              text: {text:'Total '+ groupKey,alignment:'center',bold: true},
+                              image: writeTextToDataURL('Total '+ groupKey,'black', 1, 1, "15px Heebo", 20),
                               colSpan: 2,
                               border: [false, false, false, false],
                               margin: [5,5]
