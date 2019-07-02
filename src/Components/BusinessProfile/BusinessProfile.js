@@ -111,7 +111,7 @@ class BusinessProfile extends React.Component {
                     {type: "date", name: "vatReportStart", value: values.vatReportStart, label: "Vat Report Start"},
                     {type: "text", name: "assessingOfficerNumber", value: values.assessingOfficerNumber, label: "Assessing Officer Number"},
                     {type: "text", name: "incomeTaxAdvances", value: values.incomeTaxAdvances, label: "Income Tax Advances"},
-                    {type: "text", name: "reportingFrequency", value: values.reportingFrequency, label: "Reporting Frequency"},
+                    {type: "select", name: "reportingFrequency", value: values.reportingFrequency, label: "Reporting Frequency", options: [{label: "Monthly", value: 1},{label: "Bi Monthly", value: 2}], placeholder: "Reporting Frequency" },
                     {type: "text", name: "withHoldingFile", value: values.withHoldingFile, label: "Withholding File"},
                     {type: "text", name: "foundationYear", value: values.foundationYear, label: "Foundation Year"},
                   ]
@@ -129,7 +129,7 @@ class BusinessProfile extends React.Component {
                     {type: "date", name: "birthDate", value: values.birthDate, label: "Birth Date"},
                     {type: "text", name: "email", value: values.email, label: "Email"},
                     {type: "text", name: "address", value: values.address, label: "Address"},
-                    {type: "select", name: "license", value: values.license, label: "Licensed", options: [{label: "ONE", value: 1}], onChange: (option) => alert(option), placeholder: "Licensed" },
+                    {type: "select", name: "license", value: values.license, label: "Licensed", options: [{label: "Exempted", value: 2},{label: "Licensed", value: 1}],  placeholder: "License State" },
                     {type: "text", name: "supervisedBy", value: values.supervisedBy, label: "Supervised by", disabled: true},
                   ]
                 }
@@ -149,9 +149,10 @@ class BusinessProfile extends React.Component {
                             field.type === "select" 
                             ? <Select
                                 placeholder={field.placeholder}
-                                value={field.value}
-                                onChange={field.onChange}
+                                name={field.name}
                                 options={field.options}
+                                value={(field.options ? field.options.find(option => option.value === field.value) : '')}
+                                onChange={option => setFieldValue(field.name, option.value)}
                                 onBlur={handleBlur}
                                 containerClasses={commonTextfieldClasses}
                                 feedback={touched[field.name] && errors[field.name] ? errors[field.name] : null}
