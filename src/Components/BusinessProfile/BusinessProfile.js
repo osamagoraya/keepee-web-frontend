@@ -10,6 +10,7 @@ import Button from '../Common/Button';
 import Caption from '../Common/Caption';
 import './BusinessProfile.css';
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
+import swal from 'sweetalert';
 
 class BusinessProfile extends React.Component {
 
@@ -27,7 +28,7 @@ class BusinessProfile extends React.Component {
   componentWillReceiveProps(nextProps){
     const {profileId} = nextProps.match.params;
     if (profileId !== this.state.profile) {
-      this.setState({profileId}, this.fetchProfileDetails(profileId));
+      this.setState({selectedProfileId : profileId, profile: this.fetchProfileDetails(profileId)});
     }
   }
 
@@ -59,7 +60,9 @@ class BusinessProfile extends React.Component {
       values,
       (r) => {
         console.log("response received from update business profile", r);
+        swal("Success", "Client Updated Successfully!","success");
         this.setState({profile: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
+        this.props.history.push("/profile/business/"+this.state.selectedProfileId);
       },
       (r) => {
         this.setState({apiCallInProgress: false, apiCallType: 'none', profile: null});
@@ -92,7 +95,7 @@ class BusinessProfile extends React.Component {
           initialValues={{ 
             businessDomain: profile.businessDomain, represantationOfVatIncomeReports: profile.represantationOfVatIncomeReports, socialInsurance: profile.socialInsurance, assessingOfficerNumber: profile.assessingOfficerNumber, incomeTaxAdvances: profile.incomeTaxAdvacnes, reportingFrequency: profile.reportingFrequency, 
             withHoldingFile: profile.withHoldingFile, foundationYear: profile.foundationYear, assessbusinessDomainingOfficerNumber: profile.assessbusinessDomainingOfficerNumber, type: profile.type, name: profile.name, nId: profile.nId, birthDate: profile.birthDate,
-            email: profile.email, address: profile.address, vendorName: profile.vendorName, supervisedBy: 'Supervisor', vatReportStart: profile.vatReportStart
+            email: profile.email, address: profile.address, vendorName: profile.vendorName, supervisedBy: 'Supervisor', vatReportStart: profile.vatReportStart, license : profile.license
           }}    
           onSubmit={(values,  { setSubmitting }) => {
             this.updateUser(values)
@@ -127,7 +130,7 @@ class BusinessProfile extends React.Component {
                     {type: "text", name: "name", value: values.name, label: "Full Name"},
                     {type: "number", name: "nId", value: values.nId, label: "ID"},
                     {type: "date", name: "birthDate", value: values.birthDate, label: "Birth Date"},
-                    {type: "text", name: "email", value: values.email, label: "Email"},
+                    {type: "text", name: "email", value: values.email, label: "Email",disabled: true},
                     {type: "text", name: "address", value: values.address, label: "Address"},
                     {type: "select", name: "license", value: values.license, label: "Licensed", options: [{label: "Exempted", value: 2},{label: "Licensed", value: 1}],  placeholder: "License State" },
                     {type: "text", name: "supervisedBy", value: values.supervisedBy, label: "Supervised by", disabled: true},
@@ -160,7 +163,7 @@ class BusinessProfile extends React.Component {
                             : <TextField
                                 type={field.type}
                                 name={field.name}
-                                value={field.value}
+                                value={field.value == "null" ? '' :  field.value}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 fullWidth={true}
