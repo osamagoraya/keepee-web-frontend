@@ -1,3 +1,25 @@
+let writeTextToDataURL = function(text, color='black', top=1, bottom=13, size = "1px Roboto, sans-serif", height = 3, width = 100)
+  {
+    var x = document.createElement("CANVAS");
+    var context = x.getContext("2d");
+  
+    x.height = height;
+    x.width = width;
+  
+  
+    context.fillStyle = color;
+    context.font = size;
+    context.textBaseline = "top";
+    context.beginPath();
+    context.fillText(text, top, bottom,700);
+    context.scale(2, 2)
+    context.closePath();
+    context.fill();
+  
+  
+    return x.toDataURL();
+  }
+
 export const vatDD = (data,businessName,reportPeriod,selectedUserNID) => ({
   // background color of whole document
   // background color of whole document
@@ -13,8 +35,11 @@ export const vatDD = (data,businessName,reportPeriod,selectedUserNID) => ({
     };
 },
 content: [
-    {text: businessName + " - " + selectedUserNID, style: 'header', alignment: 'right'},
-    {text: reportPeriod, style: 'header', alignment: 'left'},
+    {
+        image: writeTextToDataURL(businessName + " - " + selectedUserNID,'black', 1, 1, "bold 12px Heebo", 20,businessName.length > 11 ? 180 : 140),
+        alignment:"left"
+    },
+    {text: reportPeriod, style: 'header', alignment: 'right'},
     {
         style: 'tableExample',
         table: {
@@ -23,10 +48,11 @@ content: [
             body: [
                 [
                     {
-                        text: {text:'Deals',alignment:'right',bold: true},
+                        image: writeTextToDataURL('עסקאות','black', 1, 1, "bold 12px Heebo", 20,220),
                         fillColor: '#94D3D2',
                         border: [false, false, false, false],
-                        margin: [5,10]
+                        margin: [-55,10],
+                        alignment: 'right'
                     }
                 ]
             ]
@@ -40,19 +66,21 @@ content: [
                 [
                     {
                         border: [false, false, false, false],
-                        text: {text: '\tDeals Tax', bold: true, alignment : 'right'},
-                        margin: [5,10]
+                        image: writeTextToDataURL('מס עסקאות','black',1,10, "bold 12px Heebo", 20,220),
+                        margin: [-52,10],
+                        alignment: "right"
                     },
                     {
                         border: [false, false, false, false],
-                        text: {text: '\tDeals (No Vat)', bold: true, alignment : 'right'},
-                        margin: [5,10]
+                        image: writeTextToDataURL('עסקאות ללא מע"מ','black',1,10, "bold 12px Heebo", 20,220),
+                        margin: [-40,10],
+                        alignment: "right"
                     },
                     {
                         border: [false, false, false, false],
-                        text: {text: 'Tax Rate', bold: true, alignment : 'right'},
-
-                        margin: [5,10]
+                        image: writeTextToDataURL('שיעור מס','black',1,10, "bold 12px Heebo", 20,220),
+                        margin: [-56,10],
+                        alignment: "right"
                     }
                 ]
             ]
@@ -77,8 +105,9 @@ content: [
                     },
                     {
                         border: [false, false, false, false],
-                        text: {text: 'Deal 17%', alignment : 'right'},
-                        margin: [5,0]
+                        image: writeTextToDataURL('עסקאות חייבות 17%','black',1,10, "bold 12px Heebo", 20,220),
+                        margin: [-38,-8],
+                        alignment: "right"
                     }
                 ]
             ]
@@ -103,8 +132,9 @@ content: [
                     },
                     {
                         border: [false, false, false, false],
-                        text: {text: 'Deal 18%', alignment : 'right'},
-                        margin: [5,0]
+                        image: writeTextToDataURL('עסקאות חייבות 18%','black',1,10, "bold 12px Heebo", 20,220),
+                        margin: [-38,-8],
+                        alignment: "right"
                     }
                 ]
             ]
@@ -129,8 +159,9 @@ content: [
                     },
                     {
                         border: [false, false, false, false],
-                        text: {text: 'Deal 0%', alignment : 'right'},
-                        margin: [5,0]
+                        image: writeTextToDataURL('עסקאות פטורות או בשיעור 0%','black',1,10, "bold 12px Heebo", 20,155),
+                        margin: [1,-8],
+                        alignment: "right"
                     }
                 ],
             ]
@@ -144,8 +175,9 @@ content: [
                 [
                     {
                         border: [false, false, false, false],
-                        text: {text: 'total tax', alignment : 'right', bold: true},
-                        margin: [0,0]
+                        image: writeTextToDataURL('סה"כ מס עסקאות','black',1,10, "bold 12px Heebo", 20,220),
+                        margin: [0,-8],
+                        alignment: "left"
                     },
                     {
                         border: [false, false, false, false],
@@ -165,10 +197,11 @@ content: [
             body: [
                 [
                     {
-                        text: {text:'Input',alignment:'right',bold: true},
+                        image: writeTextToDataURL('תשומות','black', 1, 1, "bold 12px Heebo", 20,220),
                         fillColor: '#94D3D2',
                         border: [false, false, false, false],
-                        margin: [5,10]
+                        margin: [-55,10],
+                        alignment: 'right'
                     }
                 ]
             ]
@@ -182,23 +215,27 @@ content: [
                 [
                     {
                         border: [false, false, false, false],
-                        text: {text: '\tTax Input', bold: true, alignment : 'right'},
-                        margin: [5,10]
+                        image: writeTextToDataURL('מס תשומות','black',1,10, "bold 12px Heebo", 20,150),
+                        margin: [-18,10],
+                        alignment: "right"
                     },
                     {
                         border: [false, false, false, false],
-                        text: {text: '\tOthers', bold: true, alignment : 'right'},
-                        margin: [5,10]
+                        image: writeTextToDataURL('תשומות אחרות','black',1,10, "bold 12px Heebo", 20,150),
+                        margin: [2,10],
+                        alignment: "left"
                     },
                     {
                         border: [false, false, false, false],
-                        text: {text: '\tEquipment', bold: true, alignment : 'right'},
-                        margin: [5,10]
+                        image: writeTextToDataURL('תשומות ציוד','black',1,10, "bold 12px Heebo", 20,150),
+                        margin: [-20,10],
+                        alignment: "left"
                     },
                     {
                         border: [false, false, false, false],
-                        text: {text: 'Tax Rate', bold: true, alignment : 'right'},
-                        margin: [5,10]
+                        image: writeTextToDataURL('שיעור מס','black',1,10, "bold 12px Heebo", 20,150),
+                        margin: [-40,10],
+                        alignment: "left"
                     }
                 ]
             ]
@@ -244,8 +281,9 @@ content: [
                 [
                     {
                         border: [false, false, false, false],
-                        text: {text: 'total input', alignment : 'left', bold: true},
-                        margin: [0,0]
+                        image: writeTextToDataURL('סה"כ מס תשומות','black',1,10, "bold 12px Heebo", 20,220),
+                        margin: [-15,-8],
+                        alignment: "left"
                     },
                     {
                         border: [false, false, false, false],
@@ -264,8 +302,9 @@ content: [
                 [
                     {
                         border: [false, false, false, false],
-                        text: {text: 'total', alignment : 'left', bold: true},
-                        margin: [0,0]
+                        image: writeTextToDataURL('סכום הדוח','black',1,10, "bold 12px Heebo", 20,220),
+                        margin: [-15,-8],
+                        alignment: "left"
                     },
                     {
                         border: [false, false, false, false],

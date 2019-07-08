@@ -1,3 +1,24 @@
+let writeTextToDataURL = function(text, color='black', top=1, bottom=13, size = "1px Roboto, sans-serif", height = 3, width = 100)
+  {
+    var x = document.createElement("CANVAS");
+    var context = x.getContext("2d");
+  
+    x.height = height;
+    x.width = width;
+  
+  
+    context.fillStyle = color;
+    context.font = size;
+    context.textBaseline = "top";
+    context.beginPath();
+    context.fillText(text, top, bottom,700);
+    context.scale(2, 2)
+    context.closePath();
+    context.fill();
+  
+  
+    return x.toDataURL();
+  }
 export const PnlDD = (data,businessName,reportYear, userNID) => ({
 
     
@@ -13,12 +34,15 @@ export const PnlDD = (data,businessName,reportYear, userNID) => ({
 	    };
     },
 	content: [
-        {text: businessName + " - " + userNID, style: 'header', margin: [5,0],alignment:"right"},
-		{text: reportYear, style: 'header', margin: [5,0]},
+        {
+			image: writeTextToDataURL(businessName + " - " + userNID,'black', 1, 1, "bold 12px Heebo", 20,businessName.length > 11 ? 180 : 140),
+        	alignment:"left"
+		},
+		{text: reportYear, style: 'header', margin: [5,0], alignment:"right" },
 		{
 			style: 'tableExample',
 			table: {
-			    widths: ['*'],
+				widths: ['*'],
 				body: [
 					[
 						{

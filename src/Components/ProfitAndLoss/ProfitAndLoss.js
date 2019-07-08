@@ -87,14 +87,27 @@ class ProfitAndLoss extends Component {
     const {vfs} = vfsFonts.pdfMake;
     pdfMake.vfs = vfs;
 
-    // pdfMake.vfs.fonts = {
-    //   hebrew : {
-    //     normal : 'HeeboBold.ttf',
-    //     bold   : 'HeeboBlack.ttf',
-    //     italics : 'HeeboBold.ttf',
-    //     bolditalics : 'HeeboBold.ttf'
-    //   }
-    // }
+    let writeTextToDataURL = function(text, color='black', top=1, bottom=13, size = "1px Roboto, sans-serif", height = 3, width = 100)
+  {
+    var x = document.createElement("CANVAS");
+    var context = x.getContext("2d");
+  
+    x.height = height;
+    x.width = width;
+  
+  
+    context.fillStyle = color;
+    context.font = size;
+    context.textBaseline = "top";
+    context.beginPath();
+    context.fillText(text, top, bottom,700);
+    context.scale(2, 2)
+    context.closePath();
+    context.fill();
+  
+  
+    return x.toDataURL();
+  }
 
     let { report } = this.state;  
     let data = Object.keys(report.groupedData).map(function(groupKey, i)
@@ -110,10 +123,15 @@ class ProfitAndLoss extends Component {
                             body: [
                                 [
                                     {
-                                        text: {text:groupKey.substring(0,1).toUpperCase() + groupKey.substring(1),alignment:'right',bold: true},
+                                        image: writeTextToDataURL(groupKey.substring(0,1).toUpperCase() + groupKey.substring(1),'black', 1, 1, "bold 12px Heebo", 20,220),
                                         fillColor: '#94D3D2',
                                         border: [false, false, false, false],
-                                        margin: [40,10]
+                                        margin: [
+                                                groupKey   == "income" ? -55 : groupKey   == "cost of sale" ?   -47  :
+                                                groupKey   == "other expenses" ? -40    : 
+                                                groupKey   == "finance" ?   -55  : 0 , 10
+                                              ],
+                                        alignment: 'right'
                                     },
                                 ]
                             ]
@@ -126,6 +144,7 @@ class ProfitAndLoss extends Component {
                             table: {
                                 widths: [40,'*','*','*'],
                                 heights: [10,10],
+                                dontBreakRows: true,
                               body: [
                                 [
                                   {
@@ -133,13 +152,14 @@ class ProfitAndLoss extends Component {
                                     text : ''
                                   },
                                   {
-                                    text: {text:category.sum,alignment:'center',color: '#c4c0c0'},
+                                    text: {text:Math.round(category.sum),alignment:'center',color: '#c4c0c0'},
                                     fillColor: '#ffffff',
                                     border: [false, false, false, true],
                                     margin: [5,5]
                                   },
                                   {
-                                    text: {text:category.name,alignment:'center'},
+                                    image: writeTextToDataURL(category.name,'black', 1, 1, "12px Heebo", 20,220),
+                                    alignment:'center',
                                     colSpan: 2,
                                     border: [false, false, false, false],
                                     margin: [5,5]
@@ -171,7 +191,8 @@ class ProfitAndLoss extends Component {
                               margin: [5,5]
                             },
                             {
-                              text: {text:'Total '+ groupKey,alignment:'center',bold: true},
+                              image: writeTextToDataURL('סך הכל','black', 1, 1, "12px Heebo", 20,220),
+                              alignment:'center',
                               colSpan: 2,
                               border: [false, false, false, false],
                               margin: [5,5]
