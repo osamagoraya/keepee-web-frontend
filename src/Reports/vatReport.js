@@ -39,7 +39,11 @@ content: [
         image: writeTextToDataURL(businessName + " - " + selectedUserNID,'black', 1, 1, "bold 12px Heebo", 20,businessName.length > 11 ? 180 : 140),
         alignment:"left"
     },
-    {text: reportPeriod, style: 'header', alignment: 'right'},
+    { 
+        image: writeTextToDataURL(reportPeriod + ' דוח מעמ תקופתי לחודשים','black', 1, 1, "bold 12px Heebo", 20,210),
+        margin:[0,-10], 
+        alignment: 'right'
+    },
     {
         style: 'tableExample',
         table: {
@@ -244,30 +248,34 @@ content: [
     {
         style: 'deals17Input',
         table: {
-         widths: ['*','*','*','*'],
+         widths: [155,135,120,'*'],
             body: [
                 [
                     {
                         border: [false, false, false, false],
-                        text: {text: Math.round(parseFloat(data.others_deal)) + Math.round(parseFloat(data.equipment_deal)), alignment : 'right'},
-                        margin: [5,0]
+                        text: Math.round(parseFloat(data.others_deal)) + Math.round(parseFloat(data.equipment_deal)),
+                        margin: [57,0],
+                        alignment: 'left'
                     },
                     {
                         border: [false, false, false, false],
-                        text: {text: Math.round(parseFloat(data.others_deal)), alignment : 'right'},
+                        text: Math.round(parseFloat(data.others_deal)), 
+                        alignment : 'left',
                         background: 'white',
-                        margin: [8,0]
+                        margin: [0,0]
                     },
                     {
                         border: [false, false, false, false],
-                        text: {text: Math.round(parseFloat(data.equipment_deal)), alignment : 'right'},
+                        text: Math.round(parseFloat(data.equipment_deal)), 
+                        alignment : 'left',
                         background: 'white',
-                        margin: [8,0]
+                        margin: [0,0]
                     },
                     {
                         border: [false, false, false, false],
-                        text: {text: 'Deal 17%', alignment : 'right'},
-                        margin: [5,0]
+                        image: writeTextToDataURL('תשומות 17%','black',1,10, "bold 12px Heebo", 20,220),
+                        alignment:'right',
+                        margin: [5,-10]
                     }
                 ],
             ]

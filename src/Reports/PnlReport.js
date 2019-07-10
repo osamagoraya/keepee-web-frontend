@@ -38,7 +38,11 @@ export const PnlDD = (data,businessName,reportYear, userNID) => ({
 			image: writeTextToDataURL(businessName + " - " + userNID,'black', 1, 1, "bold 12px Heebo", 20,businessName.length > 11 ? 180 : 140),
         	alignment:"left"
 		},
-		{text: reportYear, style: 'header', margin: [5,0], alignment:"right" },
+		{
+			image: writeTextToDataURL(reportYear + ' דוח רווח והפסד שנת','black', 1, 1, "bold 12px Heebo", 20,180),
+			 margin: [-15,-10], 
+			 alignment:"right" 
+		},
 		{
 			style: 'tableExample',
 			table: {

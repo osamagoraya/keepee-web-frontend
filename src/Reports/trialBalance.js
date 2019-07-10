@@ -35,11 +35,15 @@ export const tbDD = (data,businessName,reportYear,UserNID) => ({
     },
 	content: [
         {
-			image: writeTextToDataURL(businessName + " - " + UserNID,'black', 1, 1, "15px Heebo", 20,140), 
+			image: writeTextToDataURL(businessName + " - " + UserNID,'black', 1, 1, "15px Heebo", 20,220), 
 			margin: [5,0],
+			alignment:"left"
+		},
+		{
+			image: writeTextToDataURL(reportYear + ' מאזן בוחן שנת','black', 1, 1, "15px Heebo", 20,220), 
+			margin: [-35,-10], 
 			alignment:"right"
 		},
-		{text: reportYear, style: 'header', margin: [5,0]},
 		{
             style: 'tableExample',
             unbreakable: true,
@@ -64,30 +68,34 @@ export const tbDD = (data,businessName,reportYear,UserNID) => ({
 			style: 'tableExample',
 			table: {
 			    widths: ['*','*','*','*'],
-                heights: [20],
+				heights: [30],
+				margin: [0,0,0,0],
                 unbreakable: true,
 				body: [
 					[
 						{
-							image:  writeTextToDataURL("חשבון",'black', 5, 1, "15px Heebo", 20),
+							image:  writeTextToDataURL("יתרה",'black', 55, 10, "15px Heebo", 20),
 							fillColor: '#dbdada;',
+							margin:[-20,0],
 							border: [false, false, false, false]
 						},
 						{
-							image:  writeTextToDataURL("אשראי",'black', 75, 1, "15px Heebo", 20,120),
+							image:  writeTextToDataURL("חובה",'black', 75, 10, "15px Heebo", 20,120),
 							fillColor: '#dbdada;',
+							margin: [-90,0],
 							border: [false, false, false, false]
 						},
 						{
-							image:  writeTextToDataURL("חיוב",'black', 65, 1, "15px Heebo", 20),
+							image:  writeTextToDataURL("זכות",'black', 65, 10, "15px Heebo", 20),
 							fillColor: '#dbdada;',
+							margin:[-100,0],
 							border: [false, false, false, false]
 						},
 						{
-							image:  writeTextToDataURL("איזון",'black', 55, 1, "15px Heebo", 20),
+							image:  writeTextToDataURL("חשבון",'black', 5, 10, "15px Heebo", 20),
 							fillColor: '#dbdada;',
 							border: [false, false, false, false]
-						},
+						}
 					]
 				]
 			}
@@ -96,7 +104,7 @@ export const tbDD = (data,businessName,reportYear,UserNID) => ({
 	],
 	styles: {
 		header: {
-			fontSize: 18,
+			fontSize: 15,
 			bold: true,
 			margin: [0, 0, 0, 5]
 		},

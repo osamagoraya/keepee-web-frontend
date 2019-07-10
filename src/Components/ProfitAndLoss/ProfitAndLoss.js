@@ -127,9 +127,10 @@ class ProfitAndLoss extends Component {
                                         fillColor: '#94D3D2',
                                         border: [false, false, false, false],
                                         margin: [
-                                                groupKey   == "income" ? -55 : groupKey   == "cost of sale" ?   -47  :
-                                                groupKey   == "other expenses" ? -40    : 
-                                                groupKey   == "finance" ?   -55  : 0 , 10
+                                                groupKey   == "הכנסות" ? -55 : 
+                                                groupKey   == "עלות ההכנסות" ?   -47  :
+                                                groupKey   == "הוצאות אחרות" ? -40    : 
+                                                groupKey   == "מימון" ?   -55  : 0 , 10
                                               ],
                                         alignment: 'right'
                                     },
@@ -186,12 +187,12 @@ class ProfitAndLoss extends Component {
                               text : ''
                             },
                             {
-                              text: {text:report.groupedData[groupKey].sum,alignment:'center',color: '#796f6f',bold: true},
+                              text: {text:Math.round(report.groupedData[groupKey].sum),alignment:'center',color: '#796f6f',bold: true},
                               border: [false, false, false, false],
                               margin: [5,5]
                             },
                             {
-                              image: writeTextToDataURL('סך הכל','black', 1, 1, "12px Heebo", 20,220),
+                              image: writeTextToDataURL(' סה"כ '+ groupKey,'black', 1, 1, "12px Heebo", 20,220),
                               alignment:'center',
                               colSpan: 2,
                               border: [false, false, false, false],

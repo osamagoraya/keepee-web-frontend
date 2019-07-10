@@ -276,7 +276,7 @@ export const incomeTaxAdvancesDD = (data,reportPeriod,businessName,userNID) => (
                                 text : {text: data.advances, alignment : 'right', color: '#828389'}
                             },
                             {
-                              image: writeTextToDataURL(' פמקדמות ששולמו בגין עודפות','#707070', 1, 1, "12px Heebo", 20,220),
+                              image: writeTextToDataURL(' מקדמות ששולמו בגין עודפות','#707070', 1, 1, "12px Heebo", 20,220),
                               border: [false,false,false,false],
                               margin: [75,2]
                             },
@@ -306,7 +306,7 @@ export const incomeTaxAdvancesDD = (data,reportPeriod,businessName,userNID) => (
                                 text : {text: data.totalPayments, alignment : 'right',color: '#828389' }
                             },
                             {
-                              image: writeTextToDataURL('פסה"כ לתשלום','#707070', 1, 1, "12px Heebo", 20,220),
+                              image: writeTextToDataURL('סה"כ לתשלום','#707070', 1, 1, "12px Heebo", 20,220),
                               border: [false,false,false,false],
                               margin: [140,1],
                             },

@@ -97,7 +97,7 @@ class TrialBalance extends Component {
     var context = x.getContext("2d");
   
     x.height = 10;
-    x.width = 350;
+    x.width = width;
   
   
     context.fillStyle = color;
@@ -122,7 +122,7 @@ class TrialBalance extends Component {
                         style: 'input',
                         "dontBreakRows": true,
                         table: {
-                          widths: [140,'*'],
+                          widths: ['*'],
                           heights: [20],
                           margin: [0,0,0,0],
                           unbreakable: true,
@@ -130,16 +130,12 @@ class TrialBalance extends Component {
                             body: [
                                 [
                                   {
-                                    text: {text:report.groupedData[groupKey].sum,alignment:'left',bold: true},
+                                    
+                                    image : writeTextToDataURL(groupKey.substring(0,1).toUpperCase() + groupKey.substring(1), 'black',250, 1, "15px Heebo", 20, 450),
+                                    border: [false,false,false,false],
                                     fillColor: '#94D3D2',
-                                    border: [false, false, false, false],
-                                    margin: [15,10]
-                                  },
-                                  {
-                                    image: writeTextToDataURL(groupKey.substring(0,1).toUpperCase() + groupKey.substring(1), 'black', 220, 1, "15px Heebo", 20),
-                                    fillColor: '#94D3D2',
-                                    border: [false, false, false, false],
-                                    margin:[0,10]
+                                    margin: [0,0],
+			                              alignment:"right"
                                   },
                                 ]
                             ]
@@ -152,35 +148,35 @@ class TrialBalance extends Component {
                             "dontBreakRows": true,
                             unbreakable: true,
                             table: {
-                                widths: [180,'*','*','*'],
+                                widths: ['*','*','*',180],
                                 "dontBreakRows": true,
                                 heights: [10,10],
                               body: [
                                 [
                                   {
-                                    image: writeTextToDataURL(category.name, 'black', 1, 1, "15px Heebo", 20),
-                                    border: [false, false, false, false],
-                                    fillColor: '#ffffff',
-                                    margin: [5,10]
-                                  },
-                                  {
-                                    text: {text: category.type === "credit" ? category.sum : 0 ,alignment:'center',color: '#c4c0c0'},
+                                    text: {text:Math.round(category.sum),alignment:'center'},
                                     fillColor: '#ffffff',
                                     border: [false, false, false, false],
                                     margin: [5,10]
                                   },
                                   {
-                                    text: {text: category.type === "debit" ? category.sum : 0 ,alignment:'center',color: '#c4c0c0'},
+                                    text: {text: category.type === "debit" ? Math.round(category.sum) : 0 ,alignment:'left',color: '#c4c0c0'},
+                                    fillColor: '#ffffff',
+                                    border: [false, false, false, false],
+                                    margin: [5,10]
+                                  },
+                                  {
+                                    text: {text: category.type === "credit" ? Math.round(category.sum) : 0 ,alignment:'left',color: '#c4c0c0'},
                                     fillColor: '#ffffff',
 							                      border: [false, false, false, false],
 							                      margin: [5,10]
                                   },
                                   {
-                                    text: {text:category.sum,alignment:'center'},
-                                    fillColor: '#ffffff',
+                                    image: writeTextToDataURL(category.name, 'black', 1, 1, "15px Heebo", 20,350),
                                     border: [false, false, false, false],
-                                    margin: [5,10]
-                                  },
+                                    fillColor: '#ffffff',
+                                    margin: [-25,10]
+                                  }
                                 ]
                               ]
                             }
@@ -192,30 +188,29 @@ class TrialBalance extends Component {
                       "dontBreakRows": true,
                       table: {
                         "dontBreakRows": true,
-                        widths: [140,'*','*','*'],
+                        widths: ['*','*','*',140],
                         heights: [20],
                         body: [
                           [
                             {
-                              image: writeTextToDataURL('Total '+ groupKey,'black', 1, 1, "15px Heebo", 20),
+                              text: {text:Math.round(report.groupedData[groupKey].sum),alignment:'left',color: '#796f6f',bold: true},
+                              border: [false, false, false, false],
+                              margin: [30,5]
+                            },
+                            {
+                              border: [false, false, false, false],
+                              text: ''
+                            },
+                            {
+                              image: writeTextToDataURL('סה"כ '+ groupKey,'black', 1, 1, "15px Heebo", 20,350),
                               colSpan: 2,
                               border: [false, false, false, false],
-                              margin: [5,5]
+                              margin: [-20,5]
                             },
                             {
                               border: [false, false, false, false],
                               text: ''
-                            },
-                            {
-                              border: [false, false, false, false],
-                              text: ''
-                            },
-                            {
-                              text: {text:report.groupedData[groupKey].sum,alignment:'center',color: '#796f6f',bold: true},
-                              border: [false, false, false, false],
-                              margin: [5,5]
-                            },
-                            
+                            }
                           ]
                         ]
                       },
