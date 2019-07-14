@@ -239,7 +239,15 @@ class TrialBalance extends Component {
           <Grid item container md={10} >
             <Grid item md={12}>
               <Caption style={{paddingLeft: 20}}>
-              {selectedTrailBalanceYear} <PdfAndExcelDownloader onPdf={() => this.prepareAndDownloadPdf()}/>
+              {selectedTrailBalanceYear} 
+              <PdfAndExcelDownloader 
+                onPdf={() => this.prepareAndDownloadPdf()}
+                excelData={this.state.report}
+                year={selectedTrailBalanceYear}
+                user={this.state.selectedUserName}
+                niD={this.state.selectedUserNID}
+                type="tb"
+              />
               </Caption>
               <Divider />
             </Grid>

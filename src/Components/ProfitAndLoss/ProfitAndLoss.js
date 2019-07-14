@@ -127,10 +127,10 @@ class ProfitAndLoss extends Component {
                                         fillColor: '#94D3D2',
                                         border: [false, false, false, false],
                                         margin: [
-                                                groupKey   == "הכנסות" ? -55 : 
+                                                groupKey   == "הכנסות" ? -58 : 
                                                 groupKey   == "עלות ההכנסות" ?   -47  :
-                                                groupKey   == "הוצאות אחרות" ? -40    : 
-                                                groupKey   == "מימון" ?   -55  : 0 , 10
+                                                groupKey   == "הוצאות אחרות" ? -47    : 
+                                                groupKey   == "מימון" ?   -60  : 0 , 10
                                               ],
                                         alignment: 'right'
                                     },
@@ -143,32 +143,23 @@ class ProfitAndLoss extends Component {
                           {
                             style: 'tableExample',
                             table: {
-                                widths: [40,'*','*','*'],
+                                widths: [248,248],
                                 heights: [10,10],
                                 dontBreakRows: true,
                               body: [
                                 [
                                   {
-                                    border: [false, false, false, false],
-                                    text : ''
-                                  },
-                                  {
-                                    text: {text:Math.round(category.sum),alignment:'center',color: '#c4c0c0'},
+                                    text: {text:Math.round(category.name.length),alignment:'center',color: '#c4c0c0'},
                                     fillColor: '#ffffff',
                                     border: [false, false, false, true],
                                     margin: [5,5]
                                   },
                                   {
-                                    image: writeTextToDataURL(category.name,'black', 1, 1, "12px Heebo", 20,220),
-                                    alignment:'center',
-                                    colSpan: 2,
+                                    image: writeTextToDataURL(category.name,'black', 1, 1, "12px Heebo", 20,248),
+                                  //  alignment:'right',
                                     border: [false, false, false, false],
-                                    margin: [5,5]
+                                    margin: [((40 - category.name.length)*5+20) + (category.name.length <= 14 ? 5 : 0) ,5]
                                   },
-                                  {
-                                    
-                                  },
-                                  
                                 ]
                               ]
                             }
@@ -180,6 +171,8 @@ class ProfitAndLoss extends Component {
                       table: {
                           widths: [40,'*','*','*'],
                           heights: [10,10],
+                          unbreakable: true,
+                          "dontBreakRows": true,
                         body: [
                           [
                             {
@@ -193,10 +186,13 @@ class ProfitAndLoss extends Component {
                             },
                             {
                               image: writeTextToDataURL(' סה"כ '+ groupKey,'black', 1, 1, "12px Heebo", 20,220),
-                              alignment:'center',
+                              alignment:'right',
                               colSpan: 2,
                               border: [false, false, false, false],
-                              margin: [5,5]
+                              margin: [groupKey   == "הכנסות" ? -48 : 
+                              groupKey   == "עלות ההכנסות" ?   -36  :
+                              groupKey   == "הוצאות אחרות" ? -36    : 
+                              groupKey   == "מימון" ?   -52  : 0 , 10]
                             },
                             {
                               
@@ -225,13 +221,22 @@ class ProfitAndLoss extends Component {
     }
 
     return (
+     
       <div className="canvas-container ita-container">
         <Grid container>
           <Grid item md={1}></Grid>
           <Grid item container md={10} >
             <Grid item md={12}>
               <Caption style={{paddingLeft: 20}}>
-              {selectedPnlYear} <PdfAndExcelDownloader onPdf={() => this.prepareAndDownloadPdf()}/>
+                {selectedPnlYear} 
+                <PdfAndExcelDownloader 
+                    onPdf={() => this.prepareAndDownloadPdf()}
+                    excelData={this.state.report}
+                    year={this.state.selectedPnlYear}
+                    user={this.state.selectedUserName}
+                    niD={this.state.selectedUserNID}
+                    type="pnl"
+                />
               </Caption>
               <Divider />
             </Grid>
