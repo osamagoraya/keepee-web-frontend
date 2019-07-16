@@ -418,7 +418,16 @@ class AccountInquiry extends Component {
       <div className="canvas-container account-inquiry-container">
       <div className="category-chip-container">
         {this.categoryInformation(report, apiCallInProgress, isValid, selectedUserId)}
-        <PdfAndExcelDownloader onPdf={() => this.prepareAndDownloadPdf()}/>
+        {report ? 
+        <PdfAndExcelDownloader 
+            onPdf={() => this.prepareAndDownloadPdf()}
+            excelData={report}
+            user={this.state.selectedUserName}
+            niD={this.state.selectedUserNID}
+            year={`${Moment(this.state.filters.minDate).format("MM.YY")} - ${Moment(this.state.filters.maxDate).format("MM.YY")}`}
+            type="ai"
+        /> : ""
+        }
       </div>
       {
         (apiCallInProgress && apiCallType === 'fetch') || (!report || Object.keys(report).length === 0)

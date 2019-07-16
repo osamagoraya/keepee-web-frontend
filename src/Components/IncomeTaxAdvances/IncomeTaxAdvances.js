@@ -97,7 +97,15 @@ class IncomeTaxAdvances extends Component {
           <Grid item container md={10} >
             <Grid item md={12}>
               <Caption style={{paddingLeft: 20}}>
-                {this.state.reportTitle} <PdfAndExcelDownloader onPdf={() => this.prepareAndDownloadPdf()}/> 
+                {this.state.reportTitle} 
+                <PdfAndExcelDownloader 
+                  onPdf={() => this.prepareAndDownloadPdf()}
+                  excelData={report}
+                  year={this.state.reportTitle}
+                  user={this.state.selectedUserName}
+                  niD={this.state.selectedUserNID}
+                  type="ita"
+                /> 
               </Caption>
               <Divider />
             </Grid>

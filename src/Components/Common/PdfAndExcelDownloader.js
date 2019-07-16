@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import DownloadPnL from '../ProfitAndLoss/DownloadPnL';
-import DownloadTB from '../TrialBalance/DownloadTB'
+import DownloadTB from '../TrialBalance/DownloadTB';
+import DownloadIncomeTaxAdvances from '../IncomeTaxAdvances/DownloadIncomeTaxAdvances';
+import DownloadVat from '../Vat/DownloadVat';
+import DownloadAccountInquiry from '../AccountInquiry/DownloadAccountInquiry';
 
 export default class PdfAndExcelDownloader extends Component {
   render() {
@@ -24,8 +27,31 @@ export default class PdfAndExcelDownloader extends Component {
                         user={this.props.user} 
                         niD={this.props.niD} 
                         hideElement={true} 
-                        className="download-button" 
-                  /> : ""
+                        className="download-button" /> :
+               this.props.type === 'ita' ? 
+                  <DownloadIncomeTaxAdvances
+                  data={this.props.excelData} 
+                  year={this.props.year} 
+                  user={this.props.user} 
+                  niD={this.props.niD} 
+                  hideElement={true} 
+                  className="download-button" /> : 
+               this.props.type === 'vat' ?
+                  <DownloadVat
+                    data={this.props.excelData}
+                    year={this.props.year}
+                    user={this.props.user}
+                    niD={this.props.niD}
+                    hideElement={true} 
+                    className="download-button" /> :
+               this.props.type === 'ai' ?
+                  <DownloadAccountInquiry
+                    data={this.props.excelData}
+                    year={this.props.year}
+                    user={this.props.user}
+                    niD={this.props.niD}
+                    hideElement={true} 
+                    className="download-button" /> : ""
                }
         </div>
       </div>

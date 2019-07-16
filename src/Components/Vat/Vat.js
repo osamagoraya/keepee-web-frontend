@@ -151,7 +151,15 @@ class Vat extends Component {
           <Grid item container md={8} >
             <Grid item md={12}>
               <Caption style={{paddingLeft: 20}}>
-                <PdfAndExcelDownloader onPdf={() => this.prepareAndDownloadPdf()}/> 
+                <PdfAndExcelDownloader 
+                  onPdf={() => this.prepareAndDownloadPdf()}
+                  excelData={report}
+                  year={`${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}`}
+                  user={this.state.selectedUserName}
+                  niD={this.state.selectedUserNID}
+                  type="vat"
+                />
+                 
               </Caption>
               <ColoredHeader rightLabel="Deals"/>
                 <InvisibleTable>
