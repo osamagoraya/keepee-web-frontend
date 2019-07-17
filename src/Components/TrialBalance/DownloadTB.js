@@ -17,12 +17,17 @@ class DownloadTB extends React.Component {
         
         let reportData = Object.keys(this.state.report.groupedData).map(function(groupKey, i){    
                return ([
-                    [[{value: groupKey, style: {font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}}]],
+                    [[
+                        {value: groupKey, style: {font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}},
+                        {value: "", style: {font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}},
+                        {value: "", style: {font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}},
+                        {value: "", style: {font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}}
+                    ]],
                ,
                 report.groupedData[groupKey].data.map((category, j) => {
                     return (
                         [
-                            {value: category.name, style:{ alignment : { readingOrder: 2, horizontal : "bottom"}}},
+                            {value: category.name, style:{ alignment : { readingOrder: 2, horizontal : "right"}}},
                             {value: category.type == "credit" ? Math.round(category.sum) : 0},
                             {value: category.type == "debit" ? Math.round(category.sum) : 0},
                             {value: Math.round(category.sum)},
@@ -32,7 +37,9 @@ class DownloadTB extends React.Component {
                   [
                       [
                         {value: ' סה"כ '+ groupKey, style: {font: {bold: true}}},
-                        {value: Math.round(report.groupedData[groupKey].sum), style: {font: {bold: true}}}
+                        {value: Math.round(report.groupedData[groupKey].creditSum), style: {font: {bold: true}}},
+                        {value: Math.round(report.groupedData[groupKey].debitSum), style: {font: {bold: true}}},
+                        {value: Math.abs(Math.round(report.groupedData[groupKey].creditSum - report.groupedData[groupKey].debitSum)), style: {font: {bold: true}}}
                       ]
                 ]
                ])

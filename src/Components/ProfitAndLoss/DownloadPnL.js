@@ -17,7 +17,10 @@ class DownloadPnL extends React.Component {
         
         let reportData = Object.keys(this.state.report.groupedData).map(function(groupKey, i){    
                return ([
-                    [[{value: groupKey, style: {font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}}]],
+                    [[
+                        {value: groupKey, style: {font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}},
+                        {value: "", style: {font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}}
+                    ]],
                ,
                 report.groupedData[groupKey].data.map((category, j) => {
                     return (
@@ -32,10 +35,14 @@ class DownloadPnL extends React.Component {
                         {value: ' סה"כ '+ groupKey, style: {font: {bold: true}}},
                         {value: Math.round(report.groupedData[groupKey].sum), style: {font: {bold: true}}}
                       ]
-                ]
+                  ]
                ])
         });
         reportData = reportData.flat().flat();
+        reportData.push([
+            {value: '(סה״כ רווח (הפסד', style: {font: {bold: true}, alignment: { horizontal: "right"}}},
+            {value: Math.round(report.totalSum), style: {font: {bold: true}}}
+        ]);
         data = [
             {
                 columns : [

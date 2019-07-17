@@ -72,15 +72,25 @@ class ProfitAndLoss extends Component {
     let totalSum = 0;
     Object.keys(reportData).forEach(k => {
       let sum = 0;
-      reportData[k].map(c => c.sum).forEach(s => sum += parseFloat(s,10));
+      console.log("asd",reportData[k]);
+      reportData[k].map(c => {
+        if(c.type == "credit") {
+            sum += parseFloat(c.sum,10)
+            console.log("ab plus huwa", sum)
+        }
+        else {
+            sum -= parseFloat(c.sum,10)
+            console.log("ab minus huwa", sum)
+        }
+      });
       totalSum += sum;
       groupedData[k] = {
         data: reportData[k],
-        sum: sum
+        sum: Math.abs(sum)
       }
     });
 
-    return { totalSum, groupedData };
+    return {  totalSum, groupedData };
   }
 
   prepareAndDownloadPdf() {

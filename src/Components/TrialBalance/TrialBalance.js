@@ -71,18 +71,28 @@ class TrialBalance extends Component {
 
   prepareReport(reportData) {
     const groupedData = {};
-    let totalSum = 0;
+    let totalSum = 0, totalCreditSum = 0, totalDebitSum = 0;
     Object.keys(reportData).forEach(k => {
-      let sum = 0;
+      let sum = 0, creditSum = 0, debitSum = 0;
       reportData[k].map(c => c.sum).forEach(s => sum += parseFloat(s,10));
+      reportData[k].map(c => {
+        creditSum += c.type == "credit" ? parseFloat(c.sum,10) : 0;
+        debitSum += c.type == "debit" ? parseFloat(c.sum,10) : 0;
+      });
+      console.log("grouped",reportData[k]);
       totalSum += sum;
+      totalCreditSum += creditSum;
+      totalDebitSum  += debitSum;  
       groupedData[k] = {
         data: reportData[k],
-        sum: sum
+        sum: sum,
+        creditSum: creditSum,
+        debitSum: debitSum
       }
+      console.log(groupedData[k])
     });
 
-    return { totalSum, groupedData };
+    return { totalCreditSum, totalDebitSum, totalSum, groupedData };
   }
 
  
