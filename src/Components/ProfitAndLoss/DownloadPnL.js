@@ -26,14 +26,14 @@ class DownloadPnL extends React.Component {
                     return (
                         [
                             {value: category.name, style:{ alignment : { readingOrder: 1, horizontal : "top"}}},
-                            {value: Math.round(category.sum)},
+                            {value: Math.round(category.sum), style:{numFmt : category.type == "debit" ? "(#,##0);#,##0;0;@" : "#,##0;(#,##0);0;@"}},
                         ]
                     )
                   }),
                   [
                       [
                         {value: ' סה"כ '+ groupKey, style: {font: {bold: true}}},
-                        {value: Math.round(report.groupedData[groupKey].sum), style: {font: {bold: true}}}
+                        {value: Math.round(report.groupedData[groupKey].sum), style: {font: {bold: true}, numFmt : "#,##0;(#,##0);0;@"}}
                       ]
                   ]
                ])
@@ -41,7 +41,7 @@ class DownloadPnL extends React.Component {
         reportData = reportData.flat().flat();
         reportData.push([
             {value: '(סה״כ רווח (הפסד', style: {font: {bold: true}, alignment: { horizontal: "right"}}},
-            {value: Math.round(report.totalSum), style: {font: {bold: true}}}
+            {value: Math.round(report.totalSum), style: {font: {bold: true}, numFmt : "#,##0;(#,##0);0;@"}}
         ]);
         data = [
             {

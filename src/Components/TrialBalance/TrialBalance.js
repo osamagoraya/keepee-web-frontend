@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import {withRouter} from 'react-router-dom';
 
@@ -12,10 +12,8 @@ import ColoredHeader from '../Common/ColoredHeader';
 import {ExpansionPanel, CompactExpansionPanelDetails, ExpansionPanelSummary} from '../Common/ExpansionPanel';
 import {BootstrapTable} from '../Common/Table';
 import {InvisibleTable, TableBody, TableCell, TableRow} from '../Common/InvisibleTable';
-import pdfMake, { fonts } from 'pdfmake/build/pdfmake';
-import vfsFonts from 'pdfmake/build/vfs_fonts';
-import {tbDD} from '../../Reports/trialBalance';
 import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
+import { saveAs } from 'file-saver';
 
 class TrialBalance extends Component {
 
@@ -98,138 +96,15 @@ class TrialBalance extends Component {
  
 
   prepareAndDownloadPdf() {
-    const {vfs} = vfsFonts.pdfMake;
-    pdfMake.vfs = vfs;
-
-    let writeTextToDataURL = function(text, color='black', top=1, bottom=13, size = "1px Roboto, sans-serif", height = 3, width = 100)
-  {
-    var x = document.createElement("CANVAS");
-    var context = x.getContext("2d");
-  
-    x.height = 10;
-    x.width = width;
-  
-  
-    context.fillStyle = color;
-    context.font = "bold 12px Heebo";
-    context.textBaseline = "top";
-    context.beginPath();
-    context.fillText(text, top, bottom,700);
-    context.scale(2, 2)
-    context.closePath();
-    context.fill();
-  
-  
-    return x.toDataURL();
-  }
-
-    let { report } = this.state;  
-    let data = Object.keys(report.groupedData).map(function(groupKey, i)
-                {    
-                  return ( 
-                    [
-                      {
-                        style: 'input',
-                        "dontBreakRows": true,
-                        table: {
-                          widths: ['*'],
-                          heights: [20],
-                          margin: [0,0,0,0],
-                          unbreakable: true,
-                          "dontBreakRows": true,
-                            body: [
-                                [
-                                  {
-                                    
-                                    image : writeTextToDataURL(groupKey.substring(0,1).toUpperCase() + groupKey.substring(1), 'black',250, 1, "15px Heebo", 20, 450),
-                                    border: [false,false,false,false],
-                                    fillColor: '#94D3D2',
-                                    margin: [0,0],
-			                              alignment:"right"
-                                  },
-                                ]
-                            ]
-                        }
-                      },
-                      report.groupedData[groupKey].data.map((category, j) => {
-                        return ([
-                          {
-                            style: 'tableExample',
-                            "dontBreakRows": true,
-                            unbreakable: true,
-                            table: {
-                                widths: ['*','*','*',180],
-                                "dontBreakRows": true,
-                                heights: [10,10],
-                              body: [
-                                [
-                                  {
-                                    text: {text:Math.round(category.sum),alignment:'center'},
-                                    fillColor: '#ffffff',
-                                    border: [false, false, false, false],
-                                    margin: [5,10]
-                                  },
-                                  {
-                                    text: {text: category.type === "debit" ? Math.round(category.sum) : 0 ,alignment:'left',color: '#c4c0c0'},
-                                    fillColor: '#ffffff',
-                                    border: [false, false, false, false],
-                                    margin: [5,10]
-                                  },
-                                  {
-                                    text: {text: category.type === "credit" ? Math.round(category.sum) : 0 ,alignment:'left',color: '#c4c0c0'},
-                                    fillColor: '#ffffff',
-							                      border: [false, false, false, false],
-							                      margin: [5,10]
-                                  },
-                                  {
-                                    image: writeTextToDataURL(category.name, 'black', 1, 1, "15px Heebo", 20,350),
-                                    border: [false, false, false, false],
-                                    fillColor: '#ffffff',
-                                    margin: [-25,10]
-                                  }
-                                ]
-                              ]
-                            }
-                          }
-                        ])
-                      }),
-                      { 
-                      style: 'tableExample',
-                      "dontBreakRows": true,
-                      table: {
-                        "dontBreakRows": true,
-                        widths: ['*','*','*',140],
-                        heights: [20],
-                        body: [
-                          [
-                            {
-                              text: {text:Math.round(report.groupedData[groupKey].sum),alignment:'left',color: '#796f6f',bold: true},
-                              border: [false, false, false, false],
-                              margin: [30,5]
-                            },
-                            {
-                              border: [false, false, false, false],
-                              text: ''
-                            },
-                            {
-                              image: writeTextToDataURL('סה"כ '+ groupKey,'black', 1, 1, "15px Heebo", 20,350),
-                              colSpan: 2,
-                              border: [false, false, false, false],
-                              margin: [-20,5]
-                            },
-                            {
-                              border: [false, false, false, false],
-                              text: ''
-                            }
-                          ]
-                        ]
-                      },
-                      }, // Total
-                ]
-                  )
-              }
-    );
-    pdfMake.createPdf(tbDD(data,this.state.selectedUserName,this.state.selectedTrailBalanceYear, this.state.selectedUserNID)).download(`TrialBalance - ${this.state.selectedTrailBalanceYear}.pdf`);
+    axios.post(
+      'http://localhost:8085/trailBalancePdf',
+      {userId: this.state.selectedUserId, reportYear: this.state.selectedTrailBalanceYear, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
+    .then((r)=> {
+      console.log(r);
+        const pdfBlob = new Blob([r.data], { type: 'application/pdf' });
+        saveAs(pdfBlob, 'generatedDocument.pdf')
+        return;
+    }).catch((err)=> console.log(err));
   }
 
   render() {

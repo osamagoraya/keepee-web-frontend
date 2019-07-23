@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import {withRouter} from 'react-router-dom';
 
@@ -15,6 +15,7 @@ import pdfMake, { fonts } from 'pdfmake/build/pdfmake';
 import vfsFonts from 'pdfmake/build/vfs_fonts';
 import {PnlDD} from '../../Reports/PnlReport';
 import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
+import { saveAs } from 'file-saver';
 
 class ProfitAndLoss extends Component {
 
@@ -86,7 +87,7 @@ class ProfitAndLoss extends Component {
       totalSum += sum;
       groupedData[k] = {
         data: reportData[k],
-        sum: Math.abs(sum)
+        sum: sum
       }
     });
 
@@ -94,129 +95,15 @@ class ProfitAndLoss extends Component {
   }
 
   prepareAndDownloadPdf() {
-    const {vfs} = vfsFonts.pdfMake;
-    pdfMake.vfs = vfs;
-
-    let writeTextToDataURL = function(text, color='black', top=1, bottom=13, size = "1px Roboto, sans-serif", height = 3, width = 100)
-  {
-    var x = document.createElement("CANVAS");
-    var context = x.getContext("2d");
-  
-    x.height = height;
-    x.width = width;
-  
-  
-    context.fillStyle = color;
-    context.font = size;
-    context.textBaseline = "top";
-    context.beginPath();
-    context.fillText(text, top, bottom,700);
-    context.scale(2, 2)
-    context.closePath();
-    context.fill();
-  
-  
-    return x.toDataURL();
-  }
-
-    let { report } = this.state;  
-    let data = Object.keys(report.groupedData).map(function(groupKey, i)
-                {    
-                  return ( 
-                    [
-                      {
-                        style: 'input',
-                        table: {
-                            widths: ['*'],
-                            heights: [20],
-                            margin: [0,0,0,0],
-                            body: [
-                                [
-                                    {
-                                        image: writeTextToDataURL(groupKey.substring(0,1).toUpperCase() + groupKey.substring(1),'black', 1, 1, "bold 12px Heebo", 20,220),
-                                        fillColor: '#94D3D2',
-                                        border: [false, false, false, false],
-                                        margin: [
-                                                groupKey   == "הכנסות" ? -58 : 
-                                                groupKey   == "עלות ההכנסות" ?   -47  :
-                                                groupKey   == "הוצאות אחרות" ? -47    : 
-                                                groupKey   == "מימון" ?   -60  : 0 , 10
-                                              ],
-                                        alignment: 'right'
-                                    },
-                                ]
-                            ]
-                        }
-                      },
-                      report.groupedData[groupKey].data.map((category, j) => {
-                        return ([
-                          {
-                            style: 'tableExample',
-                            table: {
-                                widths: [248,248],
-                                heights: [10,10],
-                                dontBreakRows: true,
-                              body: [
-                                [
-                                  {
-                                    text: {text:Math.round(category.name.length),alignment:'center',color: '#c4c0c0'},
-                                    fillColor: '#ffffff',
-                                    border: [false, false, false, true],
-                                    margin: [5,5]
-                                  },
-                                  {
-                                    image: writeTextToDataURL(category.name,'black', 1, 1, "12px Heebo", 20,248),
-                                  //  alignment:'right',
-                                    border: [false, false, false, false],
-                                    margin: [((40 - category.name.length)*5+20) + (category.name.length <= 14 ? 5 : 0) ,5]
-                                  },
-                                ]
-                              ]
-                            }
-                          }
-                        ])
-                      }),
-                      { 
-                      style: 'tableExample',
-                      table: {
-                          widths: [40,'*','*','*'],
-                          heights: [10,10],
-                          unbreakable: true,
-                          "dontBreakRows": true,
-                        body: [
-                          [
-                            {
-                              border: [false, false, false, false],
-                              text : ''
-                            },
-                            {
-                              text: {text:Math.round(report.groupedData[groupKey].sum),alignment:'center',color: '#796f6f',bold: true},
-                              border: [false, false, false, false],
-                              margin: [5,5]
-                            },
-                            {
-                              image: writeTextToDataURL(' סה"כ '+ groupKey,'black', 1, 1, "12px Heebo", 20,220),
-                              alignment:'right',
-                              colSpan: 2,
-                              border: [false, false, false, false],
-                              margin: [groupKey   == "הכנסות" ? -48 : 
-                              groupKey   == "עלות ההכנסות" ?   -36  :
-                              groupKey   == "הוצאות אחרות" ? -36    : 
-                              groupKey   == "מימון" ?   -52  : 0 , 10]
-                            },
-                            {
-                              
-                            },
-                            
-                          ]
-                        ]
-                      },
-                      }, // Total
-                ]
-                  )
-              }
-    );
-    pdfMake.createPdf(PnlDD(data, this.state.selectedUserName, this.state.selectedPnlYear, this.state.selectedUserNID)).download(`ProfitnLoss - ${this.state.selectedPnlYear}.pdf`);
+    axios.post(
+      'http://localhost:8085/profitAndLossPdf',
+      {userId: this.state.selectedUserId, reportYear: this.state.selectedPnlYear, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
+    .then((r)=> {
+      console.log(r);
+        const pdfBlob = new Blob([r.data], { type: 'application/pdf' });
+        saveAs(pdfBlob, 'generatedDocument.pdf')
+        return;
+    }).catch((err)=> console.log(err));
   }
 
   render() {

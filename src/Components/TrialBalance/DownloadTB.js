@@ -28,18 +28,18 @@ class DownloadTB extends React.Component {
                     return (
                         [
                             {value: category.name, style:{ alignment : { readingOrder: 2, horizontal : "right"}}},
-                            {value: category.type == "credit" ? Math.round(category.sum) : 0},
-                            {value: category.type == "debit" ? Math.round(category.sum) : 0},
-                            {value: Math.round(category.sum)},
+                            {value: category.type == "credit" ? Math.round(category.sum) : 0 , style: {numFmt : "#,##0"}},
+                            {value: category.type == "debit" ? Math.round(category.sum) : 0, style: {numFmt : ";(#,##0);;@"}},
+                            {value: Math.round(category.sum), style: {numFmt : "#,##0"}},
                         ]
                     )
                   }),
                   [
                       [
                         {value: ' סה"כ '+ groupKey, style: {font: {bold: true}}},
-                        {value: Math.round(report.groupedData[groupKey].creditSum), style: {font: {bold: true}}},
-                        {value: Math.round(report.groupedData[groupKey].debitSum), style: {font: {bold: true}}},
-                        {value: Math.abs(Math.round(report.groupedData[groupKey].creditSum - report.groupedData[groupKey].debitSum)), style: {font: {bold: true}}}
+                        {value: Math.round(report.groupedData[groupKey].creditSum), style: {font: {bold: true},numFmt : "#,##0"}},
+                        {value: Math.round(report.groupedData[groupKey].debitSum), style: {font: {bold: true},numFmt : "#,##0;(#,##0);0;@"}},
+                        {value: Math.abs(Math.round(report.groupedData[groupKey].creditSum - report.groupedData[groupKey].debitSum)), style: {font: {bold: true},numFmt : "#,##0"}}
                       ]
                 ]
                ])
