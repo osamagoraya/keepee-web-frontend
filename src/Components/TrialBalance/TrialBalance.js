@@ -97,12 +97,12 @@ class TrialBalance extends Component {
 
   prepareAndDownloadPdf() {
     axios.post(
-      'http://localhost:8085/trailBalancePdf',
-      {userId: this.state.selectedUserId, reportYear: this.state.selectedTrailBalanceYear, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
+      'http://54.245.6.3:8085/trailBalancePdf',
+      {report: this.state.report,userId: this.state.selectedUserId, reportYear: this.state.selectedTrailBalanceYear, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
     .then((r)=> {
       console.log(r);
         const pdfBlob = new Blob([r.data], { type: 'application/pdf' });
-        saveAs(pdfBlob, 'generatedDocument.pdf')
+        saveAs(pdfBlob, "Trial Balance ("+this.state.selectedTrailBalanceYear+") ["+this.state.selectedUserName + " - " + this.state.selectedUserNID+"].pdf")
         return;
     }).catch((err)=> console.log(err));
   }

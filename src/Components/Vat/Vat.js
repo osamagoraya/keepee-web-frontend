@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
-
+import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import {withRouter} from 'react-router-dom';
 
@@ -10,11 +10,9 @@ import Button from '../Common/Button';
 import {InvisibleTable, TableBody, TableHead, TableCell, TableRow} from '../Common/InvisibleTable';
 import './Vat.css'
 import Caption from '../Common/Caption';
-import pdfMake from 'pdfmake/build/pdfmake';
-import vfsFonts from 'pdfmake/build/vfs_fonts';
-import {vatDD} from '../../Reports/vatReport';
 import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
 import VatDetailModal from './VatDetailModal';
+import { saveAs } from 'file-saver';
 
 class Vat extends Component {
 
@@ -110,9 +108,15 @@ class Vat extends Component {
   }
 
   prepareAndDownloadPdf() {
-    const {vfs} = vfsFonts.pdfMake;
-  	pdfMake.vfs = vfs;
-    pdfMake.createPdf(vatDD(this.state.report,this.state.selectedUserName,`${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}`, this.state.selectedUserNID)).download(`VatReport - ${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}.pdf`);
+    axios.post(
+      'http://54.245.6.3:8085/vatPdf',
+      {report: this.state.report, reportYear: `${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}`, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
+    .then((r)=> {
+      console.log(r);
+        const pdfBlob = new Blob([r.data], { type: 'application/pdf' });
+        saveAs(pdfBlob, "Vat ("+`${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}`+") ["+this.state.selectedUserName + " - " + this.state.selectedUserNID+"].pdf")
+        return;
+    }).catch((err)=> console.log(err));
   }
 
   handleClickOpen = (field) => {

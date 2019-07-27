@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
-
+import axios from 'axios';
 import {withRouter} from 'react-router-dom';
 import queryString from 'query-string';
 
@@ -15,12 +15,9 @@ import InvoiceDocumentModal from '../Invoice/InvoiceDocumentModal';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 import ColoredHeader from '../Common/ColoredHeader';
-import pdfMake, { fonts } from 'pdfmake/build/pdfmake';
-import vfsFonts from 'pdfmake/build/vfs_fonts';
-import {accountInquiryDD} from '../../Reports/accountInquiries';
 import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
-import { Button, IconButton } from '@material-ui/core';
 import swal from 'sweetalert';
+import { saveAs } from 'file-saver';
 
 class AccountInquiry extends Component {
 
@@ -126,137 +123,27 @@ class AccountInquiry extends Component {
   }
 
   prepareAndDownloadPdf() {
-    const {vfs} = vfsFonts.pdfMake;
-    pdfMake.vfs = vfs;
-
-    // pdfMake.vfs.fonts = {
-    //   hebrew : {
-    //     normal : 'HeeboBold.ttf',
-    //     bold   : 'HeeboBlack.ttf',
-    //     italics : 'HeeboBold.ttf',
-    //     bolditalics : 'HeeboBold.ttf'
-    //   }
-    // }
-
-    let { report } = this.state;  
-    let data = Object.keys(report).map((k,i) => {
-      const data = this.prepareData(report[k]);
-      const lastIndex = data.length - 1;
-      const totalBalance = data.map((d,index) => {
-            if(index == lastIndex)
-              { 
-                return parseFloat(d.balance);
-              }
-      });  
-      return ( 
-                    [
-                      {
-                        style: 'input',
-                        table: {
-                          "dontBreakRows": true,
-                            widths: ['*','*'],
-                            heights: [20],
-                            margin: [0,0,0,0],
-                            body: [
-                                [
-                                    {
-                                        text: {text:k,alignment:'left',bold: true},
-                                        fillColor: '#94D3D2',
-                                        border: [false, false, false, false],
-                                        margin: [40,10]
-                                    },
-                                    {
-                                      text: {text:totalBalance[lastIndex],alignment:'right',bold: true},
-                                      fillColor: '#94D3D2',
-                                      border: [false, false, false, false],
-                                      margin: [40,10]
-                                  },
-                                ]
-                            ]
-                        }
-                      },
-                      data.map((row, j) => {
-                        return (
-                          {
-                            style: 'tableExample',
-                            "dontBreakRows": true,
-                            table: {
-                              "dontBreakRows": true,
-                                widths: [40,45,40,45,40,40,45,45,40,45],
-                                heights: [20],
-                              body: [
-                                [
-                                  {
-                                    text: {text:row.je_id,alignment:'center',bold: true,fontSize: 9},
-                                    fillColor: '#dbdada;',
-                                    border: [false, false, false, false],
-                                    margin: [0,10]
-                                  },
-                                  {
-                                    text: {text:row.movement_no,alignment:'center',bold: true,fontSize: 9},
-                                    fillColor: '#dbdada;',
-                                    border: [false, false, false, false],
-                                    margin: [0,10]
-                                  },
-                                  {
-                                    text: {text:row.batch_id,alignment:'center',bold: true,fontSize: 9},
-                                    fillColor: '#dbdada;',
-                                    border: [false, false, false, false],
-                                    margin: [0,10]
-                                  },
-                                  {
-                                    text: {text:row.reference_1,alignment:'center',bold: true,fontSize: 9},
-                                    fillColor: '#dbdada;',
-                                    border: [false, false, false, false],
-                                    margin: [0,10]
-                                  },
-                                  {
-                                    text: {text:row.je_date,alignment:'center',bold: true,fontSize: 9},
-                                    fillColor: '#dbdada;',
-                                    border: [false, false, false, false],
-                                    margin: [0,10]
-                                  },
-                                  {
-                                    text: {text:row.vendor_name,alignment:'center',bold: true,fontSize: 9},
-                                    fillColor: '#dbdada;',
-                                    border: [false, false, false, false],
-                                    margin: [0,10]
-                                  },
-                                  {
-                                    text: {text:row.details,alignment:'center',bold: true,fontSize: 9},
-                                    fillColor: '#dbdada;',
-                                    border: [false, false, false, false],
-                                    margin: [0,10]
-                                  },
-                                  {
-                                    text: {text:row.type === 'credit' ? row.credit : 0,alignment:'center',bold: true,fontSize: 9},
-                                    fillColor: '#dbdada;',
-                                    border: [false, false, false, false],
-                                    margin: [0,10]
-                                  },
-                                  {
-                                    text: {text:row.type === 'debit' ? row.debit : 0,alignment:'center',bold: true,fontSize: 9},
-                                    fillColor: '#dbdada;',
-                                    border: [false, false, false, false],
-                                    margin: [0,10]
-                                  },
-                                  {
-                                    text: {text:row.balance,alignment:'center',bold: true,fontSize: 9},
-                                    fillColor: '#dbdada;',
-                                    border: [false, false, false, false],
-                                    margin: [0,10]
-                                  },
-                                ]
-                              ]
-                            }
-                          }
-                        )
-                      }),
-                ]
-                  )
-              }
-    );
-    pdfMake.createPdf(accountInquiryDD(data,this.state.selectedUserName,this.state.selectedUserNID)).download(`Account Inquiries.pdf`);
+    const {minCat,maxCat,minDate,maxDate} = this.state.filters;
+    axios.post(
+      'http://54.245.6.3:8085/accountInquiry',
+      {
+        userId: this.state.selectedUserId, 
+        minCategoryNum: minCat , 
+        maxCategoryNum: maxCat , 
+        minDate: minDate , 
+        maxDate: maxDate, 
+        type: "pdfFile",
+        reportYear: `${Moment(this.state.filters.minDate).format("MM.YY")} - ${Moment(this.state.filters.maxDate).format("MM.YY")}`, 
+        userName: this.state.selectedUserName, 
+        userniD: this.state.selectedUserNID
+      },
+      { responseType: 'blob' })
+    .then((r)=> {
+      console.log(r);
+        const pdfBlob = new Blob([r.data], { type: 'application/pdf' });
+        saveAs(pdfBlob, "Account Inquiries ("+`${Moment(this.state.filters.minDate).format("MM.YY")} - ${Moment(this.state.filters.maxDate).format("MM.YY")}`+") ["+this.state.selectedUserName + " - " + this.state.selectedUserNID+"].pdf")
+        return;
+    }).catch((err)=> console.log(err));
   }
 
   fixJournalEntry = (jeId,isFixed) => {

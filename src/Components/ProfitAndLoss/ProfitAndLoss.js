@@ -11,9 +11,6 @@ import Divider from '../Common/Divider';
 import ColoredHeader from '../Common/ColoredHeader';
 import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary} from '../Common/ExpansionPanel';
 import {InvisibleTable, TableBody, TableCell, TableRow} from '../Common/InvisibleTable';
-import pdfMake, { fonts } from 'pdfmake/build/pdfmake';
-import vfsFonts from 'pdfmake/build/vfs_fonts';
-import {PnlDD} from '../../Reports/PnlReport';
 import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
 import { saveAs } from 'file-saver';
 
@@ -70,38 +67,43 @@ class ProfitAndLoss extends Component {
 
   prepareReport(reportData) {
     const groupedData = {};
-    let totalSum = 0;
+    let totalSum = 0, totalcreditSum = 0, totalDebitSum = 0;
     Object.keys(reportData).forEach(k => {
-      let sum = 0;
-      console.log("asd",reportData[k]);
+      let sum = 0, creditSum = 0, debitSum = 0;
+      let sumType = "";
       reportData[k].map(c => {
         if(c.type == "credit") {
             sum += parseFloat(c.sum,10)
-            console.log("ab plus huwa", sum)
+            creditSum += parseFloat(c.sum,10)
+            sumType = "credit"
         }
         else {
             sum -= parseFloat(c.sum,10)
-            console.log("ab minus huwa", sum)
+            debitSum += parseFloat(c.sum,10);
+            sumType = "debit"
         }
       });
       totalSum += sum;
+      totalcreditSum += creditSum;
+      totalDebitSum += debitSum;
       groupedData[k] = {
         data: reportData[k],
-        sum: sum
+        sum: sum,
+        sumType: sumType
       }
     });
 
-    return {  totalSum, groupedData };
+    return {  totalSum, groupedData, totalcreditSum,totalDebitSum  };
   }
 
   prepareAndDownloadPdf() {
     axios.post(
-      'http://localhost:8085/profitAndLossPdf',
-      {userId: this.state.selectedUserId, reportYear: this.state.selectedPnlYear, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
+      'http://54.245.6.3:8085/profitAndLossPdf',
+      {report: this.state.report, reportYear: this.state.selectedPnlYear, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
     .then((r)=> {
       console.log(r);
         const pdfBlob = new Blob([r.data], { type: 'application/pdf' });
-        saveAs(pdfBlob, 'generatedDocument.pdf')
+        saveAs(pdfBlob, "Profit & Loss ("+this.state.selectedPnlYear+") ["+this.state.selectedUserName + " - " + this.state.selectedUserNID+"].pdf")
         return;
     }).catch((err)=> console.log(err));
   }

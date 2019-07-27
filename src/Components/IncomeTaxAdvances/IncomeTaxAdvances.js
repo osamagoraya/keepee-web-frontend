@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 
@@ -11,10 +11,8 @@ import './IncomeTaxAdvances.css'
 import Caption from '../Common/Caption';
 import Divider from '../Common/Divider';
 
-import pdfMake from 'pdfmake/build/pdfmake';
-import vfsFonts from 'pdfmake/build/vfs_fonts';
-import {incomeTaxAdvancesDD} from '../../Reports/IncomeTaxAdvances/report';
 import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
+import { saveAs } from 'file-saver';
 
 class IncomeTaxAdvances extends Component {
 
@@ -72,9 +70,15 @@ class IncomeTaxAdvances extends Component {
   }
 
   prepareAndDownloadPdf() {
-    const {vfs} = vfsFonts.pdfMake;
-  	pdfMake.vfs = vfs;
-    pdfMake.createPdf(incomeTaxAdvancesDD(this.state.report,this.state.reportTitle,this.state.selectedUserName,this.state.selectedUserNID)).download(`IncomeTaxAdvancesReport - ${this.state.report.month}.pdf`);
+    axios.post(
+      'http://54.245.6.3:8085/incomeTaxAdvancesPdf',
+      {report: this.state.report, reportYear: this.state.reportTitle, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
+    .then((r)=> {
+      console.log(r);
+        const pdfBlob = new Blob([r.data], { type: 'application/pdf' });
+        saveAs(pdfBlob, "Income Tax Advances ("+this.state.reportTitle+") ["+this.state.selectedUserName + " - " + this.state.selectedUserNID+"].pdf")
+        return;
+    }).catch((err)=> console.log(err));
   }
 
   render() {
