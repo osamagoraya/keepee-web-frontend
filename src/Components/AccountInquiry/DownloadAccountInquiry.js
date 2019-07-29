@@ -22,8 +22,8 @@ class DownloadAccountInquiry extends React.Component {
           console.log("bal",balance);
           return {
             ...d,
-            credit: d.type === "credit" ? Math.round(balance * 100) / 100: 0,
-            debit: d.type === "debit" ? Math.round(balance * 100) / 100: 0,
+            credit: d.type === "credit" ? Math.round(d.sum * 100) / 100: 0,
+            debit: d.type === "debit" ? Math.round(d.sum * 100) / 100: 0,
             balance: Math.round(prevBalance * 100) / 100
           }
         });
@@ -90,16 +90,16 @@ class DownloadAccountInquiry extends React.Component {
        
         reportData = reportData.flat().flat();
         reportData.unshift([
-            {value: 'JE',style: { alignment: { horizontal : "right"} , font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
-            {value: "Movement",style: { alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
-            {value: "Batch",style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
-            {value: 'Reference',style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
-            {value: 'Date',style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
-            {value: "Vendor",style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
-            {value: "Details",style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
-            {value: 'Credit',style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
-            {value: 'Debit',style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
-            {value: 'Balance',style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}}
+            {value: 'פקודת יומן',style: { alignment: { horizontal : "right"} , font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
+            {value: "תנועה",style: { alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
+            {value: "מנה",style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
+            {value: 'אסמכתא',style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
+            {value: 'תאריך',style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
+            {value: "ספק",style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
+            {value: "פרטים",style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
+            {value: 'זכות',style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
+            {value: 'חובה',style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}},
+            {value: 'יתרה',style: {alignment: { horizontal : "right"} ,font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "D9D1E0E0"}}}}
         ]);
         data = [
             {

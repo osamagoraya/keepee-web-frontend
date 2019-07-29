@@ -67,7 +67,7 @@ class ProfitAndLoss extends Component {
 
   prepareReport(reportData) {
     const groupedData = {};
-    let totalSum = 0, totalcreditSum = 0, totalDebitSum = 0;
+    let totalSum = 0, totalCreditSum = 0, totalDebitSum = 0;
     Object.keys(reportData).forEach(k => {
       let sum = 0, creditSum = 0, debitSum = 0;
       let sumType = "";
@@ -78,13 +78,13 @@ class ProfitAndLoss extends Component {
             sumType = "credit"
         }
         else {
-            sum -= parseFloat(c.sum,10)
+            sum += parseFloat(c.sum,10)
             debitSum += parseFloat(c.sum,10);
             sumType = "debit"
         }
       });
       totalSum += sum;
-      totalcreditSum += creditSum;
+      totalCreditSum += creditSum;
       totalDebitSum += debitSum;
       groupedData[k] = {
         data: reportData[k],
@@ -93,7 +93,7 @@ class ProfitAndLoss extends Component {
       }
     });
 
-    return {  totalSum, groupedData, totalcreditSum,totalDebitSum  };
+    return {  totalSum, groupedData, totalCreditSum,totalDebitSum  };
   }
 
   prepareAndDownloadPdf() {
@@ -168,7 +168,7 @@ class ProfitAndLoss extends Component {
                   </ExpansionPanel>
                 ))
               }
-              <ColoredHeader leftLabel={report.totalSum} rightLabel="Total" variant="grey" style={{marginTop: "12px"}}/>
+              <ColoredHeader leftLabel={Math.abs(report.totalCreditSum-report.totalDebitSum)} rightLabel="Total" variant="grey" style={{marginTop: "12px"}}/>
             </Grid>
           </Grid>
           <Grid item md={1}></Grid>

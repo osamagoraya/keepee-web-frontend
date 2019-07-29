@@ -115,8 +115,8 @@ class AccountInquiry extends Component {
       console.log("bal",balance);
       return {
         ...d,
-        credit: d.type === "credit" ? Math.round(balance * 100) / 100: 0,
-        debit: d.type === "debit" ? Math.round(balance * 100) / 100: 0,
+        credit: d.type === "credit" ? Math.round(d.sum * 100) / 100: 0,
+        debit: d.type === "debit" ? Math.round(d.sum * 100) / 100: 0,
         balance: Math.round(prevBalance * 100) / 100
       }
     });
