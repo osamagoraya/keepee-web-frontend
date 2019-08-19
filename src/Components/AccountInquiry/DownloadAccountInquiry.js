@@ -1,6 +1,7 @@
 import React from "react";
 import Button from '@material-ui/core/Button';
 import ReactExport from "react-data-export";
+import Moment from 'moment';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -22,9 +23,10 @@ class DownloadAccountInquiry extends React.Component {
           console.log("bal",balance);
           return {
             ...d,
-            credit: d.type === "credit" ? Math.round(d.sum * 100) / 100: 0,
-            debit: d.type === "debit" ? Math.round(d.sum * 100) / 100: 0,
-            balance: Math.round(prevBalance * 100) / 100
+            credit: d.type === "credit" ? d.sum * 100 / 100: 0,
+            debit: d.type === "debit" ? d.sum * 100 / 100: 0,
+            je_date: Moment(d.je_date).format("DD.MM.YYYY"),
+            balance: prevBalance * 100 / 100
           }
         });
       }
@@ -40,6 +42,11 @@ class DownloadAccountInquiry extends React.Component {
                     { 
                       return parseFloat(d.balance);
                     }
+            });
+            let creditBalance = 0 , debitBalance = 0;
+            data.forEach(d => {
+                creditBalance += d.credit;
+                debitBalance  += d.debit;
             });  
             return ( [
                        [[
@@ -47,7 +54,7 @@ class DownloadAccountInquiry extends React.Component {
                                 value : k , style: { alignment: { horizontal : "right"},font: { bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}
                             },
                             {
-                                value: Math.round(totalBalance[lastIndex]), style: { alignment: { horizontal : "right"}, font: { bold: true},fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}
+                                value: Number(Number(totalBalance[lastIndex]).toFixed(2)) , style: { numFmt : "#,##0.00", alignment: { horizontal : "right"}, font: { bold: true},fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}
                             }
                          ]],
                         data.map((row, j) => {
@@ -75,16 +82,48 @@ class DownloadAccountInquiry extends React.Component {
                                           value: row.details, style: { alignment: { horizontal : "right"}}
                                     },
                                     {
-                                          value: row.type === 'credit' ? Math.round(row.credit) : 0
+                                          value: row.type === 'credit' ? Number(parseFloat(Number(row.credit)).toFixed(2)) : 0 , style: { alignment: { horizontal : "right"}, numFmt : "#,##0.00"}
                                     },
                                     {
-                                          value: row.type === 'debit' ? Math.round(row.debit) : 0
+                                          value: row.type === 'debit' ? Number(parseFloat(Number(row.debit)).toFixed(2)) : 0  , style: { alignment: { horizontal : "right"}, numFmt : "#,##0.00"}
                                     },
                                     {
-                                          value: Math.round(row.balance)
+                                          value: Number(parseFloat(Number(row.balance)).toFixed(2)), style: { alignment: { horizontal : "right"}, numFmt : "#,##0.00"}
                                     },
                                 ])
-                        })
+                        }),
+                        [[
+                            {
+                                value : 'סה"כ' , style: { alignment: { horizontal : "right"},font: { bold: true}}
+                            },
+                            {
+                                
+                            },
+                            {
+                               
+                            },
+                            {
+                               
+                            },
+                            {
+                                
+                            },
+                            {
+                               
+                            },
+                            {
+                                
+                            },
+                            {
+                                value: Number(Number(creditBalance).toFixed(2)) , style: { numFmt : "#,##0.00", alignment: { horizontal : "right"}, font: { bold: true}}
+                            },
+                            {
+                                value: Number(Number(debitBalance).toFixed(2)) , style: { numFmt : "#,##0.00", alignment: { horizontal : "right"}, font: { bold: true}}
+                            },
+                            {
+                                value: Number(Number(totalBalance[lastIndex]).toFixed(2)) , style: { numFmt : "#,##0.00", alignment: { horizontal : "right"}, font: { bold: true}}
+                            }
+                        ]]
             ]);
         })
        
@@ -104,7 +143,7 @@ class DownloadAccountInquiry extends React.Component {
         data = [
             {
                 columns : [
-                    {title: this.state.reportYear, width: {wch: 40}, style: {alignment: { horizontal : "right"}}},//pixels width 
+                    {title: this.state.reportYear + ' כרטסת שנת ', width: {wch: 40}, style: {alignment: { horizontal : "right"}}},//pixels width 
                     {title: this.state.userName + " - " + this.state.userNID, width: {wch: 30}},//char width
                     {title : "", width: {wch: 15}},
                     {title : "", width: {wch: 15}},

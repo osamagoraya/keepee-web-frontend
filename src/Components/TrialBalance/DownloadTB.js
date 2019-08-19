@@ -28,18 +28,18 @@ class DownloadTB extends React.Component {
                     return (
                         [
                             {value: category.name, style:{ alignment : { readingOrder: 2, horizontal : "right"}}},
-                            {value: category.type == "credit" ? Math.round(category.sum) : 0 , style: {numFmt : "#,##0;(#,##0);0;@"}},
-                            {value: category.type == "debit" ? Math.round(category.sum) : 0, style: {numFmt : "(#,##0);#,##0;0;@"}},
-                            {value: Math.round(category.sum) , style: {numFmt : category.type == "debit" ? "(#,##0);#,##0;0;@" : "#,##0;(#,##0);0;@"}},
+                            {value: category.type == "credit" ? Number(Number(category.sum).toFixed(2)) : 0 , style: {numFmt : "#,##0.00;(#,##0.00);0.00;@"}},
+                            {value: category.type == "debit" ? Number(Number(category.sum).toFixed(2)) : 0, style: {numFmt : "(#,##0.00);#,##0.00;0.00;@"}},
+                            {value: Number(Number(category.sum).toFixed(2)) , style: {numFmt : category.type == "debit" ? "(#,##0.00);#,##0.00;0.00;@" : "#,##0.00;(#,##0.00);0.00;@"}},
                         ]
                     )
                   }),
                   [
                       [
                         {value: ' סה"כ '+ groupKey, style: {font: {bold: true}}},
-                        {value: Math.round(report.groupedData[groupKey].creditSum), style: {font: {bold: true},numFmt : "#,##0;(#,##0);0;@"}},
-                        {value: Math.round(report.groupedData[groupKey].debitSum), style: {font: {bold: true},numFmt : "(#,##0);#,##0;0;@"}},
-                        {value: Math.abs(Math.round(report.groupedData[groupKey].creditSum - report.groupedData[groupKey].debitSum)), style: {font: {bold: true},numFmt : report.groupedData[groupKey].creditSum >= report.groupedData[groupKey].debitSum ? "#,##0;#,##0;0;@" : "(#,##0);(#,##0);0;@"}}
+                        {value: Number(Number(report.groupedData[groupKey].creditSum).toFixed(2)), style: {font: {bold: true},numFmt : "#,##0.00;(#,##0.00);0.00;@"}},
+                        {value: Number(Number(report.groupedData[groupKey].debitSum).toFixed(2)), style: {font: {bold: true},numFmt : "(#,##0.00);#,##0.00;0.00;@"}},
+                        {value: Number(Math.abs(report.groupedData[groupKey].creditSum - report.groupedData[groupKey].debitSum).toFixed(2)), style: {font: {bold: true},numFmt : report.groupedData[groupKey].creditSum >= Number(report.groupedData[groupKey].debitSum).toFixed(2) ? "#,##0.00;#,##0.00;0.00;@" : "(#,##0.00);(#,##0.00);0.00;@"}}
                       ]
                 ]
                ])

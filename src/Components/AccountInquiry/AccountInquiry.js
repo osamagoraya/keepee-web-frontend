@@ -133,7 +133,7 @@ class AccountInquiry extends Component {
         minDate: minDate , 
         maxDate: maxDate, 
         type: "pdfFile",
-        reportYear: `${Moment(this.state.filters.minDate).format("MM.YY")} - ${Moment(this.state.filters.maxDate).format("MM.YY")}`, 
+        reportYear: `${Moment(this.state.filters.minDate).format("YYYY")}`, 
         userName: this.state.selectedUserName, 
         userniD: this.state.selectedUserNID
       },
@@ -311,7 +311,7 @@ class AccountInquiry extends Component {
             excelData={report}
             user={this.state.selectedUserName}
             niD={this.state.selectedUserNID}
-            year={`${Moment(this.state.filters.minDate).format("MM.YY")} - ${Moment(this.state.filters.maxDate).format("MM.YY")}`}
+            year={`${Moment(this.state.filters.minDate).format("YYYY")}`}
             type="ai"
         /> : ""
         }
