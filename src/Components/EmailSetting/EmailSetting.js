@@ -8,11 +8,11 @@ import Select from '../Common/Select';
 import TextField from '../Common/TextField';
 import Button from '../Common/Button';
 import Caption from '../Common/Caption';
-import './BusinessProfile.css';
+import './EmailSetting.css';
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 import swal from 'sweetalert';
 
-class BusinessProfile extends React.Component {
+class EmailSetting extends React.Component {
 
   state = {
     selectedProfileId: this.props.match.params.profileId,
@@ -88,7 +88,7 @@ class BusinessProfile extends React.Component {
     return (
       <Grid container className="canvas-container bp-container" alignContent="flex-start" >
         <Grid item md={12} className="bp-title strong-font">
-          Personal Details
+          Email Monitor
         </Grid>
         <Grid item md={12}>
         <Formik
@@ -107,39 +107,20 @@ class BusinessProfile extends React.Component {
           {({ values, touched, errors, handleSubmit, handleChange, handleBlur, setFieldValue, submitForm }) => {
             const formFields = [
                 {
-                  columnLabel: "Report Factors",
-                  fields: [
-                    {type: "text", name: "represantationOfVatIncomeReports", value: values.represantationOfVatIncomeReports, label: "Representation of VAT and Income TAX"},
-                    {type: "text", name: "socialInsurance", value: values.socialInsurance, label: "Representation of Social Insurance"},
-                    {type: "date", name: "vatReportStart", value: values.vatReportStart, label: "Vat Report Start"},
-                    {type: "text", name: "assessingOfficerNumber", value: values.assessingOfficerNumber, label: "Assessing Officer Number"},
-                    {type: "text", name: "incomeTaxAdvances", value: values.incomeTaxAdvances, label: "Income Tax Advances"},
-                    {type: "select", name: "reportingFrequency", value: values.reportingFrequency, label: "Reporting Frequency", options: [{label: "Monthly", value: 1},{label: "Bi Monthly", value: 2}], placeholder: "Reporting Frequency" },
-                    {type: "text", name: "withHoldingFile", value: values.withHoldingFile, label: "Withholding File"},
-                    {type: "text", name: "foundationYear", value: values.foundationYear, label: "Foundation Year"},
-                  ]
-                },{
-                  columnLabel: "Business Details",
-                  fields: [
-                    {type: "text", name: "businessDomain", value: values.businessDomain, label: "Business Domain"},
-                    {type: "text", name: "type", value: values.type, label: "Employee/ Employer"},
-                  ]
-                },{
                   columnLabel: "User Details",
                   fields: [
-                    {type: "text", name: "name", value: values.name, label: "Full Name"},
-                    {type: "number", name: "nId", value: values.nId, label: "ID"},
-                    {type: "date", name: "birthDate", value: values.birthDate, label: "Birth Date"},
-                    {type: "text", name: "email", value: values.email, label: "Email",disabled: true},
-                    {type: "text", name: "address", value: values.address, label: "Address"},
-                    {type: "select", name: "license", value: values.license, label: "Licensed", options: [{label: "Exempted", value: 2},{label: "Licensed", value: 1}],  placeholder: "License State" },
-                    {type: "text", name: "supervisedBy", value: values.supervisedBy, label: "Supervised by", disabled: true},
+                    {type: "select", name: "license", value: values.license, label: "License", options: [{label: "Exempted", value: 2},{label: "Licensed", value: 1}],  placeholder: "License State" },
+                    {type: "select", name: "accountInquires", value: values.accountInquires, label: "Account Inquries", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
+                    {type: "select", name: "vatReport", value: values.vatReport, label: "Vat report", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
+                    {type: "select", name: "incomeTaxAdvances", value: values.incomeTaxAdvances, label: "Income tax advances", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
+                    {type: "select", name: "profitAndLoss", value: values.profitAndLoss, label: "P & L", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
+                    {type: "select", name: "trialBalance", value: values.trialBalance, label: "Trial Balance", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
                   ]
                 }
               ]
               return (
               <form onSubmit={handleSubmit} style={this.props.formStyle}>
-                <Grid container>
+                <Grid container justify="flex-end"> 
                 {
                   formFields.map((column, cidx) => (
                     <Grid item md={4} key={cidx} className="fields-column">
@@ -159,7 +140,7 @@ class BusinessProfile extends React.Component {
                                 onBlur={handleBlur}
                                 containerClasses={commonTextfieldClasses}
                                 feedback={touched[field.name] && errors[field.name] ? errors[field.name] : null}
-                                EmailSetting={false}
+                                EmailSetting={true}
                               />
                             : <TextField
                                 type={field.type}
@@ -197,4 +178,4 @@ class BusinessProfile extends React.Component {
   }
 }
 
-export default BusinessProfile;
+export default EmailSetting;

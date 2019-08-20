@@ -4,13 +4,23 @@ import './Select.css';
 import Select, { components } from 'react-select';
 
 import SearchIcon from '@material-ui/icons/Search';
-
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 const DropdownIndicator = (
   props
 ) => {
   return (
     <components.DropdownIndicator {...props}>
       <SearchIcon style={{height: "20px", width: "20px"}}/>
+    </components.DropdownIndicator>
+  );
+};
+
+const DropdownIndicatorKeyboardArrowDown = (
+  props
+) => {
+  return (
+    <components.DropdownIndicator {...props}>
+      <KeyboardArrowDown style={{height: "20px", width: "20px"}}/>
     </components.DropdownIndicator>
   );
 };
@@ -29,7 +39,7 @@ const KSelect = (props) => (
       isMulti={false}
       isRtl={true}
       backspaceRemovesValue={true}
-      components={{ DropdownIndicator }}
+      components={props.EmailSetting === true ? {DropdownIndicatorKeyboardArrowDown} : {DropdownIndicator} }
     />
     {
       props.feedback 

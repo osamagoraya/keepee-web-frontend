@@ -13,7 +13,7 @@ import ProfitAndLossItems from '../Components/Dashboard/MenubarItems/ProfitAndLo
 import TrialBalanceItems from '../Components/Dashboard/MenubarItems/TrialBalanceItems';
 import BusinessProfileItems from '../Components/Dashboard/MenubarItems/BusinessProfileItems';
 import UnifiedFormItems from '../Components/Dashboard/MenubarItems/UnifiedFormItems';
-
+import EmailSettingItems from '../Components/Dashboard/MenubarItems/EmailSettingsItems';
 
 const appRoutes = [
   {
@@ -81,6 +81,11 @@ const appRoutes = [
         path: "/profile/business",
         component: BusinessProfileItems
       },
+      {
+        label: "Email Settings",
+        path: "/profile/email-settings",
+        component: EmailSettingItems
+      }
     ]
   },
   {

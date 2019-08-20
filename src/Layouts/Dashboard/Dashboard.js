@@ -11,6 +11,7 @@ import AccountInquiry from '../../Components/AccountInquiry/AccountInquiry';
 import Vat from '../../Components/Vat/Vat';
 import IncomeTaxAdvances from '../../Components/IncomeTaxAdvances/IncomeTaxAdvances';
 import BusinessProfile from '../../Components/BusinessProfile/BusinessProfile';
+import EmailSetting from '../../Components/EmailSetting/EmailSetting';
 import Categories from '../../Components/Categories/Categories';
 
 import ProtectedRoute from '../../Components/Routes/ProtectedRoute';
@@ -54,6 +55,7 @@ class Dashboard extends Component {
               <ProtectedRoute path="/workspace/report/profilt-and-loss/:pnlYear" component={(props) => <ProfitAndLoss selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>} exact/>
               <ProtectedRoute path="/workspace/report/trial-balance/:trailBalanceYear" component={(props) => <TrialBalance selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>} exact/>
               <ProtectedRoute path="/profile/business/:profileId" component={BusinessProfile} exact/>
+              <ProtectedRoute path="/profile/email-settings/:profileId"  component={EmailSetting} exact />
               <ProtectedRoute path="/settings/categories" component={Categories} exact/>
               <ProtectedRoute path="/settings/unified-form/:clientId" component={UnifiedForm} exact/>
             </Switch>
