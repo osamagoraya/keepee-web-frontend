@@ -39,7 +39,7 @@ class EmailSetting extends React.Component {
     }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
-      "/getUser",
+      "/getUserEmailSetting",
       "POST", 
       {userId: profileId},
       (r) => {
@@ -52,7 +52,7 @@ class EmailSetting extends React.Component {
     );
   }
 
-  updateUser (values) {
+  updateUserEmailSettings (values) {
     values.userId = this.state.selectedProfileId;
     sendAuthenticatedAsyncRequest(
       "/updateUserEmailSettings",
@@ -93,9 +93,8 @@ class EmailSetting extends React.Component {
         <Grid item md={12}>
         <Formik
           initialValues={{ 
-            businessDomain: profile.businessDomain, represantationOfVatIncomeReports: profile.represantationOfVatIncomeReports, socialInsurance: profile.socialInsurance, assessingOfficerNumber: profile.assessingOfficerNumber, incomeTaxAdvances: profile.incomeTaxAdvacnes, reportingFrequency: profile.reportingFrequency, 
-            withHoldingFile: profile.withHoldingFile, foundationYear: profile.foundationYear, assessbusinessDomainingOfficerNumber: profile.assessbusinessDomainingOfficerNumber, type: profile.type, name: profile.name, nId: profile.nId, birthDate: profile.birthDate,
-            email: profile.email, address: profile.address, vendorName: profile.vendorName, supervisedBy: 'Supervisor', vatReportStart: profile.vatReportStart, license : profile.license
+            vatReport: parseInt(profile.vatReport), incomeTaxAdvances : parseInt(profile.incomeTaxAdvances), 
+            profitAndLoss: parseInt(profile.profitAndLoss), trialBalance: parseInt(profile.trialBalance)
           }}    
           onSubmit={(values,  { setSubmitting }) => {
             this.updateUserEmailSettings(values)
@@ -158,7 +157,7 @@ class EmailSetting extends React.Component {
                       {
                         cidx === 0
                         ? <div className="submit-bp-btn-container">
-                            <Button disabled type="submit" variant="blue" className="submit-bp-btn"> Update</Button>
+                            <Button type="submit" variant="blue" className="submit-bp-btn"> Update</Button>
                           </div>
                         : null
                       }
