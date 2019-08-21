@@ -55,14 +55,14 @@ class EmailSetting extends React.Component {
   updateUser (values) {
     values.userId = this.state.selectedProfileId;
     sendAuthenticatedAsyncRequest(
-      "/updateUser",
+      "/updateUserEmailSettings",
       "POST", 
       values,
       (r) => {
-        console.log("response received from update business profile", r);
+        console.log("response received from update email settings profile", r);
         swal("Success", "Client Updated Successfully!","success");
         this.setState({profile: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
-        this.props.history.push("/profile/business/"+this.state.selectedProfileId);
+        this.props.history.push("/profile/email-settings/"+this.state.selectedProfileId);
       },
       (r) => {
         this.setState({apiCallInProgress: false, apiCallType: 'none', profile: null});
@@ -98,7 +98,7 @@ class EmailSetting extends React.Component {
             email: profile.email, address: profile.address, vendorName: profile.vendorName, supervisedBy: 'Supervisor', vatReportStart: profile.vatReportStart, license : profile.license
           }}    
           onSubmit={(values,  { setSubmitting }) => {
-            this.updateUser(values)
+            this.updateUserEmailSettings(values)
             setSubmitting(false);
           }}
           enableReinitialize={true}
@@ -109,8 +109,6 @@ class EmailSetting extends React.Component {
                 {
                   columnLabel: "User Details",
                   fields: [
-                    {type: "select", name: "license", value: values.license, label: "License", options: [{label: "Exempted", value: 2},{label: "Licensed", value: 1}],  placeholder: "License State" },
-                    {type: "select", name: "accountInquires", value: values.accountInquires, label: "Account Inquries", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
                     {type: "select", name: "vatReport", value: values.vatReport, label: "Vat report", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
                     {type: "select", name: "incomeTaxAdvances", value: values.incomeTaxAdvances, label: "Income tax advances", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
                     {type: "select", name: "profitAndLoss", value: values.profitAndLoss, label: "P & L", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
@@ -160,7 +158,7 @@ class EmailSetting extends React.Component {
                       {
                         cidx === 0
                         ? <div className="submit-bp-btn-container">
-                            <Button type="submit" variant="blue" className="submit-bp-btn"> Update</Button>
+                            <Button disabled type="submit" variant="blue" className="submit-bp-btn"> Update</Button>
                           </div>
                         : null
                       }
