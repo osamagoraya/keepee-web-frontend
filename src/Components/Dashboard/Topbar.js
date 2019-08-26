@@ -33,6 +33,7 @@ class Topbar extends React.Component {
     selectedUserID: null,
     selectedUserName : null,
     selectedUserNID : null,
+    selectedUserEmail: null,
     isLoadingUsers: true
   }
 
@@ -64,7 +65,8 @@ class Topbar extends React.Component {
       return {
         value: parseInt(userRow.userId,10),
         label: userRow.name,
-        userNID: userRow.nid 
+        userNID: userRow.nid ,
+        userEmail: userRow.email
       }
     });
   }
@@ -72,8 +74,8 @@ class Topbar extends React.Component {
   handleSelect = (selectedOption) => {
     // console.log("handle select",selectedOption);
     if(selectedOption.value){
-      this.setState({ selectedUserID: selectedOption.value, selectedUserName: selectedOption.label, selectedUserNID: selectedOption.userNID});
-      this.props.onUserChange(selectedOption.value, selectedOption.label, selectedOption.userNID);
+      this.setState({ selectedUserID: selectedOption.value, selectedUserName: selectedOption.label, selectedUserNID: selectedOption.userNID, selectedUserEmail: selectedOption.userEmail});
+      this.props.onUserChange(selectedOption.value, selectedOption.label, selectedOption.userNID, selectedOption.userEmail);
       this.props.history.push("/");
     }
   }

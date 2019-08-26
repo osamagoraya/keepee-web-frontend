@@ -11,6 +11,8 @@ export default class PdfAndExcelDownloader extends Component {
     return (
       <div style={{position: 'relative'}}>
         <div className="download-options" >
+          {  this.props.type == 'vat' ?
+            <Button className="download-button" onClick={this.props.sendReportsViaEmail}>Send all reports  </Button> : ""} | 
           <Button className="download-button" onClick={this.props.onPdf}>PDF</Button> | 
               {this.props.type === 'pnl' ? 
                   <DownloadPnL 
