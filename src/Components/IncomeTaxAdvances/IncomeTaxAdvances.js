@@ -13,6 +13,7 @@ import Divider from '../Common/Divider';
 
 import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
 import { saveAs } from 'file-saver';
+import swal from 'sweetalert';
 
 class IncomeTaxAdvances extends Component {
 
@@ -24,7 +25,10 @@ class IncomeTaxAdvances extends Component {
     apiCallType: 'fetch',
     selectedUserId: this.props.selectedUserId,
     selectedUserName : this.props.selectedUserName,
-    selectedUserNID : this.props.selectedUserNID
+    selectedUserNID : this.props.selectedUserNID,
+    selectedUserEmail: this.props.selectedUserEmail,
+    selectedUserItaFrequency: this.props.selectedUserItaFrequency,
+    selectedUserVatFrequency: this.props.selectedUserVatFrequency
   }
 
   componentDidMount() {
@@ -36,6 +40,9 @@ class IncomeTaxAdvances extends Component {
     const {selectedEndDate} = nextProps.match.params;
     const {reportTitle} = nextProps.match.params;
     const {selectedUserId} = nextProps;
+    const {selectedUserEmail} = nextProps;
+    const {selectedUserItaFrequency} = nextProps;
+    const {selectedUserVatFrequency} = nextProps;
 
     console.log("props received", selectedUserId,selectedStartDate,selectedEndDate)
     if (selectedStartDate !== this.state.selectedStartDate || selectedUserId !== this.state.selectedUserId || selectedEndDate !== this.state.selectedEndDate ){
@@ -44,7 +51,10 @@ class IncomeTaxAdvances extends Component {
         selectedStartDate: selectedStartDate,
         selectedEndDate: selectedEndDate,
         selectedUserId: selectedUserId,
-        reportTitle: reportTitle
+        reportTitle: reportTitle,
+        selectedUserEmail: selectedUserEmail,
+        selectedUserItaFrequency : selectedUserItaFrequency,
+        selectedUserVatFrequency : selectedUserVatFrequency
       });
       this.fetchItaReport(selectedStartDate,selectedEndDate,selectedUserId);
     }
@@ -81,8 +91,24 @@ class IncomeTaxAdvances extends Component {
     }).catch((err)=> console.log(err));
   }
 
+  sendEmail = (selectedProfileId, userName, userniD, email, itaFrequency, vatFrequency) => {
+    sendAuthenticatedAsyncRequest(
+      "/sendReportsViaEmail",
+      "POST", 
+      { userId: selectedProfileId, userName : userName, userniD : userniD, email:email, itaFrequency:itaFrequency,vatFrequency:vatFrequency, btn : 'ita'},
+      (r) => {
+        console.log("response received from send reports via", r);
+        swal("Success", "Reports Sending Process Initiated!","success");
+      },
+      (r) => {
+        this.setState({apiCallInProgress: false, apiCallType: 'none', profile: null});
+        swal("Success", "Error! Sending Reports","success");
+      }
+    );
+  }
+
   render() {
-    const {apiCallInProgress, report, selectedUserId, reportTitle} = this.state;
+    const {apiCallInProgress, report, selectedUserId, selectedUserName, selectedUserNID ,selectedUserEmail, selectedUserItaFrequency, selectedUserVatFrequency} = this.state;
 
     console.log("Rendering ITA report",apiCallInProgress, report, selectedUserId);
     if (apiCallInProgress){
@@ -104,6 +130,7 @@ class IncomeTaxAdvances extends Component {
                 {this.state.reportTitle} 
                 <PdfAndExcelDownloader 
                   onPdf={() => this.prepareAndDownloadPdf()}
+                  sendReportsViaEmail={() => this.sendEmail(selectedUserId,selectedUserName,selectedUserNID,selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency)}
                   excelData={report}
                   year={this.state.reportTitle}
                   user={this.state.selectedUserName}

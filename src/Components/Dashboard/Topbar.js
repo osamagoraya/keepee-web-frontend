@@ -34,6 +34,8 @@ class Topbar extends React.Component {
     selectedUserName : null,
     selectedUserNID : null,
     selectedUserEmail: null,
+    selectedUserVatFrequency: null,
+    selectedUserItaFrequency: null,
     isLoadingUsers: true
   }
 
@@ -66,7 +68,9 @@ class Topbar extends React.Component {
         value: parseInt(userRow.userId,10),
         label: userRow.name,
         userNID: userRow.nid ,
-        userEmail: userRow.email
+        userEmail: userRow.email,
+        incomeTaxReportFrequency: userRow.incomeTaxReportFrequency,
+        vatReportFrequency : userRow.vatReportFrequency
       }
     });
   }
@@ -74,8 +78,8 @@ class Topbar extends React.Component {
   handleSelect = (selectedOption) => {
     // console.log("handle select",selectedOption);
     if(selectedOption.value){
-      this.setState({ selectedUserID: selectedOption.value, selectedUserName: selectedOption.label, selectedUserNID: selectedOption.userNID, selectedUserEmail: selectedOption.userEmail});
-      this.props.onUserChange(selectedOption.value, selectedOption.label, selectedOption.userNID, selectedOption.userEmail);
+      this.setState({ selectedUserID: selectedOption.value, selectedUserName: selectedOption.label, selectedUserNID: selectedOption.userNID, selectedUserEmail: selectedOption.userEmail, selectedUserItaFrequency: selectedOption.incomeTaxReportFrequency,selectedUserVatFrequency: selectedOption.vatReportFrequency });
+      this.props.onUserChange(selectedOption.value, selectedOption.label, selectedOption.userNID, selectedOption.userEmail,selectedOption.incomeTaxReportFrequency,selectedOption.vatReportFrequency);
       this.props.history.push("/");
     }
   }

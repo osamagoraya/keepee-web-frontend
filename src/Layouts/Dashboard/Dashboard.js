@@ -27,11 +27,13 @@ class Dashboard extends Component {
     selectedUserName: null,
     selectedUserNID : null,
     selectedUserEmail: null,
+    selectedUserItaFrequency: null,
+    selectedUserVatFrequency: null,
     loggedInUser: Auth.getLoggedInUser()
   }
 
   render () {
-    const {selectedUserId, loggedInUser, selectedUserName, selectedUserNID, selectedUserEmail} = this.state;
+    const {selectedUserId, loggedInUser, selectedUserName, selectedUserNID, selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency } = this.state;
     //console.log("rendering dashboard", this.state);
 
     return (
@@ -44,15 +46,15 @@ class Dashboard extends Component {
         </div>
         <div style={content} className="full-height">
           {/* TODO: remove user from state and store in redux */}
-          <Topbar onUserChange={(selectedUserId, selectedUserName, selectedUserNID, selectedUserEmail) => this.setState({selectedUserId,selectedUserName,selectedUserNID,selectedUserEmail})} loggedInUser={loggedInUser}/>
+          <Topbar onUserChange={(selectedUserId, selectedUserName, selectedUserNID, selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency) => this.setState({selectedUserId,selectedUserName,selectedUserNID,selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency})} loggedInUser={loggedInUser}/>
           <div style={canvas}>
             <Switch>
               {/* TODO: move these routes in AppRoute or something similar? */}
               <ProtectedRoute path="/workspace/invoice/:imageId/:imageType/:imageStamp" component={(props) => <Invoice selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>} exact />
               <ProtectedRoute path="/workspace/batch/:batchId" component={(props) => <Batch selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>} exact/>
               <ProtectedRoute path="/workspace/account-inquiry" component={(props) => <AccountInquiry selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>}/>
-              <ProtectedRoute path="/workspace/report/vat/:vatId" component={(props) => <Vat selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} selectedUserEmail={selectedUserEmail} {...props}/>} exact/>
-              <ProtectedRoute path="/workspace/report/income-tax-advances/:startDate/:endDate/:reportTitle" component={(props) => <IncomeTaxAdvances selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/report/vat/:vatId" component={(props) => <Vat selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} selectedUserEmail={selectedUserEmail} selectedUserItaFrequency={selectedUserItaFrequency}  selectedUserVatFrequency={selectedUserVatFrequency} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/report/income-tax-advances/:startDate/:endDate/:reportTitle" component={(props) => <IncomeTaxAdvances selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} selectedUserEmail={selectedUserEmail} selectedUserItaFrequency={selectedUserItaFrequency}  selectedUserVatFrequency={selectedUserVatFrequency} {...props}/>} exact/>
               <ProtectedRoute path="/workspace/report/profilt-and-loss/:pnlYear" component={(props) => <ProfitAndLoss selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>} exact/>
               <ProtectedRoute path="/workspace/report/trial-balance/:trailBalanceYear" component={(props) => <TrialBalance selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>} exact/>
               <ProtectedRoute path="/profile/business/:profileId" component={BusinessProfile} exact/>
