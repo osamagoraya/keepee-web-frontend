@@ -38,6 +38,7 @@ const KSelect = (props) => (
       className="k-select"
       isMulti={false}
       isRtl={true}
+      isDisabled={props.isDisabled}
       backspaceRemovesValue={true}
       components={props.EmailSetting === true ? {DropdownIndicatorKeyboardArrowDown} : {DropdownIndicator} }
     />

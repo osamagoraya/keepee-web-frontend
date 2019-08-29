@@ -109,7 +109,7 @@ class EmailSetting extends React.Component {
                   columnLabel: "User Details",
                   fields: [
                     {type: "select", name: "vatReport", value: values.vatReport, label: "Vat report", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
-                    {type: "select", name: "incomeTaxAdvances", value: values.incomeTaxAdvances, label: "Income tax advances", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
+                    // {type: "select", name: "incomeTaxAdvances", value: values.incomeTaxAdvances, label: "Income tax advances", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
                     {type: "select", name: "profitAndLoss", value: values.profitAndLoss, label: "P & L", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
                     {type: "select", name: "trialBalance", value: values.trialBalance, label: "Trial Balance", options: [{label: "Monthly", value: 1},{label: "Bi-Monthly", value: 2}],  placeholder: "Monthly" },
                   ]
@@ -135,6 +135,7 @@ class EmailSetting extends React.Component {
                                 value={(field.options ? field.options.find(option => option.value === field.value) : '')}
                                 onChange={option => setFieldValue(field.name, option.value)}
                                 onBlur={handleBlur}
+                                isDisabled={true}
                                 containerClasses={commonTextfieldClasses}
                                 feedback={touched[field.name] && errors[field.name] ? errors[field.name] : null}
                                 EmailSetting={true}
