@@ -103,7 +103,7 @@ class ProfitAndLoss extends Component {
     .then((r)=> {
       console.log(r);
         const pdfBlob = new Blob([r.data], { type: 'application/pdf' });
-        saveAs(pdfBlob, "Profit & Loss ("+this.state.selectedPnlYear+") ["+this.state.selectedUserName + " - " + this.state.selectedUserNID+"].pdf")
+        saveAs(pdfBlob, "("+this.state.selectedPnlYear+") ["+this.state.selectedUserNID+ " - " + this.state.selectedUserName+"] דוח רווח והפסד.pdf")
         return;
     }).catch((err)=> console.log(err));
   }

@@ -86,7 +86,7 @@ class IncomeTaxAdvances extends Component {
     .then((r)=> {
       console.log(r);
         const pdfBlob = new Blob([r.data], { type: 'application/pdf' });
-        saveAs(pdfBlob, "Income Tax Advances ("+this.state.reportTitle+") ["+this.state.selectedUserName + " - " + this.state.selectedUserNID+"].pdf")
+        saveAs(pdfBlob, "("+this.state.reportTitle+") ["+this.state.selectedUserNID + " - " + this.state.selectedUserName +"] דוח מקדמות מס הכנסה.pdf")
         return;
     }).catch((err)=> console.log(err));
   }

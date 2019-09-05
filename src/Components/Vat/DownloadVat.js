@@ -146,7 +146,7 @@ class DownloadVat extends React.Component {
             }
         ]
 
-        let filename= "Vat ("+this.state.reportYear+") ["+this.state.userName + " - " + this.state.userNID+"]";
+        let filename= "("+this.state.reportYear+") ["+this.state.userNID + " - " + this.state.userName+"] דוח מעמ";
         return (
             <ExcelFile element={<Button className="download-button">Excel</Button>} filename={filename}>
                 <ExcelSheet dataSet={data} name="Vat" />

@@ -124,7 +124,7 @@ class Vat extends Component {
     .then((r)=> {
       console.log(r);
         const pdfBlob = new Blob([r.data], { type: 'application/pdf' });
-        saveAs(pdfBlob, "Vat ("+`${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}`+") ["+this.state.selectedUserName + " - " + this.state.selectedUserNID+"].pdf")
+        saveAs(pdfBlob, "("+`${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}`+") ["+this.state.selectedUserNID + " - " +this.state.selectedUserName+"] דוח מעמ.pdf")
         return;
     }).catch((err)=> console.log(err));
   }

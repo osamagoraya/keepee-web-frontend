@@ -102,7 +102,7 @@ class TrialBalance extends Component {
     .then((r)=> {
       console.log(r);
         const pdfBlob = new Blob([r.data], { type: 'application/pdf' });
-        saveAs(pdfBlob, "Trial Balance ("+this.state.selectedTrailBalanceYear+") ["+this.state.selectedUserName + " - " + this.state.selectedUserNID+"].pdf")
+        saveAs(pdfBlob, "("+this.state.selectedTrailBalanceYear+") ["+this.state.selectedUserNID + " - " + this.state.selectedUserName+"] מאזן בוחן.pdf")
         return;
     }).catch((err)=> console.log(err));
   }

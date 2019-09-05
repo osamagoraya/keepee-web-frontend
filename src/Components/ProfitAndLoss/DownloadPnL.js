@@ -53,7 +53,7 @@ class DownloadPnL extends React.Component {
             }
         ]
 
-        let filename= "Profit & Loss ("+this.state.reportYear+") ["+this.state.userName + " - " + this.state.userNID+"]";
+        let filename= "("+this.state.reportYear+") ["+this.state.userNID + " - " +this.state.userName +"] דוח רווח והפסד";
         return (
             <ExcelFile element={<Button className="download-button">Excel</Button>} filename={filename}>
                 <ExcelSheet dataSet={data} name="Profit and Loss" />

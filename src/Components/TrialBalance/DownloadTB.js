@@ -61,7 +61,7 @@ class DownloadTB extends React.Component {
             }
         ]
 
-        let filename= "Trial Balance ("+this.state.reportYear+") ["+this.state.userName + " - " + this.state.userNID+"]";
+        let filename= "("+this.state.reportYear+") ["+ this.state.userNID + " - " + this.state.userName+"] מאזן בוחן";
         return (
             <ExcelFile element={<Button className="download-button">Excel</Button>} filename={filename} >
                 <ExcelSheet dataSet={data} name="Trial Balance" />

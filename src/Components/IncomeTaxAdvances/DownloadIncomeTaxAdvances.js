@@ -84,7 +84,7 @@ class DownloadIncomeTaxAdvances extends React.Component {
             }
         ]
 
-        let filename= "Income Tax Advances ("+this.state.reportYear+") ["+this.state.userName + " - " + this.state.userNID+"]";
+        let filename= "("+this.state.reportYear+") ["+this.state.userNID + " - " + this.state.userName+"] דוח מקדמות מס הכנסה";
         return (
             <ExcelFile element={<Button className="download-button">Excel</Button>} filename={filename}>
                 <ExcelSheet dataSet={data} name="Income tax advances" />
