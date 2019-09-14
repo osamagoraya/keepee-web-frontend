@@ -93,12 +93,38 @@ class IncomeTaxAdvances extends Component {
 
   sendEmail = (selectedProfileId, userName, userniD, email, itaFrequency, vatFrequency) => {
     sendAuthenticatedAsyncRequest(
-      "/sendReportsViaEmail",
+      "/reportsSendingHistory",
       "POST", 
-      { userId: selectedProfileId, userName : userName, userniD : userniD, email:email, itaFrequency:itaFrequency,vatFrequency:vatFrequency, btn : 'ita'},
+      { userId: selectedProfileId },
       (r) => {
-        console.log("response received from send reports via", r);
-        swal("Success", "Reports Sending Process Initiated!","success");
+        console.log("response received from send reports history", r);
+        let dates = JSON.parse(r.data.body);
+        swal({
+          title: "Report Sending History!",
+          text: "Vat : "+dates.vat_report_date+"\nIncome Tax : "+dates.ita_report_date+"\nExempted Deals : "+dates.ed_report_date+"\nProfit and Loss : "+dates.pnl_report_date+"\nTrial Balance : "+dates.tb_report_date,
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+              sendAuthenticatedAsyncRequest(
+                "/sendReportsViaEmail",
+                "POST", 
+                { userId: selectedProfileId, userName : userName, userniD : userniD, email:email, itaFrequency:itaFrequency,vatFrequency:vatFrequency, btn : 'ita'},
+                (r) => {
+                  console.log("response received from send reports via", r);
+                  swal("Success", "Reports Sending Process Initiated!","success");
+                },
+                (r) => {
+                  this.setState({apiCallInProgress: false, apiCallType: 'none', profile: null});
+                  swal("Success", "Error! Sending Reports","success");
+                }
+              );
+          } else {
+            swal("Email Sending Process Stopped!");
+          }
+        });
       },
       (r) => {
         this.setState({apiCallInProgress: false, apiCallType: 'none', profile: null});
