@@ -157,7 +157,7 @@ class Vat extends Component {
               sendAuthenticatedAsyncRequest(
                 "/sendReportsViaEmail",
                 "POST", 
-                { userId: selectedProfileId, userName : userName, userniD : userniD, email:email, itaFrequency:itaFrequency,vatFrequency:vatFrequency, btn : 'ita'},
+                { userId: selectedProfileId, userName : userName, userniD : userniD, email:email, itaFrequency:itaFrequency,vatFrequency:vatFrequency, btn : 'vat'},
                 (r) => {
                   console.log("response received from send reports via", r);
                   swal("Success", "Reports Sending Process Initiated!","success");
