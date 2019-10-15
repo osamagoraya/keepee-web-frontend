@@ -62,7 +62,20 @@ class BusinessProfile extends React.Component {
         console.log("response received from update business profile", r);
         swal("Success", "Client Updated Successfully!","success");
         this.setState({profile: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
-        this.props.history.push("/profile/business/"+this.state.selectedProfileId);
+      //  this.props.history.push("/profile/business/"+this.state.selectedProfileId);
+  
+        swal({
+          title: "Business Profile Settings",
+          text: "Client's Business Profile Updated Successfully!",
+          icon: "success",
+          button: true,
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+            window.location.href = "http://docs.keepee.info/profile/business/"+this.state.selectedProfileId;
+          }
+        });
+        
       },
       (r) => {
         this.setState({apiCallInProgress: false, apiCallType: 'none', profile: null});

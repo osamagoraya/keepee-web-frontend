@@ -28,7 +28,9 @@ class IncomeTaxAdvances extends Component {
     selectedUserNID : this.props.selectedUserNID,
     selectedUserEmail: this.props.selectedUserEmail,
     selectedUserItaFrequency: this.props.selectedUserItaFrequency,
-    selectedUserVatFrequency: this.props.selectedUserVatFrequency
+    selectedUserVatFrequency: this.props.selectedUserVatFrequency,
+    selectedUserLicense: this.props.selectedUserLicense,
+    selectedUserIncomeTaxAdvances: this.props.selectedUserIncomeTaxAdvances
   }
 
   componentDidMount() {
@@ -43,7 +45,8 @@ class IncomeTaxAdvances extends Component {
     const {selectedUserEmail} = nextProps;
     const {selectedUserItaFrequency} = nextProps;
     const {selectedUserVatFrequency} = nextProps;
-
+    const {selectedUserLicense} = nextProps;
+    const {selectedUserIncomeTaxAdvances} = nextProps;
     console.log("props received", selectedUserId,selectedStartDate,selectedEndDate)
     if (selectedStartDate !== this.state.selectedStartDate || selectedUserId !== this.state.selectedUserId || selectedEndDate !== this.state.selectedEndDate ){
       console.log("updating state of ITA", selectedStartDate, selectedEndDate, selectedUserId)
@@ -54,7 +57,9 @@ class IncomeTaxAdvances extends Component {
         reportTitle: reportTitle,
         selectedUserEmail: selectedUserEmail,
         selectedUserItaFrequency : selectedUserItaFrequency,
-        selectedUserVatFrequency : selectedUserVatFrequency
+        selectedUserVatFrequency : selectedUserVatFrequency,
+        selectedUserLicense : selectedUserLicense,
+        selectedUserIncomeTaxAdvances: selectedUserIncomeTaxAdvances
       });
       this.fetchItaReport(selectedStartDate,selectedEndDate,selectedUserId);
     }
@@ -81,7 +86,7 @@ class IncomeTaxAdvances extends Component {
 
   prepareAndDownloadPdf() {
     axios.post(
-      'http://54.245.6.3:8085/incomeTaxAdvancesPdf',
+      'http://localhost:8085/incomeTaxAdvancesPdf',
       {report: this.state.report, reportYear: this.state.reportTitle, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
     .then((r)=> {
       console.log(r);
@@ -91,7 +96,7 @@ class IncomeTaxAdvances extends Component {
     }).catch((err)=> console.log(err));
   }
 
-  sendEmail = (selectedProfileId, userName, userniD, email, itaFrequency, vatFrequency) => {
+  sendEmail = (selectedProfileId, userName, userniD, email, itaFrequency, vatFrequency, license, incomeTaxAdvances) => {
     sendAuthenticatedAsyncRequest(
       "/reportsSendingHistory",
       "POST", 
@@ -111,7 +116,7 @@ class IncomeTaxAdvances extends Component {
               sendAuthenticatedAsyncRequest(
                 "/sendReportsViaEmail",
                 "POST", 
-                { userId: selectedProfileId, userName : userName, userniD : userniD, email:email, itaFrequency:itaFrequency,vatFrequency:vatFrequency, btn : 'ita'},
+                { userId: selectedProfileId, userName : userName, userniD : userniD, email:email,license: license ,itaFrequency:itaFrequency,vatFrequency:vatFrequency, btn : 'ita',incomeTaxAdvances: incomeTaxAdvances},
                 (r) => {
                   console.log("response received from send reports via", r);
                   swal("Success", "Reports Sending Process Initiated!","success");
@@ -134,7 +139,7 @@ class IncomeTaxAdvances extends Component {
   }
 
   render() {
-    const {apiCallInProgress, report, selectedUserId, selectedUserName, selectedUserNID ,selectedUserEmail, selectedUserItaFrequency, selectedUserVatFrequency} = this.state;
+    const {apiCallInProgress, report, selectedUserId, selectedUserName, selectedUserNID ,selectedUserEmail, selectedUserItaFrequency, selectedUserVatFrequency, selectedUserLicense, selectedUserIncomeTaxAdvances} = this.state;
 
     console.log("Rendering ITA report",apiCallInProgress, report, selectedUserId);
     if (apiCallInProgress){
@@ -156,7 +161,7 @@ class IncomeTaxAdvances extends Component {
                 {this.state.reportTitle} 
                 <PdfAndExcelDownloader 
                   onPdf={() => this.prepareAndDownloadPdf()}
-                  sendReportsViaEmail={() => this.sendEmail(selectedUserId,selectedUserName,selectedUserNID,selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency)}
+                  sendReportsViaEmail={() => this.sendEmail(selectedUserId,selectedUserName,selectedUserNID,selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency,selectedUserLicense,selectedUserIncomeTaxAdvances)}
                   excelData={report}
                   year={this.state.reportTitle}
                   user={this.state.selectedUserName}

@@ -27,6 +27,8 @@ class Vat extends Component {
     selectedUserEmail: this.props.selectedUserEmail,
     selectedUserItaFrequency: this.props.selectedUserItaFrequency,
     selectedUserVatFrequency: this.props.selectedUserVatFrequency,
+    selectedUserLicense : this.props.selectedUserLicense,
+    selectedUserIncomeTaxAdvances: this.props.selectedUserIncomeTaxAdvances,
     detailModalOpen : false,
     selectedField: null
   }
@@ -43,7 +45,9 @@ class Vat extends Component {
     const {selectedUserEmail} = nextProps;
     const {selectedUserItaFrequency} = nextProps;
     const {selectedUserVatFrequency} = nextProps;
-    console.log("props received", vatId, selectedUserId, selectedUserName, selectedUserNID, selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency)
+    const {selectedUserLicense} = nextProps;
+    const {selectedUserIncomeTaxAdvances} = nextProps;
+    console.log("props received", vatId, selectedUserId, selectedUserName, selectedUserNID, selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency,selectedUserLicense)
     if (vatId !== this.state.selectedVatId || selectedUserId !== this.state.selectedUserId){
       console.log("updating state of vat", vatId, selectedUserId)
       this.setState({
@@ -53,7 +57,9 @@ class Vat extends Component {
         selectedUserNID: selectedUserNID,
         selectedUserEmail: selectedUserEmail,
         selectedUserItaFrequency : selectedUserItaFrequency,
-        selectedUserVatFrequency : selectedUserVatFrequency
+        selectedUserVatFrequency : selectedUserVatFrequency,
+        selectedUserLicense: selectedUserLicense,
+        selectedUserIncomeTaxAdvances: selectedUserIncomeTaxAdvances
       });
       this.fetchVatReport(vatId, selectedUserId, selectedUserName, selectedUserNID, selectedUserEmail);
     }
@@ -137,7 +143,7 @@ class Vat extends Component {
     this.setState({detailModalOpen : false});
   };
 
-  sendEmail = (selectedProfileId, userName, userniD, email, itaFrequency, vatFrequency) => {
+  sendEmail = (selectedProfileId, userName, userniD, email, itaFrequency, vatFrequency, license, incomeTaxAdvances) => {
     sendAuthenticatedAsyncRequest(
       "/reportsSendingHistory",
       "POST", 
@@ -153,11 +159,12 @@ class Vat extends Component {
           dangerMode: true,
         })
         .then((willDelete) => {
+          console.log("body at front",selectedProfileId, userName, userniD, email, itaFrequency, vatFrequency, license, incomeTaxAdvances);
           if (willDelete) {
               sendAuthenticatedAsyncRequest(
                 "/sendReportsViaEmail",
                 "POST", 
-                { userId: selectedProfileId, userName : userName, userniD : userniD, email:email, itaFrequency:itaFrequency,vatFrequency:vatFrequency, btn : 'vat'},
+                { userId: selectedProfileId, userName : userName, userniD : userniD, email:email, itaFrequency:itaFrequency,vatFrequency:vatFrequency, btn : 'vat',  license:license, incomeTaxAdvances: incomeTaxAdvances},
                 (r) => {
                   console.log("response received from send reports via", r);
                   swal("Success", "Reports Sending Process Initiated!","success");
@@ -181,7 +188,7 @@ class Vat extends Component {
 
   render() {
 
-    const {apiCallInProgress,apiCallType, report, selectedUserId, selectedUserName, selectedUserNID, selectedUserEmail, selectedUserItaFrequency, selectedUserVatFrequency} = this.state;
+    const {apiCallInProgress,apiCallType, report, selectedUserId, selectedUserName, selectedUserNID, selectedUserEmail, selectedUserItaFrequency, selectedUserVatFrequency, selectedUserLicense,selectedUserIncomeTaxAdvances} = this.state;
     console.log("Rendering vat report",apiCallInProgress, report, selectedUserId,selectedUserName, selectedUserNID, selectedUserEmail);
     if (apiCallInProgress && apiCallType == 'fetch'){
       return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
@@ -209,7 +216,7 @@ class Vat extends Component {
               <Caption style={{paddingLeft: 20}}>
                 <PdfAndExcelDownloader 
                   onPdf={() => this.prepareAndDownloadPdf()}
-                  sendReportsViaEmail={() => this.sendEmail(selectedUserId,selectedUserName,selectedUserNID,selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency)}
+                  sendReportsViaEmail={() => this.sendEmail(selectedUserId,selectedUserName,selectedUserNID,selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency,selectedUserLicense, selectedUserIncomeTaxAdvances)}
                   excelData={report}
                   year={`${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}`}
                   user={this.state.selectedUserName}

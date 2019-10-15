@@ -36,6 +36,8 @@ class Topbar extends React.Component {
     selectedUserEmail: null,
     selectedUserVatFrequency: null,
     selectedUserItaFrequency: null,
+    selectedUserLicense: null,
+    incomeTaxAdvances: null,
     isLoadingUsers: true
   }
 
@@ -70,7 +72,9 @@ class Topbar extends React.Component {
         userNID: userRow.nid ,
         userEmail: userRow.email,
         incomeTaxReportFrequency: userRow.incomeTaxReportFrequency,
-        vatReportFrequency : userRow.vatReportFrequency
+        vatReportFrequency : userRow.vatReportFrequency,
+        license: userRow.license,
+        incomeTaxAdvances: userRow.incomeTaxAdvances
       }
     });
   }
@@ -78,8 +82,17 @@ class Topbar extends React.Component {
   handleSelect = (selectedOption) => {
     // console.log("handle select",selectedOption);
     if(selectedOption.value){
-      this.setState({ selectedUserID: selectedOption.value, selectedUserName: selectedOption.label, selectedUserNID: selectedOption.userNID, selectedUserEmail: selectedOption.userEmail, selectedUserItaFrequency: selectedOption.incomeTaxReportFrequency,selectedUserVatFrequency: selectedOption.vatReportFrequency });
-      this.props.onUserChange(selectedOption.value, selectedOption.label, selectedOption.userNID, selectedOption.userEmail,selectedOption.incomeTaxReportFrequency,selectedOption.vatReportFrequency);
+      this.setState({ 
+        selectedUserID: selectedOption.value, 
+        selectedUserName: selectedOption.label, 
+        selectedUserNID: selectedOption.userNID, 
+        selectedUserEmail: selectedOption.userEmail, 
+        selectedUserItaFrequency: selectedOption.incomeTaxReportFrequency,
+        selectedUserVatFrequency: selectedOption.vatReportFrequency,
+        selectedUserLicense: selectedOption.license,
+        selectedUserIncomeTaxAdvances: selectedOption.incomeTaxAdvances
+      });
+      this.props.onUserChange(selectedOption.value, selectedOption.label, selectedOption.userNID, selectedOption.userEmail,selectedOption.incomeTaxReportFrequency,selectedOption.vatReportFrequency, selectedOption.license, selectedOption.incomeTaxAdvances);
       this.props.history.push("/");
     }
   }
