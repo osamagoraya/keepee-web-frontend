@@ -36,12 +36,13 @@ class UnifiedForm extends React.Component {
     }
     this.setState({apiCallInProgress: true, apiCallType: 'fetch'});
     sendAuthenticatedAsyncRequest(
-      "/getUser",
+      "/getUserForUnifiedForm",
       "POST", 
       {userId: clientId},
       (r) => {
         console.log("response received business profile", r);
         this.setState({client: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
+        console.log("after parsing",JSON.parse(r.data.body));
       },
       (r) => {
         this.setState({apiCallInProgress: false, apiCallType: 'none', profile: null});
@@ -61,26 +62,94 @@ class UnifiedForm extends React.Component {
     return random_string
 }
 
-  generateIniFile = () => {
-    
-    let currentyear = moment().year().toString();
-    let currentMonth = moment().month() + 1 > 9 ? moment().month() + 1 :  "0"+ (moment().month() + 1);
-    let currentHours = moment().hours().toString();
-    let currentMinutes = moment().minutes().toString();
-    let currentDay = moment().dates().toString();
-    let client = this.state.client;
-    let iniPath = "OPENFRMT/"+client.nId+"."+currentyear[2]+currentyear[3]+"/"+currentMonth+currentDay+currentHours+currentMinutes+"/INI.txt";
-    
+padWithZeroes = (number, length) => {
 
+  var my_string = '' + number;
+  while (my_string.length < length) {
+      my_string = '0' + my_string;
+  }
+
+  return my_string;
+
+}
+
+  generateIniFile = (sumOfEntriesBKMVDATA='000000000000023', masterID='000000000000015') => {
     
-    let data = "A000\t00000\t000000000000015\t"+client.nId+"\t"+"X"+Date.now().toString()+"Y"+"\t&OF1.31&"+"\t12345678\tKEEPEE\t00000000000000000020\tAVIID\tAvi Babai\t1\t"+iniPath+"\t1\t1,2\t&OF1.31&\t000000009\t0000000010\t"+client.name;
+    let currentyear    = moment().year().toString();
+    let currentMonth   = (moment().month() + 1) > 9 ? moment().month() + 1 :  "0"+ (moment().month() + 1);
+    let currentHours   = moment().hours().toString();
+    let currentMinutes = moment().minutes().toString();
+    let currentDay     = moment().dates().toString();
+    let client         = this.state.client;
+    let iniPath = client.userInfo.nId+"."+currentyear[2]+currentyear[3]+"/"+currentMonth+currentDay+currentHours+currentMinutes+"/INI.txt";
+
+    // "X"+Date.now().toString()+"Y"+
+    let data = "A000\t00000\t" 
+                + "[sumOfEntriesBKMVDATA]"
+                + "\t"+client.userInfo.nId+"\t" 
+                + masterID 
+                + "\t&OF1.31&" 
+                + "\t12345678" 
+                + "\tKEEPEE" 
+                + "\t00000000000000000020"
+                + "\tAVIID" 
+                + "\tAvi Babai" 
+                + "\t1\t" 
+                + iniPath 
+                + "\t1" 
+                + "1,2\t" 
+                + "&OF1.31&\t" 
+                + "000000009\t" 
+                + "0000000010\t" 
+                + client.userInfo.name + "\t"
+                + client.userInfo.address + "\t"
+                + moment().year() + "\t"
+                + moment().startOf('year').format('YYYYMMDD') + "\t"
+                + moment().format("YYYYMMDD") + "\t"
+                + moment().format('YYYYMMDD') + "\t"
+                + moment().format('HHMM') + "\t" 
+                + "1" + "\t"
+                + "1 =ISO-8859-8-i; 2 = CP-862" + "\t"
+                + "JsZip React Library" + "\t"
+                + "ILS" + "\t"
+                + "1- has branches 0-hasn’t any branches" + "\t"
+                + "\n";
+       
+        
+        data += "B100\t" + this.padWithZeroes(client.userData.length,19) + "\n";
+        data += "B110\t" + this.padWithZeroes(client.categoryCount,19) +  "\n";
+        data += "C100\t" + this.padWithZeroes(0,19) + "\n";
+        data += "D110\t" + this.padWithZeroes(0,19) +  "\n";
+        data += "D120\t" + this.padWithZeroes(0,19) + "\n";
+        data += "M100\t" + this.padWithZeroes(0,19) +  "\n";
     
     var zip = new JSZip();
-    zip.file(iniPath, data);
-    zip.generateAsync({type:"blob"})
-    .then(function(content) {
-    // see FileSaver.js
+    
+    var mkvdata = new JSZip();
+
+    var MkvdataString = 'Journal Entry ID \t Batch ID \t Category ID \t Journal Entry ID \t Reference One \t Reference Two \t Details \t Vendor \t Sum \t Vat \n\n';
+    this.state.client.userData.forEach((row,index) => {
+      MkvdataString +=      row.je_id + "\t" 
+                          + row.batch_id + "\t" 
+                          + row.category_id + "\t"
+                          + row.je_date + "\t"
+                          + row.reference_1 + "\t"
+                          + row.reference_2 + "\t"
+                          + row.details + "\t"
+                          + row.vendor_name + "\t"
+                          + row.sum + "\t"
+                          + row.vat + "\t"
+                          + "\n\n";
+    });
+
+    mkvdata.file("BKMVDATA.txt",MkvdataString);
+    mkvdata.generateAsync({type: 'blob'}).then(content => {
+      zip.file(client.userInfo.nId+"."+currentyear[2]+currentyear[3]+"/"+currentMonth+currentDay+currentHours+currentMinutes+ "/BKMVDATA.zip", content);
+      zip.file(iniPath, data);
+      zip.generateAsync({type:"blob"}).then(function(content) {
+        // see FileSaver.js
         window.saveAs(content,"OPENFRMT.zip");
+    });
     });
   }
 
