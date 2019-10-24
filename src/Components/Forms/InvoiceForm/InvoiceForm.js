@@ -183,6 +183,7 @@ class InvoiceForm extends Component {
                       setFieldValue('categoryId', selectedOption.categoryId)
                       setFieldValue('vat', selectedOption.vatpercent)
                       setFieldValue('vatAmount',Math.round(values.sum*(1-1/(1+0.17))*(selectedOption.vatpercent/100)));
+                      setFieldValue('details', selectedOption.lastDetails);
                   }}
                   options={categories}
                   labelKey="categoryLabel"
