@@ -60,6 +60,7 @@ class InvoiceForm extends Component {
     let parts = imageName.split('/');
     return parts[parts.length - 1];
   }
+
   uploadInvoice = (values) => {
     const {selectedUserId,loggedInUser} = this.state;
     if (this.props.isUserIdRequired && !selectedUserId){
@@ -74,9 +75,7 @@ class InvoiceForm extends Component {
       "POST", 
       {values: values},
       (r) => {
-        r.data.body === '"Journal Entry Already Exists!"' 
-        ?  swal ( "Oops" ,  "Journal Entry With this data Already Exists!" ,  "error" )
-        : this.props.onSubmit();
+        
         if(r.data.body === '"Journal Entry Already Exists!"') {
           swal ( "Oops" ,  "Journal Entry With this data Already Exists!" ,  "error" );
         } 
