@@ -73,8 +73,9 @@ padWithZeroes = (number, length) => {
 
 }
 
-  generateIniFile = (sumOfEntriesBKMVDATA='000000000000023', masterID='000000000000015') => {
+  generateIniFile = () => {
     
+    let masterID = this.generateRandomString(15);
     let currentyear    = moment().year().toString();
     let currentMonth   = (moment().month() + 1) > 9 ? moment().month() + 1 :  "0"+ (moment().month() + 1);
     let currentHours   = moment().hours().toString();
@@ -127,19 +128,25 @@ padWithZeroes = (number, length) => {
     
     var mkvdata = new JSZip();
 
-    var MkvdataString = 'Journal Entry ID \t Batch ID \t Category ID \t Journal Entry ID \t Reference One \t Reference Two \t Details \t Vendor \t Sum \t Vat \n\n';
+    var MkvdataString = 'A000 \t'+masterID+ '\t&OF1.31&\n';
     this.state.client.userData.forEach((row,index) => {
-      MkvdataString +=      row.je_id + "\t" 
-                          + row.batch_id + "\t" 
-                          + row.category_id + "\t"
-                          + row.je_date + "\t"
+      MkvdataString +=    'B100\t'
+                          + this.padWithZeroes(index+1,19) + "\t"
+                          + client.userInfo.nId + "\t"
+                          + row.je_id + "\t"
+                          + row.movement_no + "\t"
+                          + "הוצאה" + "\t"
                           + row.reference_1 + "\t"
                           + row.reference_2 + "\t"
+                          + row.category_id + "\t"
                           + row.details + "\t"
-                          + row.vendor_name + "\t"
-                          + row.sum + "\t"
-                          + row.vat + "\t"
-                          + "\n\n";
+                          + row.je_date + "\t"
+                          + row.je_date + "\t"
+                          + row.category_no + "\t"
+                          + 0 + "\t"
+                          + moment(row.date_created).format('YYYY-MM-DD') + "\t"
+                          + client.userInfo.name + "\t"
+                          + "\n";
     });
 
     mkvdata.file("BKMVDATA.txt",MkvdataString);

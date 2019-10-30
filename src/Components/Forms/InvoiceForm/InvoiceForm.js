@@ -8,6 +8,7 @@ import TextField from '../../Common/TextField';
 
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
 import swal from 'sweetalert';
+import {withRouter} from 'react-router-dom';
 
 class InvoiceForm extends Component {
     
@@ -55,6 +56,10 @@ class InvoiceForm extends Component {
 
   }
   
+  imageStamp = (imageName) => {
+    let parts = imageName.split('/');
+    return parts[parts.length - 1];
+  }
   uploadInvoice = (values) => {
     const {selectedUserId,loggedInUser} = this.state;
     if (this.props.isUserIdRequired && !selectedUserId){
@@ -72,7 +77,29 @@ class InvoiceForm extends Component {
         r.data.body === '"Journal Entry Already Exists!"' 
         ?  swal ( "Oops" ,  "Journal Entry With this data Already Exists!" ,  "error" )
         : this.props.onSubmit();
+        if(r.data.body === '"Journal Entry Already Exists!"') {
+          swal ( "Oops" ,  "Journal Entry With this data Already Exists!" ,  "error" );
+        } 
+        else {
+          swal({
+            title: "Journal Entry Saved Successfully!",
+            text: "What do you want to do next?",
+            icon: "success",
+            buttons: ["No, Thanks", "Next JE"],
+            dangerMode: false
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              this.props.onSubmit();
+              var nextImage = JSON.parse(r.data.body);
+              var path = `/workspace/invoice/${nextImage.imageId}/${nextImage.imageType}/${this.imageStamp(nextImage.imageLink)}`;
+              this.props.history.push(path);
+            } else {
+              this.props.onSubmit();
+            }
+          });
 
+        }
       },
       (r) => {
         swal ( "Oops" ,  "Journal Entry With this data Already Exists!" ,  "error" );
@@ -304,4 +331,4 @@ class InvoiceForm extends Component {
   }
 }
 
-export default InvoiceForm;
+export default withRouter(InvoiceForm);
