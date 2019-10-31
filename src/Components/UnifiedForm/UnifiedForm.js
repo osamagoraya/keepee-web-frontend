@@ -86,7 +86,7 @@ padWithZeroes = (number, length) => {
 
     // "X"+Date.now().toString()+"Y"+
     let data = "A000\t00000\t" 
-                + "[sumOfEntriesBKMVDATA]"
+                + (Number(client.userData.length) + Number(client.categoryData.length))
                 + "\t"+client.userInfo.nId+"\t" 
                 + masterID 
                 + "\t&OF1.31&" 
@@ -118,7 +118,7 @@ padWithZeroes = (number, length) => {
        
         
         data += "B100\t" + this.padWithZeroes(client.userData.length,19) + "\n";
-        data += "B110\t" + this.padWithZeroes(client.categoryCount,19) +  "\n";
+        data += "B110\t" + this.padWithZeroes(client.categoryData.length,19) +  "\n";
         data += "C100\t" + this.padWithZeroes(0,19) + "\n";
         data += "D110\t" + this.padWithZeroes(0,19) +  "\n";
         data += "D120\t" + this.padWithZeroes(0,19) + "\n";
@@ -128,8 +128,10 @@ padWithZeroes = (number, length) => {
     
     var mkvdata = new JSZip();
 
+    var entryIndex = 0;
     var MkvdataString = 'A000 \t'+masterID+ '\t&OF1.31&\n';
     this.state.client.userData.forEach((row,index) => {
+      var type = row.type == "debit" ? "1" : "2"  + "\t";
       MkvdataString +=    'B100\t'
                           + this.padWithZeroes(index+1,19) + "\t"
                           + client.userInfo.nId + "\t"
@@ -143,11 +145,34 @@ padWithZeroes = (number, length) => {
                           + row.je_date + "\t"
                           + row.je_date + "\t"
                           + row.category_no + "\t"
-                          + 0 + "\t"
+                          + "000000000000000" + "\t"
+                          + type + "\t"
+                          + "376" + "\t"
+                          + row.sum + "\t"
+                          + "0" + "\t"
                           + moment(row.date_created).format('YYYY-MM-DD') + "\t"
                           + client.userInfo.name + "\t"
                           + "\n";
+                          entryIndex = index+1;
     });
+    var catEntryIndex = 0;
+    this.state.client.categoryData.forEach((row,index) => {
+      var credit = row.type == 'credit' ? row.sum : '0';
+      var debit  = row.type == 'debit'  ? row.sum : '0';
+      MkvdataString +=    'B110\t'
+                          + this.padWithZeroes(entryIndex+index+1,19) + "\t"
+                          + client.userInfo.nId + "\t"
+                          + row.category_no + "\t"
+                          + row.name + "\t"
+                          + row.group_no + "\t"
+                          + row.group + "\t"
+                          + row.sum + "\t"
+                          + credit + "\t" 
+                          + debit + "\t"
+                          + "\n";    
+                          catEntryIndex = entryIndex+index+1;               
+    });
+    MkvdataString +=    'Z900\t' + this.padWithZeroes(catEntryIndex+1,19) + "\t" + client.userInfo.nId + "\t" + '&OF1.31&' + "\t" + this.padWithZeroes(catEntryIndex+1,19)
 
     mkvdata.file("BKMVDATA.txt",MkvdataString);
     mkvdata.generateAsync({type: 'blob'}).then(content => {
