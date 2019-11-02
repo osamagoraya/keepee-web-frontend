@@ -2,6 +2,11 @@ import React from 'react';
 
 
 import Grid from '@material-ui/core/Grid';
+import { Formik } from 'formik'
+
+import * as Yup from 'yup'
+import Select from '../Common/Select';
+import TextField from '../Common/TextField';
 import Button from '../Common/Button';
 import Caption from '../Common/Caption';
 import './UnifiedForm.css';
@@ -19,17 +24,17 @@ class UnifiedForm extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchClientDetails(this.state.selectedClientId);
+    //this.fetchClientDetails(this.state.selectedClientId);
   }
 
   componentWillReceiveProps(nextProps){
     const {clientId} = nextProps.match.params;
     if (clientId !== this.state.client) {
-      this.setState({clientId}, this.fetchClientDetails(clientId));
+      this.setState({clientId});
     }
   }
 
-  fetchClientDetails = (clientId) => {
+  fetchClientDetails = (clientId, startDate, endDate) => {
     if (!clientId) {
       console.log("No client id found to fetch details for", clientId,);
       return;
@@ -38,14 +43,15 @@ class UnifiedForm extends React.Component {
     sendAuthenticatedAsyncRequest(
       "/getUserForUnifiedForm",
       "POST", 
-      {userId: clientId},
+      {userId: clientId, startDate: startDate, endDate: endDate},
       (r) => {
         console.log("response received business profile", r);
         this.setState({client: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
         console.log("after parsing",JSON.parse(r.data.body));
+        this.generateIniFile();
       },
       (r) => {
-        this.setState({apiCallInProgress: false, apiCallType: 'none', profile: null});
+        this.setState({apiCallInProgress: false, apiCallType: 'none'});
       }
     );
   }
@@ -74,15 +80,15 @@ padWithZeroes = (number, length) => {
 }
 
   generateIniFile = () => {
-    
-    let masterID = this.generateRandomString(15);
+    console.log("Pehly hi hogya!");
+    let masterID       = this.generateRandomString(15);
     let currentyear    = moment().year().toString();
     let currentMonth   = (moment().month() + 1) > 9 ? moment().month() + 1 :  "0"+ (moment().month() + 1);
     let currentHours   = moment().hours().toString();
     let currentMinutes = moment().minutes().toString();
     let currentDay     = moment().dates().toString();
     let client         = this.state.client;
-    let iniPath = client.userInfo.nId+"."+currentyear[2]+currentyear[3]+"/"+currentMonth+currentDay+currentHours+currentMinutes+"/INI.txt";
+    let iniPath        = client.userInfo.nId+"."+currentyear[2]+currentyear[3]+"/"+currentMonth+currentDay+currentHours+currentMinutes+"/INI.txt";
 
     // "X"+Date.now().toString()+"Y"+
     let data = "A000\t00000\t" 
@@ -188,18 +194,98 @@ padWithZeroes = (number, length) => {
   render () {
     const {apiCallInProgress, client, selectedClientId} = this.state;
 
+    const commonTextfieldClasses = "little-bottom-spacer";
+    const validationSchema = Yup.object().shape({
+      unifiedStartDate: Yup.date().required("נדרש"),
+      unifiedEndDate: Yup.date().required("נדרש")
+    })
+
+
     if (apiCallInProgress){
       return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
     } else if (!selectedClientId) {
       return (<Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Selecting a user is mandatory </Caption>);
-    } else if (!client){
-      return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Could not fetch profile data </Caption>);
     }
     
-    console.log(client);
+    //console.log(client);
     return (
-      <Grid container className="canvas-container bp-container" alignContent="flex-start" >
-          <Button onClick={this.generateIniFile}>Click to generate Unified Form Files</Button>
+      <Grid container className="canvas-container bp-container" alignContent="flex-start" justify="flex-end">
+         <Formik
+          initialValues={{ 
+            unifiedStartDate: moment().startOf('year').format('YYYY-MM-DD'), unifiedEndDate : moment().format('YYYY-MM-DD')
+          }}    
+          onSubmit={async(values,  { setSubmitting }) => {
+            this.fetchClientDetails(selectedClientId, values.unifiedStartDate, values.unifiedEndDate);
+            setSubmitting(false);
+          }}
+          enableReinitialize={true}
+          validationSchema={validationSchema} 
+          >
+          {({ values, touched, errors, handleSubmit, handleChange, handleBlur, setFieldValue, submitForm }) => {
+            const formFields = [
+                {
+                  columnLabel: "Report Filters",
+                  fields: [
+                    {type: "date", name: "unifiedStartDate", value: values.unifiedStartDate, label: "Start Date"},
+                    {type: "date", name: "unifiedEndDate", value: values.unifiedEndDate, label: "End Date"},
+                  ]
+                }
+              ]
+              return (
+              <form onSubmit={handleSubmit} style={this.props.formStyle}>
+                <Grid container justify="flex-end"> 
+                {
+                  formFields.map((column, cidx) => (
+                    <Grid item md={12} key={cidx} className="fields-column">
+                      <div className="light-font">{column.columnLabel}</div>
+                      {
+                        column.fields.map((field, idx) => 
+                        <div key={idx}> 
+                          <span className="bp-label">{field.label}</span>
+                          {
+                            field.type === "select" 
+                            ? <Select
+                                placeholder={field.placeholder}
+                                name={field.name}
+                                options={field.options}
+                                value={(field.options ? field.options.find(option => option.value === field.value) : '')}
+                                onChange={option => setFieldValue(field.name, option.value)}
+                                onBlur={handleBlur}
+                                isDisabled={true}
+                                containerClasses={commonTextfieldClasses}
+                                feedback={touched[field.name] && errors[field.name] ? errors[field.name] : null}
+                                EmailSetting={true}
+                              />
+                            : <TextField
+                                type={field.type}
+                                name={field.name}
+                                value={field.value == "null" ? '' :  field.value}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                fullWidth={true}
+                                containerClasses={commonTextfieldClasses}
+                                feedback={touched[field.name] && errors[field.name] ? errors[field.name] : null}
+                              />
+                          }
+                          
+                        </div>
+                        )
+                      }
+                      {
+                        cidx === 0
+                        ? <div className="submit-bp-btn-container">
+                            <Button type="submit" variant="blue" className="submit-bp-btn">Click to generate Unified Form Files</Button>
+                          </div>
+                        : null
+                      }
+                    </Grid>
+                  ))
+                }
+                </Grid>
+              </form>
+            )
+          }}
+        </Formik>
       </Grid>
     );
   }
