@@ -80,28 +80,14 @@ class InvoiceForm extends Component {
           swal ( "Oops" ,  "Journal Entry With this data Already Exists!" ,  "error" );
         } 
         else {
-          swal({
-            title: "Journal Entry Saved Successfully!",
-            text: "What do you want to do next?",
-            icon: "success",
-            buttons: ["No, Thanks", "Next JE"],
-            dangerMode: false
-          })
-          .then((willDelete) => {
-            if (willDelete) {
               this.props.onSubmit();
               var nextImage = JSON.parse(r.data.body);
               var path = `/workspace/invoice/${nextImage.imageId}/${nextImage.imageType}/${this.imageStamp(nextImage.imageLink)}`;
               this.props.history.push(path);
-            } else {
-              this.props.onSubmit();
-            }
-          });
-
-        }
+          }
       },
       (r) => {
-        swal ( "Oops" ,  "Journal Entry With this data Already Exists!" ,  "error" );
+        swal ( "Oops" ,  "No more journal entries exists Or System Error! " ,  "Info" );
       }
     );
   }
