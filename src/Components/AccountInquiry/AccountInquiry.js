@@ -125,7 +125,7 @@ class AccountInquiry extends Component {
   prepareAndDownloadPdf() {
     const {minCat,maxCat,minDate,maxDate} = this.state.filters;
     axios.post(
-      'https://54.245.6.3:8085/accountInquiry',
+      'http://54.245.6.3:8085/accountInquiry',
       {
         userId: this.state.selectedUserId, 
         minCategoryNum: minCat , 

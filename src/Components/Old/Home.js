@@ -34,7 +34,7 @@ class Home extends Component {
     }
 
     getUsers = (user) => {
-        Axios.post('https://54.245.6.3:8085/getUsers', user).then(response => {
+        Axios.post('http://54.245.6.3:8085/getUsers', user).then(response => {
             console.log("Result", response.data)
             this.setState({ userList: JSON.parse(response.data.body), filteredUsers: JSON.parse(response.data.body)})
         }).catch(error => {
@@ -44,7 +44,7 @@ class Home extends Component {
 
     saveImageData = (values,cb) => {
         console.log("User",this.props.location.state)
-        Axios.post('https://54.245.6.3:8085/saveImageData',{values,userID:this.state.selectedUserID,accountantID:this.props.location.state.user.UserID}).then((response)=>{
+        Axios.post('http://54.245.6.3:8085/saveImageData',{values,userID:this.state.selectedUserID,accountantID:this.props.location.state.user.UserID}).then((response)=>{
             console.log("Response",response)
             if(response.data.statusCode === 200){
                 let updatedImageList = this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== values.image});
@@ -62,7 +62,7 @@ class Home extends Component {
     }
 
     irrelevantPicture = (imageID,cb) =>{
-        Axios.post("https://54.245.6.3:8085/irrelevantPicture",{imageID:imageID}).then((response)=>{
+        Axios.post("http://54.245.6.3:8085/irrelevantPicture",{imageID:imageID}).then((response)=>{
             if(response.data.statusCode === 200){
                 cb(true)
               let updatedImageList =  this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== imageID})
@@ -84,7 +84,7 @@ class Home extends Component {
             name: user.Name,
             userEmail: user.Email
         }
-        Axios.post("https://54.245.6.3:8085/retakePicture",data).then((response)=>{
+        Axios.post("http://54.245.6.3:8085/retakePicture",data).then((response)=>{
             if(response.data.statusCode === 200){
                 cb(true)
                 let updatedImageList = this.state.selectedUserImagesList.filter(image=>{return image.ImageID !== imageID})

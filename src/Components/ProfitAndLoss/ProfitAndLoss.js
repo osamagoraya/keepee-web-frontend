@@ -98,7 +98,7 @@ class ProfitAndLoss extends Component {
 
   prepareAndDownloadPdf() {
     axios.post(
-      'https://54.245.6.3:8085/profitAndLossPdf',
+      'http://54.245.6.3:8085/profitAndLossPdf',
       {report: this.state.report, reportYear: this.state.selectedPnlYear, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
     .then((r)=> {
       console.log(r);
