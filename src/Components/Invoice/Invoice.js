@@ -49,6 +49,10 @@ class Invoice extends Component {
     }
   }
 
+  imageStamp = (imageName) => {
+    let parts = imageName.split('/');
+    return parts[parts.length - 1];
+  }
 
   updateImageStatus = (uri, apiCallType) => {
     this.setState({apiCallInProgress: true, apiCallType: apiCallType});
@@ -58,7 +62,13 @@ class Invoice extends Component {
       {imageId: this.state.selectedImageID, email: "not available"},
       (r) => {
         this.setState({apiCallInProgress: false, apiCallType: apiCallType});
-        this.props.history.push("/workspace/invoice");
+        var nextImage = JSON.parse(r.data.body);
+        this.props.history.push('/workspace/invoice');
+        var path = `/workspace/invoice/${nextImage.imageId}/${nextImage.imageType}/${this.imageStamp(nextImage.imageLink)}`;
+        this.props.history.push(path);
+      },
+      (r) => {
+        console.log("Failing");
       }
     );
   }
