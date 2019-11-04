@@ -125,7 +125,7 @@ class Vat extends Component {
 
   prepareAndDownloadPdf() {
     axios.post(
-      'http://54.245.6.3:8085/vatPdf',
+      'https://54.245.6.3:8085/vatPdf',
       {report: this.state.report, reportYear: `${Moment(this.state.report.start_date).format("MM.YY")} - ${Moment(this.state.report.end_date).format("MM.YY")}`, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
     .then((r)=> {
       console.log(r);
