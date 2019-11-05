@@ -9,7 +9,7 @@ const ProtectedRoute = ({ component, path, ...props }) => {
             component={component}
             {...props} />
     } else {
-        return <Redirect to="/login" />
+        return <Redirect to="/securelogin/token-id=r$3easd" />
     }
 }
 
