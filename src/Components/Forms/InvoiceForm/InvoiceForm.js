@@ -78,6 +78,10 @@ class InvoiceForm extends Component {
         
         if(r.data.body === '"Journal Entry Already Exists!"') {
           swal ( "Oops" ,  "Journal Entry With this data Already Exists!" ,  "error" );
+        }
+        else if(r.data.body === '"No More JE!"') {
+          swal ( "Done" ,  "Journal Entry Added! No More JE Left" ,  "info" );
+          this.props.onSubmit();
         } 
         else {
               this.props.onSubmit();
@@ -87,7 +91,7 @@ class InvoiceForm extends Component {
           }
       },
       (r) => {
-        swal ( "Oops" ,  "No more journal entries exists Or System Error! " ,  "Info" );
+        swal("Oops", "System Error! Try Again","error");
       }
     );
   }

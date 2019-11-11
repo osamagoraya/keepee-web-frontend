@@ -5,6 +5,7 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ProtectedRoute from './Components/Routes/ProtectedRoute';
 import Login from './Views/Login/Login';
+import Error from './Views/Error/Error';
 import Dashboard from './Layouts/Dashboard/Dashboard';
 
 class App extends React.Component {
@@ -17,9 +18,15 @@ class App extends React.Component {
                     exact
                     component={Login}
                 />
+                <Route
+                    path="/error"
+                    exact
+                    component={Error}
+                />
                 <ProtectedRoute
                     component={Dashboard}
-                    path="/" />
+                    path="/" 
+                />  
             </Switch>
         </BrowserRouter>
     );

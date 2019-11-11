@@ -1,0 +1,33 @@
+.section {
+    background-image: linear-gradient(180deg, #eb896b 0%, #b5b7d8 100%, #ff342c 100%);
+    opacity: 0.64;
+    height: 100vh;
+}
+
+.logo {
+    height: 10vmin;
+}
+
+.field {
+    width: 20%;
+}
+
+.field-button {
+    margin-top: 2%;
+    margin-left: 47%;
+}
+
+.field-input {
+    margin-top: 2%;
+    margin-left: 40%;
+}
+
+.field-img {
+    margin-top: 10% ;
+    margin-left: 47% ;
+}
+
+.input {
+    background-color: transparent !important;
+    border-color: white;
+}
