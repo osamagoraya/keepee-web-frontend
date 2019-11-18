@@ -50,7 +50,7 @@ class InvoiceForm extends Component {
     sendAuthenticatedAsyncRequest(
       "/getCategories",
       "POST", 
-      null,
+      { userId : this.state.selectedUserId},
       (r) => this.setState({categories: JSON.parse(r.data.body)})
     );
 
