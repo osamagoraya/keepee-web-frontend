@@ -2,10 +2,11 @@ import React from 'react';
 import Moment from 'moment';
 import {withRouter} from 'react-router-dom';
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
-
+import swal from 'sweetalert';
 import MenuSubSectionList from './MenuSubSectionList';
 
 const localPath = "/workspace/report/income-tax-advances";
+
 
 class IncomeTaxAdvancesItems extends React.Component {
   
@@ -45,10 +46,17 @@ class IncomeTaxAdvancesItems extends React.Component {
       "/getIncomeTaxReports",
       "POST",
       {userId: selectedUserId},
-      (r) => this.setState({
-        listData: this.incomeTaxAdvancesFormatter(JSON.parse(r.data.body)),
-        loading: false
-      })
+      (r) => {
+          if(r.data.statusCode == 500){
+            swal("Error","Please Set Vat Report Start Period in client settings", "error");
+          }
+          else {
+            this.setState({
+            listData: this.incomeTaxAdvancesFormatter(JSON.parse(r.data.body)),
+            loading: false
+          })
+        }
+      }
     );
   }
 
