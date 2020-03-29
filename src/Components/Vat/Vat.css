@@ -1,0 +1,21 @@
+.vat-container {
+  overflow: scroll;
+  /* padding: 3% 1% 2% 1%; */
+  padding: 8% 5% 0 5%;
+}
+
+.vat-button {
+  width: 100%;
+}
+
+.vat-modal-button {
+    color: white !important;
+    margin-right: 2% !important;
+}
+
+.vat-detail-modal-size {
+  height: 80%;
+  width: 70%;
+  max-width: 70% !important;
+  background-color: #f8f8f8 !important;
+}

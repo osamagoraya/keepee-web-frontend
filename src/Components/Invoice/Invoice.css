@@ -1,14 +1,14 @@
 .document-box {
-  height: 70%;
-  width: 70%;
-  max-height: 500px;
+  height: 100%;
+  width: 95%;
+  max-height: 100%;
 }
 
 .doc-action-btn-box {
   display: block;
   width: 70%;
+  margin-left: 15%;
   height: 10%;
-  margin-top: -12%;
 }
 
 .doc-action-btns {
@@ -23,12 +23,21 @@
 }
 
 .bottom-btn-container {
-  width: 80%;
-  margin-bottom: 7% !important;
+   width: 100% !important;
 }
 
 .image {
     width: 100%;
     object-fit: fill;
     overflow: hidden;
+}
+
+.document-modal-size {
+  height: 80%;
+  width: 40%;
+  max-width: 40% !important;
+}
+.document-modal-content {
+  height: 100%;
+  width: 100%;
 }

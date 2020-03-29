@@ -11,17 +11,23 @@ class InvoiceMenubarItems extends React.Component {
   
   state = {
     selectedUserId: this.props.selectedUserId,
-    listData: null
+    listData: null,
+    loading: false
   }
 
   componentDidMount() {
-    this.fetchListData(this.state.selectedUserId);
+    if (this.props.location.pathname.indexOf(localPath) >= 0){
+      // console.log("InvoiceMenubarItems mounted, attempting to fetch images ")
+      this.fetchListData(this.state.selectedUserId);
+    } else {
+      // console.log("InvoiceMenubarItems mounted, NOT attempting to fetch images, user id: ", this.state.selectedUserId, "location: ", this.props.location.pathname);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
     // console.log("InvoiceMenubarItems received props", nextProps)
     if (nextProps.selectedUserId !== this.state.selectedUserId){
-      // console.log("InvoiceMenubarItems state update", nextProps)
+      // console.log("InvoiceMenubarItems state update with new user", nextProps)
       this.setState({selectedUserId: nextProps.selectedUserId});
       this.fetchListData(nextProps.selectedUserId);
     }
@@ -32,16 +38,23 @@ class InvoiceMenubarItems extends React.Component {
 
   fetchListData(selectedUserId) {
     if (selectedUserId === undefined || selectedUserId === null){
-      // console.log("not fetching list data, no selected user id founf");
+      console.log("not fetching invoices, no selected user id found");
       return;
-    } else 
-      console.log("fetching list data four user id", selectedUserId);
-    this.setState({listData: []});
+    } else if (this.state.loading) {
+      console.log("not fetching invoices, request already sent");
+      return;
+    } else {
+      console.log("fetching invoices for user id", selectedUserId);
+    }
+    this.setState({listData: [], loading: true});
     sendAuthenticatedAsyncRequest(
       "/getImages",
       "POST",
       {userId: selectedUserId},
-      (r) => this.setState({listData: this.invoiceListItemFormatter(JSON.parse(r.data.body))})
+      (r) => this.setState({
+        listData: this.invoiceListItemFormatter(JSON.parse(r.data.body)),
+        loading: false
+      })
     );
   }
 
@@ -57,20 +70,24 @@ class InvoiceMenubarItems extends React.Component {
       return Moment(`${imageStamp(imageName)}`,'x').format("MM.DD.YY")
     }
   
-    // console.log("Images received",data);
+    console.log("Images received",data);
     return data.map(image => ({
         label: imageName(image.imageLink),
-        path: `${localPath}/${image.imageId}/${image.imageType}/${imageStamp(image.imageLink)}`
+        path: `${localPath}/${image.imageId}/${image.imageType}/${imageStamp(image.imageLink)}`,
+        rawLabel: imageName(image.imageLink),
       })
     );
   }
 
   render (){
     // console.log("rendering InvoiceMenubarItems", this.state, this.props);
-    const {listData} = this.state;
-    return ( listData !== null ? 
-      <MenuSubSectionList listData={this.state.listData} />
-      : "Select user first"
+    const {listData, loading} = this.state;
+    return ( 
+      !loading 
+      ? listData !== null 
+        ? <MenuSubSectionList listData={listData} />
+        : "Select user first"
+      : "Requesting images ..."
     );
   }
 }

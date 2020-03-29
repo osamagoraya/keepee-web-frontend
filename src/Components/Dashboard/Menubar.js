@@ -16,6 +16,7 @@ const ExpansionPanel = withStyles({
     fontSize: 13,
     fontWeight: 700,
     // border: '1px solid rgba(0,0,0,.125)',
+    minHeight: "40px !important",
     boxShadow: 'none',
     '&:not(:last-child)': {
       borderBottom: 0,
@@ -31,12 +32,10 @@ const ExpansionPanel = withStyles({
 
 const ExpansionPanelSummary = withStyles({
   root: {
-    backgroundColor: 'rgba(0,0,0,.03)',
-    borderBottom: '1px solid rgba(0,0,0,.125)',
-    marginBottom: -1,
-    minHeight: 56,
+    backgroundColor: 'rgba(245, 244, 244, 0.8)',
+    minHeight: 40,
     '&$expanded': {
-      minHeight: 56,
+      minHeight: 40,
     },
   },
   content: {
@@ -59,10 +58,10 @@ const ExpansionPanelDetails = withStyles(theme => ({
 
 class Menubar extends Component {
   state = {
-    selectedRoute: this.props.location.pathname, 
+    selectedRoute: this.props.location.pathname,
     selectedUserId: this.props.selectedUserId
   };
-  
+
   componentWillReceiveProps(nextProps) {
     if (this.state.selectedUserId !== nextProps.selectedUserId)
       this.setState({selectedUserId: nextProps.selectedUserId})
@@ -71,7 +70,7 @@ class Menubar extends Component {
   isSelected(path) {
     return this.state.selectedRoute.indexOf(path) !== -1;
   }
-  
+
   handleChange = (localPath) => (event, expanded) => {
     this.setState({
       selectedRoute: expanded ? localPath : this.getBasePath(),
@@ -90,7 +89,7 @@ class Menubar extends Component {
 
   render() {
     const { selectedUserId } = this.state;
-    
+
     const basePath = this.getBasePath();
     // console.log("rendeing menubar", this.state);
     return (
@@ -108,12 +107,17 @@ class Menubar extends Component {
                   <ExpansionPanelSummary>
                     {item.label}
                   </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <item.component selectedUserId={selectedUserId} />
-                  </ExpansionPanelDetails>
+                  {
+                    item.component
+                    ? <ExpansionPanelDetails>
+                        <item.component selectedUserId={selectedUserId} />
+                      </ExpansionPanelDetails>
+                    : null
+                  }
+
               </ExpansionPanel>
             ))
-          } else 
+          } else
             return null;
         })
       }
@@ -123,7 +127,7 @@ class Menubar extends Component {
 }
 
 
-// const styles = {
+// const Styles = {
 //   menubarItem : {
 //     height: 20,
 //     color: '#4d4f5c',

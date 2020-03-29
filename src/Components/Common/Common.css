@@ -6,6 +6,11 @@
   font-style: italic;
 }
 
+.k-divider {
+  border-bottom: 1px solid #bfbfbf;
+  margin: 10px 0;
+}
+
 .k-blue-button {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
   border-radius: 3px;
@@ -13,6 +18,15 @@
   opacity: 0.67;
   text-transform: capitalize !important;
 }
+
+.k-red-button {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+  border-radius: 3px;
+  background-image: linear-gradient(180deg, #ff0000 0%, #b0b5bf 0%, #ef8787 100%, #f7b3a9 100%);
+  opacity: 0.67;
+  text-transform: capitalize !important;
+}
+
 
 .k-grey-button {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
@@ -25,6 +39,12 @@
 .k-button-text {
   color: white;
   font-family: Heebo;
+}
+
+.k-transparent-button-text {
+  color: #616774;
+  font-family: Heebo;
+  text-transform: none;
 }
 
 .k-form-feedback {
@@ -62,59 +82,6 @@
   border-bottom: 2px solid #3794a5 !important;
 }
 
-/*
-* react-select style overrides
-*/
-
-/* Main select container */
-.k-select-container .css-vj8t7z,
-/* Active state */
-.k-select-container .css-2o5izw, 
-.k-select-container .css-2o5izw:hover,
-.k-select-container .css-2o5izw:focus {
-  background-color: rgba(255, 255, 255, 0.48) !important;
-  border-top-left-radius: 3px !important;
-  border-top-right-radius: 3px !important;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04);
-  border: none;
-  border-bottom: 1px solid #828389;
-}
-
-.k-select-container .css-2o5izw:hover,
-.k-select-container .css-2o5izw:focus {
-  border-bottom: 2px solid #3794a5;
-}
-
-/* Text styles */
-.k-select-container .css-xp4uvy, 
-.k-select-container .css-1g6gooi input {
-  color: #c4c0c0 !important;
-  font-family: Heebo !important;
-  font-size: 11px !important;
-  font-weight: 500 !important;
-}
-
-/* Placeholder */
-.k-select-container .css-1492t68 {
-  color: #e4e3e3 !important;
-  font-family: Heebo !important;
-  font-size: 11px !important;
-  font-weight: 500 !important;
-}
-
-
-.k-select-container .css-bl6clz {
-  border: none !important;
-  background: transparent !important;
-}
-
-/* dropdown icon border */
-.k-select-container .css-d8oujb {
-  display: none;
-}
-
 /* 
 * bootstrap table overrides
 */
@@ -128,6 +95,10 @@
   border-radius: 3px !important;
   background-color: #dbdada;
   margin-bottom: 10px;
+}
+
+.k-hidden-row {
+  visibility: collapse;
 }
 
 .k-header-cell {
@@ -171,4 +142,102 @@ tr td:first-child .k-force {
 tr td:last-child .k-force {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
+}
+
+.k-edit-cell {
+  border: none !important;
+  margin: 0 !important;
+  padding-right: 4px !important;
+  padding-left: 4px !important;
+  /* padding-top: inherit !important; */
+  /* padding-bottom: inherit !important; */
+}
+/* 
+.table td .react-bootstrap-table-editing-cell {
+  border: none !important;
+} */
+
+/*
+* green-header
+*/
+
+.k-header {
+  height: 30px;
+  width: 100%;
+  border-radius: 3px;
+  /* opacity: 0.48; */
+  font-family: Heebo;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  justify-content: space-between;
+}
+
+.k-green-header {
+  background-color: #94d3d2;
+  color: #707070;
+}
+
+.k-grey-header {
+  background-color: #bfc0c3;
+  color: #707070;
+}
+
+/*
+* Invisible table
+*/
+
+.k-invisible-table {
+  color: #796f6f;
+  font-family: Heebo !important;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01px;
+  line-height: 22px;
+}
+
+.k-invisible-table-head {
+  color: #796f6f !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+}
+
+.k-invisible-table-body{
+  color: #796f6f !important; 
+  font-weight: 400 !important;
+  font-size: 12px !important;
+}
+
+.k-invisible-table-cell {
+  border-bottom: none !important;
+  
+}
+
+.k-invisible-table-row {
+  height: 35px !important;
+}
+.k-invisible-table-high-row {
+  height: 70px !important;
+}
+
+/**
+* Download PDF button
+*/
+.download-options {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: #707070;
+  font-style: initial;
+}
+
+.download-button {
+  color: inherit !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: 400;
+  font-style: italic;
+  padding: 0 !important;
 }

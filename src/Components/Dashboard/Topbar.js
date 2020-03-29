@@ -31,6 +31,13 @@ class Topbar extends React.Component {
   state = {
     userList: null,
     selectedUserID: null,
+    selectedUserName : null,
+    selectedUserNID : null,
+    selectedUserEmail: null,
+    selectedUserVatFrequency: null,
+    selectedUserItaFrequency: null,
+    selectedUserLicense: null,
+    incomeTaxAdvances: null,
     isLoadingUsers: true
   }
 
@@ -49,7 +56,7 @@ class Topbar extends React.Component {
     sendAuthenticatedAsyncRequest(
       "/getUsers",
       "POST", 
-      {userId: user.userId},
+      {accountantId: user.userId},
       (r) => this.setState({ userList: JSON.parse(r.data.body), isLoadingUsers: false})
     );
   }
@@ -61,7 +68,13 @@ class Topbar extends React.Component {
     return list.map(userRow => {
       return {
         value: parseInt(userRow.userId,10),
-        label: userRow.name
+        label: userRow.name,
+        userNID: userRow.nid ,
+        userEmail: userRow.email,
+        incomeTaxReportFrequency: userRow.incomeTaxReportFrequency,
+        vatReportFrequency : userRow.vatReportFrequency,
+        license: userRow.license,
+        incomeTaxAdvances: userRow.incomeTaxAdvances
       }
     });
   }
@@ -69,9 +82,18 @@ class Topbar extends React.Component {
   handleSelect = (selectedOption) => {
     // console.log("handle select",selectedOption);
     if(selectedOption.value){
-      this.setState({ selectedUserID: selectedOption.value});
-      this.props.onUserChange(selectedOption.value);
-      this.props.history.push("/workspace");
+      this.setState({ 
+        selectedUserID: selectedOption.value, 
+        selectedUserName: selectedOption.label, 
+        selectedUserNID: selectedOption.userNID, 
+        selectedUserEmail: selectedOption.userEmail, 
+        selectedUserItaFrequency: selectedOption.incomeTaxReportFrequency,
+        selectedUserVatFrequency: selectedOption.vatReportFrequency,
+        selectedUserLicense: selectedOption.license,
+        selectedUserIncomeTaxAdvances: selectedOption.incomeTaxAdvances
+      });
+      this.props.onUserChange(selectedOption.value, selectedOption.label, selectedOption.userNID, selectedOption.userEmail,selectedOption.incomeTaxReportFrequency,selectedOption.vatReportFrequency, selectedOption.license, selectedOption.incomeTaxAdvances);
+      this.props.history.push("/");
     }
   }
 

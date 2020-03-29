@@ -1,10 +1,32 @@
 import React from 'react';
-import './Common.css';
+import './Select.css';
 
-import Select from 'react-select';
+import Select, { components } from 'react-select';
+
+import SearchIcon from '@material-ui/icons/Search';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+const DropdownIndicator = (
+  props
+) => {
+  return (
+    <components.DropdownIndicator {...props}>
+      <SearchIcon style={{height: "20px", width: "20px"}}/>
+    </components.DropdownIndicator>
+  );
+};
+
+const DropdownIndicatorKeyboardArrowDown = (
+  props
+) => {
+  return (
+    <components.DropdownIndicator {...props}>
+      <KeyboardArrowDown style={{height: "20px", width: "20px"}}/>
+    </components.DropdownIndicator>
+  );
+};
 
 const KSelect = (props) => (
-  <div className={`k-select-container ${props.containerClasses}`}>
+  <div className={`${props.transparent ? 'k-select-container-transparent': 'k-select-container'} k-select-common ${props.containerClasses}`}>
     <Select
       value={props.value}
       onChange={props.onChange}
@@ -16,7 +38,9 @@ const KSelect = (props) => (
       className="k-select"
       isMulti={false}
       isRtl={true}
+      isDisabled={props.isDisabled}
       backspaceRemovesValue={true}
+      components={props.EmailSetting === true ? {DropdownIndicatorKeyboardArrowDown} : {DropdownIndicator} }
     />
     {
       props.feedback 

@@ -1,7 +1,8 @@
 import axios from 'axios';
 // import config from '../config';
 
-export const config = {apiRoot: 'http://localhost:8085'}
+export const config = {apiRoot: 'http://54.245.6.3:8085'}
+//export const config = {apiRoot: 'http://localhost:8085'}
 
 export function sendAsyncRequest(url, method, data, onSuccessCallback, onFailureCallback){
 	axios ({

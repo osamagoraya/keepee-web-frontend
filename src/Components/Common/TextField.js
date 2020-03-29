@@ -13,6 +13,7 @@ const KTextField = (props) => (
     onBlur={props.onBlur}
     value={props.value}
     name={props.name}
+    disabled={props.disabled}
     fullWidth={props.fullWidth}
     className={props.className}
     classes={{root: 'k-textfield-plain', underline: 'k-textfield-focus'}}

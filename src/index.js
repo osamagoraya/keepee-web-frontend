@@ -5,7 +5,10 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ProtectedRoute from './Components/Routes/ProtectedRoute';
 import Login from './Views/Login/Login';
+import Error from './Views/Error/Error';
+import Reset from './Views/Reset Password/Reset';
 import Dashboard from './Layouts/Dashboard/Dashboard';
+import GetToken from './Views/Reset Password/GetToken';
 
 class App extends React.Component {
   render() {
@@ -13,13 +16,29 @@ class App extends React.Component {
       <BrowserRouter>
             <Switch>
                 <Route
-                    path="/login"
+                    path="/securelogin/token-id=r$3easd"
                     exact
                     component={Login}
                 />
+                <Route
+                    path="/error"
+                    exact
+                    component={Error}
+                />
+                <Route
+                    path="/get-token"
+                    exact
+                    component={GetToken}
+                />
+                <Route
+                    path="/reset-password/:authToken"
+                    exact
+                    component={Reset}
+                />
                 <ProtectedRoute
                     component={Dashboard}
-                    path="/" />
+                    path="/" 
+                />  
             </Switch>
         </BrowserRouter>
     );

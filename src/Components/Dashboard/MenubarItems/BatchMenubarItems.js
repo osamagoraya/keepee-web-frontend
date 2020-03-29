@@ -4,7 +4,6 @@ import {withRouter} from 'react-router-dom';
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
 
 import MenuSubSectionList from './MenuSubSectionList';
-import Auth from '../../../Services/Auth';
 
 const localPath = "/workspace/batch";
 
@@ -13,69 +12,89 @@ class BatchMenubarItems extends React.Component {
   state = {
     listData: null,
     loading: false,
-    loggedInUser: Auth.getLoggedInUser()
+    selectedUserId: this.props.selectedUserId,
   }
 
   componentDidMount() {
-    this.fetchListData();
+    if (this.props.location.pathname.indexOf(localPath) >= 0)
+      this.fetchListData(this.props.selectedUserId);
   }
   
   componentWillReceiveProps(nextProps) {
-    if (nextProps.location.pathname === localPath) {
-      this.fetchListData();
+    if (nextProps.selectedUserId !== this.state.selectedUserId){
+      this.setState({selectedUserId: nextProps.selectedUserId});
+      this.fetchListData(nextProps.selectedUserId);
+    }
+    else if (nextProps.location.pathname === localPath) {
+      this.fetchListData(nextProps.selectedUserId);
     }
   }
 
-  fetchListData() {
-    if (this.state.loading)
+  fetchListData(selectedUserId) {
+    if (selectedUserId === undefined || selectedUserId === null){
+      console.log("not fetching batches, no selected user id found");
       return;
+    } else if (this.state.loading) {
+      console.log("not fetching batches, request already sent");
+      return;
+    } else {
+      console.log("fetching batches for user id", selectedUserId);
+    }
     this.setState({listData: [], loading: true});
     sendAuthenticatedAsyncRequest(
       "/getBatches",
       "POST",
-      {accountantId: this.state.loggedInUser.userId},
-      (r) => this.setState({
-        listData: this.batchListItemFormatter(JSON.parse(r.data.body)),
-        loading: false
-      })
+      {userId: selectedUserId},
+      (r) => {
+          this.setState({
+          listData: this.batchListItemFormatter(JSON.parse(r.data.body)),
+          loading: false
+        })
+      }
     );
   }
 
   batchListItemFormatter = (data) => {
     if (!data) return [];
-    
     data.sort((o1, o2) => parseInt(o2.batchId,10) - parseInt(o1.batchId,10));
 
     const batchName = (batch) => {
-      let name = batch.batchId.toString();
+      let name = batch.batchNumber.toString();
       if (name.length === 1) return "00"+name;
       else if (name.length === 2) return "0"+name;
       else return name;
     }
-  
+
     const batchNameWithDetails = (batch) => {
       return (
         <span style={{fontStyle:"italic", fontWeight: 300}}>
           {batchName(batch)} <br />
           Invoices ({batch.invoiceCount}) <br />
-          Since {Moment(batch.createdAt,'x').format("MM.DD.YY")} 
+          Since {Moment(batch.createdAt).format("DD.MM.YY")} 
         </span>
       );
     }
   
-    // console.log("Batches received",data);
-    return data.map(batch => ({
-      label: batch.batchStatus === 'open' ? batchNameWithDetails(batch) : batchName(batch),
-      path: `${localPath}/${batch.batchId}`
-    }));
+    console.log("Total", data.length ,"Batches received",data);
+    return data.map((batch,idx) => {
+      batch.batchNumber = data.length-idx;
+      return {
+        label: batch.batchStatus === 'open' ? batchNameWithDetails(batch) : batchName(batch),
+        path: `${localPath}/${batch.batchId}`,
+        rawLabel: batchName(batch)
+      };
+    });
   }
 
   render (){
     // console.log("rendering InvoiceMenubarItems", this.state, this.props);
-    const {listData} = this.state;
-    return ( listData !== null ? 
-      <MenuSubSectionList listData={listData} />
-      : "Requesting Batches"
+    const {listData, loading} = this.state;
+    return ( 
+      !loading 
+      ? listData !== null 
+        ? <MenuSubSectionList listData={listData} />
+        : "No Batches"
+      : "Requesting batches ..."
     );
   }
 }

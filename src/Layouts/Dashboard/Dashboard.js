@@ -7,19 +7,36 @@ import Topbar from '../../Components/Dashboard/Topbar';
 import {Switch} from 'react-router-dom';
 import Auth from '../../Services/Auth';
 import Batch from '../../Components/Batch/Batch';
+import AccountInquiry from '../../Components/AccountInquiry/AccountInquiry';
+import Vat from '../../Components/Vat/Vat';
+import IncomeTaxAdvances from '../../Components/IncomeTaxAdvances/IncomeTaxAdvances';
+import BusinessProfile from '../../Components/BusinessProfile/BusinessProfile';
+import EmailSetting from '../../Components/EmailSetting/EmailSetting';
+import Categories from '../../Components/Categories/Categories';
 
 import ProtectedRoute from '../../Components/Routes/ProtectedRoute';
+import ProfitAndLoss from '../../Components/ProfitAndLoss/ProfitAndLoss';
+import TrialBalance from '../../Components/TrialBalance/TrialBalance';
+import { Route, Redirect } from 'react-router-dom'
+import UnifiedForm from '../../Components/UnifiedForm/UnifiedForm';
 
 class Dashboard extends Component {
 
   state = {
     selectedUserId: null,
+    selectedUserName: null,
+    selectedUserNID : null,
+    selectedUserEmail: null,
+    selectedUserItaFrequency: null,
+    selectedUserVatFrequency: null,
+    selectedUserLicense: null,
+    selectedUserIncomeTaxAdvances: null,
     loggedInUser: Auth.getLoggedInUser()
   }
 
   render () {
-    const {selectedUserId, loggedInUser} = this.state;
-    // console.log("rendering dashboard", this.state);
+    const {selectedUserId, loggedInUser, selectedUserName, selectedUserNID, selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency,selectedUserLicense,selectedUserIncomeTaxAdvances} = this.state;
+    //console.log("rendering dashboard", this.state);
 
     return (
       <span >
@@ -31,12 +48,21 @@ class Dashboard extends Component {
         </div>
         <div style={content} className="full-height">
           {/* TODO: remove user from state and store in redux */}
-          <Topbar onUserChange={(selectedUserId) => this.setState({selectedUserId})} loggedInUser={loggedInUser}/>
+          <Topbar onUserChange={(selectedUserId, selectedUserName, selectedUserNID, selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency,selectedUserLicense,selectedUserIncomeTaxAdvances) => this.setState({selectedUserId,selectedUserName,selectedUserNID,selectedUserEmail,selectedUserItaFrequency,selectedUserVatFrequency,selectedUserLicense,selectedUserIncomeTaxAdvances})} loggedInUser={loggedInUser}/>
           <div style={canvas}>
             <Switch>
               {/* TODO: move these routes in AppRoute or something similar? */}
-              <ProtectedRoute path="/workspace/invoice/:imageId/:imageType/:imageStamp" component={(props) => <Invoice selectedUserId={selectedUserId} {...props}/>} exact />
-              <ProtectedRoute path="/workspace/batch/:batchId" component={Batch} exact/>
+              <ProtectedRoute path="/workspace/invoice/:imageId/:imageType/:imageStamp" component={(props) => <Invoice selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>} exact />
+              <ProtectedRoute path="/workspace/batch/:batchId" component={(props) => <Batch selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/account-inquiry" component={(props) => <AccountInquiry selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>}/>
+              <ProtectedRoute path="/workspace/report/vat/:vatId" component={(props) => <Vat selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} selectedUserEmail={selectedUserEmail} selectedUserItaFrequency={selectedUserItaFrequency}  selectedUserVatFrequency={selectedUserVatFrequency} selectedUserLicense={selectedUserLicense} selectedUserIncomeTaxAdvances={selectedUserIncomeTaxAdvances} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/report/income-tax-advances/:startDate/:endDate/:reportTitle" component={(props) => <IncomeTaxAdvances selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} selectedUserEmail={selectedUserEmail} selectedUserItaFrequency={selectedUserItaFrequency}  selectedUserVatFrequency={selectedUserVatFrequency} selectedUserLicense={selectedUserLicense} selectedUserIncomeTaxAdvances={selectedUserIncomeTaxAdvances} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/report/profilt-and-loss/:pnlYear" component={(props) => <ProfitAndLoss selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>} exact/>
+              <ProtectedRoute path="/workspace/report/trial-balance/:trailBalanceYear" component={(props) => <TrialBalance selectedUserId={selectedUserId} selectedUserName={selectedUserName} selectedUserNID={selectedUserNID} {...props}/>} exact/>
+              <ProtectedRoute path="/profile/business/:profileId" component={BusinessProfile} exact/>
+              <ProtectedRoute path="/profile/email-settings/:profileId"  component={EmailSetting} exact />
+              <ProtectedRoute path="/settings/categories" component={Categories} exact/>
+              <ProtectedRoute path="/settings/unified-form/:clientId" component={UnifiedForm} exact/>
             </Switch>
           </div>
         </div>
@@ -46,7 +72,7 @@ class Dashboard extends Component {
 }
 
 const canvas = {
-  width: "79%",
+  width: "85%",
   height: "78.3vh",
   boxShadow: '0 3 6 rgba(0, 0, 0, 0.04)',
   borderRadius: 3,

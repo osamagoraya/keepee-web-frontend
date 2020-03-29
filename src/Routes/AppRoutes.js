@@ -6,8 +6,14 @@ import logoSettings from '../Assets/Images/Path_1054.svg'
 
 import InvoiceMenubarItems from '../Components/Dashboard/MenubarItems/InvoiceMenubarItems';
 import BatchMenubarItems from '../Components/Dashboard/MenubarItems/BatchMenubarItems';
-import Dummy from '../Components/Dummy';
-
+import AccountInquiryFilters from '../Components/Dashboard/MenubarItems/AccountInquiryFilters';
+import VatMenubarItems from '../Components/Dashboard/MenubarItems/VatMenubarItems';
+import IncomeTaxAdvancesItems from '../Components/Dashboard/MenubarItems/IncomeTaxAdvancesItems';
+import ProfitAndLossItems from '../Components/Dashboard/MenubarItems/ProfitAndLossItems';
+import TrialBalanceItems from '../Components/Dashboard/MenubarItems/TrialBalanceItems';
+import BusinessProfileItems from '../Components/Dashboard/MenubarItems/BusinessProfileItems';
+import UnifiedFormItems from '../Components/Dashboard/MenubarItems/UnifiedFormItems';
+import EmailSettingItems from '../Components/Dashboard/MenubarItems/EmailSettingsItems';
 
 const appRoutes = [
   {
@@ -28,28 +34,28 @@ const appRoutes = [
       {
         label: "Account Inquiries",
         path: "/workspace/account-inquiry",
-        component: Dummy
+        component: AccountInquiryFilters
       },
       {
         label: "VAT Report",
         path: "/workspace/report/vat",
-        component: Dummy
+        component: VatMenubarItems
         
       },
       {
         label: "Income Tax Advances",
         path: "/workspace/report/income-tax-advances",
-        component: Dummy
+        component: IncomeTaxAdvancesItems
       },
       {
         label: "P & L",
         path: "/workspace/report/profilt-and-loss",
-        component: Dummy
+        component: ProfitAndLossItems
       },
       {
         label: "Trial Balance",
         path: "/workspace/report/trial-balance",
-        component: Dummy
+        component: TrialBalanceItems
       }
     ]
   },
@@ -69,13 +75,38 @@ const appRoutes = [
     to: "/profile",
     menubarComponent: undefined,
     icon: logoUser,
-    menubarItems: []
+    menubarItems: [
+      {
+        label: "Personal Details",
+        path: "/profile/business",
+        component: BusinessProfileItems
+      },
+      {
+        label: "Email Settings",
+        path: "/profile/email-settings",
+        component: EmailSettingItems
+      }
+    ]
   },
   {
     to: "/settings",
     menubarComponent: undefined,
     icon: logoSettings,
-    menubarItems: []
+    menubarItems: [
+      {
+        label: "Category Settings",
+        path: "/settings/categories"
+      },
+      {
+        label: "Accountants Assignment",
+        path: "/settings/accountant-assigment"
+      },
+      {
+        label: "Unified Form",
+        path: "/settings/unified-form",
+        component : UnifiedFormItems
+      },
+    ]
   },
 ]
 

@@ -1,0 +1,90 @@
+/*
+* NON TRANSPARENT OVERRIDES
+*/
+
+/* Main select container */
+.k-select-container .css-vj8t7z,
+/* Active state */
+.k-select-container .css-2o5izw,
+.k-select-container .css-2o5izw:hover,
+.k-select-container .css-2o5izw:focus {
+  background-color: rgba(255, 255, 255, 0.48) !important;
+  border-top-left-radius: 3px !important;
+  border-top-right-radius: 3px !important;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04);
+  border: none;
+  border-bottom: 1px solid #828389;
+}
+
+.k-select-container .css-2o5izw:hover,
+.k-select-container .css-2o5izw:focus {
+  border-bottom: 2px solid #3794a5;
+}
+
+/*
+* TRANSPARENT OVERRIDES
+*/
+
+/* Main select container */
+.k-select-container-transparent .css-vj8t7z,
+/* Active state */
+.k-select-container-transparent .css-2o5izw,
+.k-select-container-transparent .css-2o5izw:hover,
+.k-select-container-transparent .css-2o5izw:focus {
+  background-color: transparent !important;
+  border-top-left-radius: 0px !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  box-shadow: none;
+  border: none;
+  border-bottom: 1px solid #828389;
+  min-height: 25px !important;
+  max-height: 25px !important;
+}
+
+.k-select-container-transparent .css-2o5izw:hover,
+.k-select-container-transparent .css-2o5izw:focus {
+  border-bottom: 1px solid #3794a5;
+}
+
+/*
+* COMMON OVERRIDES
+*/
+
+.k-select-common .css-1ep9fjw,
+.k-select-common .css-1uq0kb5 {
+  padding: 0px;
+  margin-right: 4px;
+  margin-left: 4px;
+}
+
+/* Text Styles */
+.k-select-common .css-xp4uvy,
+.k-select-common .css-1g6gooi input {
+  color: #c4c0c0 !important;
+  font-family: Heebo !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+}
+
+/* Placeholder */
+.k-select-common .css-1492t68 {
+  color: #e4e3e3 !important;
+  font-family: Heebo !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+}
+
+
+.k-select-common .css-bl6clz {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* dropdown icon border */
+.k-select-common .css-d8oujb {
+  display: none;
+}

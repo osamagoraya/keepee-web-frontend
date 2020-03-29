@@ -1,0 +1,21 @@
+.account-inquiry-container {
+  overflow: scroll;
+  padding: 3% 1% 2% 1%;
+}
+
+.category-chip-container {
+  margin: 0% 2% 1% 2%;
+  position: relative;
+}
+
+.category-chip {
+  background-color: #94d3d2 !important;
+  color: #f0f4f5 !important;
+  font-family: "Source Sans Pro" !important;
+  font-size: 13px !important;
+  font-weight: 400;
+  font-style: italic;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  letter-spacing: 0.5px;
+}
