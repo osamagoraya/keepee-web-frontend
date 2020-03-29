@@ -63,6 +63,31 @@ class Auth {
             return this.isAuthenticated
         }
     }
+
+    resetPassword(userData,cb){
+        Axios.post(`${config.apiRoot}/resetPassword`,userData).then(
+            (response) =>{
+                if(response.status === 200){
+                    cb(response.status,null,"Please Check Your Email!")
+                }
+            }).catch(error=>{
+            
+            cb(404,null,"Validate Your Email or Contact Administrator!")
+        })
+    }
+
+    updatePassword(userData,cb){
+        Axios.post(`${config.apiRoot}/updatePassword`,userData).then(response=>{
+            console.log(response);
+            if(response.status === 200){
+                cb(200,null,"Password Updated Successfully!")
+            }else if(response.status === 404){
+                cb(404, null,"Token Expired!")
+            }
+        }).catch(error=>{
+            cb(false,null,"Network Error")
+        })
+    }
 }
 
 export default new Auth()

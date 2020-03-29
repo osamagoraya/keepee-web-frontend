@@ -2,10 +2,11 @@ import React from 'react';
 import { Formik } from 'formik'
 import  * as Yup from 'yup'
 import Auth from '../../Services/Auth'
-import './Login.css';
+import '../Reset Password/GetToken.css';
 import logo from '../../Assets/Images/logo.png';
+import swal from 'sweetalert';
 
-class Login extends React.PureComponent {
+class GetToken extends React.PureComponent {
     constructor(props){
         super(props)
         this.state={
@@ -16,8 +17,7 @@ class Login extends React.PureComponent {
     render() {
         const validationSchema =
         Yup.object().shape({
-            email: Yup.string().required("נדרש").email("אימייל שגוי"),
-            password: Yup.string().required("נדרש"),
+            email: Yup.string().required("נדרש").email("אימייל שגוי")
         })
         return (
             <div className="section">
@@ -28,13 +28,14 @@ class Login extends React.PureComponent {
                         </div>
                     </div>
                     <Formik
-                        initialValues={{ email: '',password:'' }}
+                        initialValues={{ email: '' }}
                         onSubmit={(values, actions) => {
                             this.setState({buttonLoading: 'is-loading'})
-                         Auth.login(values,(status,user,errorMessage)=>{
-                             if(status){
-                                this.setState({buttonLoading: ''})
-                                this.props.history.push({pathname: "/"})
+                         Auth.resetPassword(values,(status,user,errorMessage)=>{
+                             if(status === 200){
+                                this.setState({buttonLoading: ''});
+                                swal ( "Success" ,  "Check Your Email!" ,  "success" );
+                                this.props.history.push({pathname: "/securelogin/token-id=r$3easd"});
                              }else{
                                 this.setState({buttonLoading: '',loginError: errorMessage})
                              }                            
@@ -58,33 +59,12 @@ class Login extends React.PureComponent {
                                     {props.touched.email && props.errors.email && <p className="help is-right is-danger">{props.errors.email}</p>}
                                 </div>
                                 <div className="field field-input">
-                                    <div className="control">
-                                        <input
-                                            className={`input is-rounded ${props.touched.password && props.errors.password? 'is-danger':''}`}
-                                            type="password"
-                                            placeholder="Password"
-                                            onChange={props.handleChange}
-                                            onBlur={props.handleBlur}
-                                            value={props.values.password}
-                                            name="password"
-                                        />
-                                    </div>
-                                   {props.touched.password && props.errors.password && <p className="help is-right is-danger">{props.errors.password}</p>}
-                                </div>
-                                <div className="field field-input">
                                 {this.state.loginError && <p className="help is-right is-danger">{this.state.loginError}</p>}
                                 </div>
                                 <div className="field field-button">
                                     <p className="control">
                                         <button className={`button is-primary is-rounded is-small ${this.state.buttonLoading}`} type="submit">
-                                            Login
-                                        </button>
-                                    </p>
-                                </div>
-                                <div className="field field-button">
-                                    <p className="control">
-                                        <button className={`button is-primary is-rounded is-small ${this.state.buttonLoading}`} type="button" onClick={ () => {  this.props.history.push({pathname: "/get-token"})}}>
-                                            Forget Password?
+                                            Get Reset Token
                                         </button>
                                     </p>
                                 </div>
@@ -102,4 +82,4 @@ class Login extends React.PureComponent {
     }
 }
 
-export default Login;
+export default GetToken;

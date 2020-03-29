@@ -13,7 +13,7 @@
 }
 
 .field-button {
-    margin-top: 2%;
+    margin-top: 1%;
     margin-left: 45%;
 }
 
@@ -34,4 +34,8 @@
 .input {
     background-color: transparent !important;
     border-color: white;
+}
+
+.help {
+    width: 110% !important;
 }

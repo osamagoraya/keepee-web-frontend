@@ -6,7 +6,9 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ProtectedRoute from './Components/Routes/ProtectedRoute';
 import Login from './Views/Login/Login';
 import Error from './Views/Error/Error';
+import Reset from './Views/Reset Password/Reset';
 import Dashboard from './Layouts/Dashboard/Dashboard';
+import GetToken from './Views/Reset Password/GetToken';
 
 class App extends React.Component {
   render() {
@@ -22,6 +24,16 @@ class App extends React.Component {
                     path="/error"
                     exact
                     component={Error}
+                />
+                <Route
+                    path="/get-token"
+                    exact
+                    component={GetToken}
+                />
+                <Route
+                    path="/reset-password/:authToken"
+                    exact
+                    component={Reset}
                 />
                 <ProtectedRoute
                     component={Dashboard}
