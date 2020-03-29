@@ -58,10 +58,10 @@ const ExpansionPanelDetails = withStyles(theme => ({
 
 class Menubar extends Component {
   state = {
-    selectedRoute: this.props.location.pathname, 
+    selectedRoute: this.props.location.pathname,
     selectedUserId: this.props.selectedUserId
   };
-  
+
   componentWillReceiveProps(nextProps) {
     if (this.state.selectedUserId !== nextProps.selectedUserId)
       this.setState({selectedUserId: nextProps.selectedUserId})
@@ -70,7 +70,7 @@ class Menubar extends Component {
   isSelected(path) {
     return this.state.selectedRoute.indexOf(path) !== -1;
   }
-  
+
   handleChange = (localPath) => (event, expanded) => {
     this.setState({
       selectedRoute: expanded ? localPath : this.getBasePath(),
@@ -89,7 +89,7 @@ class Menubar extends Component {
 
   render() {
     const { selectedUserId } = this.state;
-    
+
     const basePath = this.getBasePath();
     // console.log("rendeing menubar", this.state);
     return (
@@ -114,10 +114,10 @@ class Menubar extends Component {
                       </ExpansionPanelDetails>
                     : null
                   }
-                  
+
               </ExpansionPanel>
             ))
-          } else 
+          } else
             return null;
         })
       }
@@ -127,7 +127,7 @@ class Menubar extends Component {
 }
 
 
-// const styles = {
+// const Styles = {
 //   menubarItem : {
 //     height: 20,
 //     color: '#4d4f5c',

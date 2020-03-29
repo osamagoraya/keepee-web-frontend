@@ -5,7 +5,7 @@
 /* Main select container */
 .k-select-container .css-vj8t7z,
 /* Active state */
-.k-select-container .css-2o5izw, 
+.k-select-container .css-2o5izw,
 .k-select-container .css-2o5izw:hover,
 .k-select-container .css-2o5izw:focus {
   background-color: rgba(255, 255, 255, 0.48) !important;
@@ -30,7 +30,7 @@
 /* Main select container */
 .k-select-container-transparent .css-vj8t7z,
 /* Active state */
-.k-select-container-transparent .css-2o5izw, 
+.k-select-container-transparent .css-2o5izw,
 .k-select-container-transparent .css-2o5izw:hover,
 .k-select-container-transparent .css-2o5izw:focus {
   background-color: transparent !important;
@@ -54,15 +54,15 @@
 * COMMON OVERRIDES
 */
 
-.k-select-common .css-1ep9fjw, 
+.k-select-common .css-1ep9fjw,
 .k-select-common .css-1uq0kb5 {
   padding: 0px;
   margin-right: 4px;
   margin-left: 4px;
 }
 
-/* Text styles */
-.k-select-common .css-xp4uvy, 
+/* Text Styles */
+.k-select-common .css-xp4uvy,
 .k-select-common .css-1g6gooi input {
   color: #c4c0c0 !important;
   font-family: Heebo !important;
