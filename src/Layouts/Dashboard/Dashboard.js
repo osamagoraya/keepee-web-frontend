@@ -17,8 +17,8 @@ import Categories from '../../Components/Categories/Categories';
 import ProtectedRoute from '../../Components/Routes/ProtectedRoute';
 import ProfitAndLoss from '../../Components/ProfitAndLoss/ProfitAndLoss';
 import TrialBalance from '../../Components/TrialBalance/TrialBalance';
-import { Route, Redirect } from 'react-router-dom'
 import UnifiedForm from '../../Components/UnifiedForm/UnifiedForm';
+import TaxAttributes from '../../Components/TaxAttributes/TaxAttributes';
 
 class Dashboard extends Component {
 
@@ -63,6 +63,7 @@ class Dashboard extends Component {
               <ProtectedRoute path="/profile/email-settings/:profileId"  component={EmailSetting} exact />
               <ProtectedRoute path="/settings/categories" component={Categories} exact/>
               <ProtectedRoute path="/settings/unified-form/:clientId" component={UnifiedForm} exact/>
+              <ProtectedRoute path="/settings/tax-attributes/:year"  component={TaxAttributes} exact />
             </Switch>
           </div>
         </div>

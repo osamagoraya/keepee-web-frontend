@@ -14,6 +14,7 @@ import TrialBalanceItems from '../Components/Dashboard/MenubarItems/TrialBalance
 import BusinessProfileItems from '../Components/Dashboard/MenubarItems/BusinessProfileItems';
 import UnifiedFormItems from '../Components/Dashboard/MenubarItems/UnifiedFormItems';
 import EmailSettingItems from '../Components/Dashboard/MenubarItems/EmailSettingsItems';
+import TaxAttributesYears from '../Components/Dashboard/MenubarItems/TaxAttributesYears';
 
 const appRoutes = [
   {
@@ -105,6 +106,11 @@ const appRoutes = [
         label: "Unified Form",
         path: "/settings/unified-form",
         component : UnifiedFormItems
+      },
+      {
+        label: "Tax Attributes",
+        path: "/settings/tax-attributes",
+        component : TaxAttributesYears
       },
     ]
   },
