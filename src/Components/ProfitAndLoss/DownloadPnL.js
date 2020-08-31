@@ -41,7 +41,7 @@ class DownloadPnL extends React.Component {
         reportData = reportData.flat().flat();
         reportData.push([
             {value: '(סה״כ רווח (הפסד', style: {font: {bold: true}, alignment: { horizontal: "right"}}},
-            {value: Math.round(Math.abs(report.totalSum)), style: {font: {bold: true}, numFmt : report.totalCreditSum >= report.totalDebitSum ? "#,##0;#,##0;0;@" : "(#,##0);(#,##0);0;@"}}
+            {value: Math.round(Math.abs(report.totalCreditSum - report.totalDebitSum)), style: {font: {bold: true}, numFmt : report.totalCreditSum >= report.totalDebitSum ? "#,##0;#,##0;0;@" : "(#,##0);(#,##0);0;@"}}
         ]);
         data = [
             {
