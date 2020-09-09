@@ -9,7 +9,7 @@ import BatchMenubarItems from '../Components/Dashboard/MenubarItems/BatchMenubar
 import AccountInquiryFilters from '../Components/Dashboard/MenubarItems/AccountInquiryFilters';
 import VatMenubarItems from '../Components/Dashboard/MenubarItems/VatMenubarItems';
 import IncomeTaxAdvancesItems from '../Components/Dashboard/MenubarItems/IncomeTaxAdvancesItems';
-import ProfitAndLossItems from '../Components/Dashboard/MenubarItems/ProfitAndLossItems';
+// import ProfitAndLossItems from '../Components/Dashboard/MenubarItems/ProfitAndLossItems';
 import TrialBalanceItems from '../Components/Dashboard/MenubarItems/TrialBalanceItems';
 import BusinessProfileItems from '../Components/Dashboard/MenubarItems/BusinessProfileItems';
 import UnifiedFormItems from '../Components/Dashboard/MenubarItems/UnifiedFormItems';
@@ -51,7 +51,7 @@ const appRoutes = [
       {
         label: "P & L",
         path: "/workspace/report/profilt-and-loss",
-        component: ProfitAndLossItems
+        component: null
       },
       {
         label: "Trial Balance",

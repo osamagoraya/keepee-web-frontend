@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component } from 'react';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import {withRouter} from 'react-router-dom';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
-
+import { Multiselect } from 'multiselect-react-dropdown';
 import './ProfitAndLoss.css'
 import Caption from '../Common/Caption';
 import Divider from '../Common/Divider';
@@ -15,9 +15,13 @@ import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
 import { saveAs } from 'file-saver';
 
 class ProfitAndLoss extends Component {
+  
 
   state = {
-    selectedPnlYear: this.props.match.params.pnlYear,
+    type: 'Select Type',
+    months: [{name: 'January', id:1}, {name: 'February', id:2},{name: 'March', id:3},{name: 'April', id:4},],
+    selectedValues: [],
+    selectedPnlYear: '2019',
     apiCallInProgress: false,
     apiCallType: 'fetch',
     selectedUserId: this.props.selectedUserId,
@@ -109,7 +113,7 @@ class ProfitAndLoss extends Component {
   }
 
   render() {
-    const {apiCallInProgress, report, selectedUserId, selectedPnlYear} = this.state;
+    const {apiCallInProgress, report, selectedUserId, selectedPnlYear, type } = this.state;
 
     if (apiCallInProgress){
       return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
@@ -118,16 +122,56 @@ class ProfitAndLoss extends Component {
     } else if (!report){
       return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> No report data </Caption>);
     }
+    const selectType = e => {
+      console.log('ev',e.target.value)
+      this.setState({type:e.target.value});
+    }
+    const selectYear = e => {
+      console.log('ev',e.target.value)
+      this.setState({selectedPnlYear:e.target.value});
+    }
+    const selectMonth = e => {
+      console.log('ev',e.target.value)
+      this.setState({month:e.target.value});
+    }
+    const onSelect = ev => {
+      console.log('onselect event',ev);
+    }
+    const onRemove = ev => {
+      console.log('On remove event',ev);
+    }
 
     return (
      
       <div className="canvas-container ita-container">
         <Grid container>
           <Grid item md={1}></Grid>
-          <Grid item container md={10} >
+          <Grid item md={12}>
+          <select className="dropdown" id="type" onChange={selectType} value={this.state.type}>
+                  <option value="select">Type</option>
+                  <option value="Yearly">Yearly</option>
+                  <option value="Monthly">Monthly</option>
+            </select>
+            <select className="dropdown" id="year" onChange={selectYear} value={this.state.selectedPnlYear}>
+                  <option value="year">Year</option>
+                  <option value="2019">2019</option>
+                  <option value="2020">2020</option>
+            </select>
+            <Multiselect
+              className="multi-select"
+              options={this.state.months} 
+              selectedValues={this.state.selectedValue} 
+              onSelect={onSelect}
+              onRemove={onRemove}
+              displayValue="name"
+            />
+          </Grid>
+          <Grid className="d-none" item container md={10} >
             <Grid item md={12}>
+            
+            <Divider />
               <Caption style={{paddingLeft: 20}}>
-                {selectedPnlYear} 
+                {selectedPnlYear} {this.type}
                 <PdfAndExcelDownloader 
                     onPdf={() => this.prepareAndDownloadPdf()}
                     excelData={this.state.report}
