@@ -14,7 +14,16 @@
 
 ._3vt7_Mh4hRCFbp__dFqBCI  {
   float: right;
-  max-width: 70% !important;
   background-color: rgb(163,216,229);
   border-radius: 6px;
 }
+.btn-primary {
+  margin-left: 13px;
+    margin-top: 3px;
+    height: 80%;
+}
+
+/* .multi {
+  width: 80%;
+  float: right;
+} */
