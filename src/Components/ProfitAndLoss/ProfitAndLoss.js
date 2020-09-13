@@ -14,6 +14,7 @@ import {InvisibleTable, TableBody, TableCell, TableRow} from '../Common/Invisibl
 import PdfAndExcelDownloader from '../Common/PdfAndExcelDownloader';
 import { saveAs } from 'file-saver';
 import { Button } from 'react-bootstrap';
+import moment from 'moment';
 
 class ProfitAndLoss extends Component {
   
@@ -161,7 +162,6 @@ class ProfitAndLoss extends Component {
       }
     }
     const onSelect = ev => {
-      // {name: 'February', id:2}
       console.log('onselect event',ev);
       let i = 0;
       let temp = [];
@@ -279,32 +279,35 @@ class ProfitAndLoss extends Component {
               <Divider />
             </Grid>
             <Grid item md={2}></Grid>
-            <Grid item md={8}> 
+            <Grid item md={10}> 
               {this.state.reportM && Object.entries(this.state.reportM).map(item => (
                 <ExpansionPanel key={item[0]}>
                     <ExpansionPanelSummary>
-                      <ColoredHeader rightLabel={item[0].toUpperCase()} />
+                      <div className={`k-header k-green-header`}>
+                        {this.state.selectedMonths ? this.state.selectedMonths.slice(0).reverse().map(month => (
+                          <div style={{ width: '20%', textAlign: 'center'}}>
+                            {moment(month).format('MMMM')}
+                          </div>
+                        )): ""
+                        }
+                        <div style={{ width: '20%', textAlign: 'center'}}>
+                          {item[0].toUpperCase()}
+                        </div>
+                      </div>
                     </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
+                    <ExpansionPanelDetails style={{ padding: 'none !important'}}>
                       <InvisibleTable>
                         <TableBody>
                         {
-                          item[1].map((entry) => (
-                            <TableRow key={entry.name}>
-                              
-                              {Object.entries(entry).map(cell => (
-                                console.log(cell),
-                              <TableCell align="right">{cell[1]}</TableCell>))}
-                              
-                              {/* <TableCell align="right">{entry.Dec}</TableCell>
-                              <TableCell align="right">{entry.name}</TableCell> */}
+                          item[1].map((entry,index) => (
+                            <TableRow key={index}>
+                              {this.state.selectedMonths.slice(0).reverse().map(month => (
+                                <TableCell style={{ width: '20%', textAlign: 'center',padding: '0'}}>{entry[moment(month).format('MMM')] === undefined ? '0' : entry[moment(month).format('MMM')]}</TableCell>  
+                              ))}
+                              <TableCell style={{ width: '20%', textAlign: 'center',padding: '0'}}>{entry.name}</TableCell>
                             </TableRow>
                           ))
                         }
-                          <TableRow >
-                            {/* <TableCell align="right">{report.sum}</TableCell>
-                            <TableCell align="right"><strong>Total {}</strong></TableCell> */}
-                          </TableRow>
                         </TableBody>
                       </InvisibleTable>
                     </ExpansionPanelDetails>

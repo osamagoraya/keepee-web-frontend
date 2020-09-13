@@ -38,7 +38,7 @@ export const ExpansionPanelSummary = withStyles({
   },
   content: {
     '&$expanded': {
-      margin: '12px 0',
+      //margin: '12px 0',
     },
   },
   expanded: {},
@@ -48,7 +48,7 @@ ExpansionPanelSummary.muiName = 'ExpansionPanelSummary';
 
 export const ExpansionPanelDetails = withStyles(theme => ({
   root: {
-    padding: "0 14.15% 1.6% 14.15%",
+    //padding: "0 14.15% 1.6% 14.15%",
     backgroundColor: 'rgba(0,0,0,.03)',
   },
 }))(MuiExpansionPanelDetails);
