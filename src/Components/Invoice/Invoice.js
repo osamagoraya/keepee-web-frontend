@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
 import {Grid} from '@material-ui/core';
+import { Modal } from 'react-bootstrap';
 import './Invoice.css';
 import iconRotate from '../../Assets/Images/Path_981.svg';
 import Button from '../Common/Button';
+import ReactCrop from 'react-image-crop';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
+import Crop from '../Invoice/crop';
 import Auth from '../../Services/Auth';
 import InvoiceForm from '../Forms/InvoiceForm/InvoiceForm';
 
 
+
 import InvoiceDocumentModal from './InvoiceDocumentModal';
 import InvoiceDocumentCard from './InvoiceDocumentCard';
+import ImageCrop from './imageCrop';
 
 const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
 
@@ -19,6 +24,7 @@ class Invoice extends Component {
   constructor(props){
     super(props);
     this.state = {
+      show: false,
       selectedImageID: this.props.match.params.imageId,
       selectedImageStamp: this.props.match.params.imageStamp,
       selectedImageFileType: this.props.match.params.imageType,
@@ -32,6 +38,7 @@ class Invoice extends Component {
   }
 
   
+
   componentWillReceiveProps(nextProps,nextContext) {
     const oldImageId = this.state.selectedImageID;
     const { imageId, imageType, imageStamp } = nextProps.match.params;
@@ -84,12 +91,58 @@ class Invoice extends Component {
   bindSubmitForm(submitter) {
     this.formSubmitter = submitter ;
   }
+  showModal = () => {
+    this.setState({ show: true });
+  };
+
+  hideModal = () => {
+    this.setState({ show: false });
+  };
+
+  cropImage = () => {
+    this.setState({ show: false });
+  };
+
+  mouseMove = ev => {
+    console.log(ev.clientX,'X')
+    console.log(ev.clientY,'Y')
+  }
+
+  preventDragHandler = (e) => {
+    e.preventDefault();
+  }
+  onSubmitCoordinates = e => {
+      sendAuthenticatedAsyncRequest(
+        "http://localhost:5000/invoice",
+        "POST", 
+        {p1: this.state.p1, p2: this.state.p2},
+        (r) => {
+          var response = JSON.parse(r.data.body);
+          // this.props.history.push('/workspace/invoice');
+          // var path = `/workspace/invoice/${nextImage.imageId}/${nextImage.imageType}/${this.imageStamp(nextImage.imageLink)}`;
+          // this.props.history.push(path);
+        },
+        (r) => {
+          console.log("Failing");
+        }
+      );
+    
+  }
+
   
   render(){
       
     const { selectedImageID , selectedImageFileType, selectedImageStamp, apiCallInProgress, apiCallType, selectedUserId, loggedInUser} = this.state;
     const selectedImagePath = BASE_URL + selectedImageStamp;
-
+    const mouseDown = ev => {
+      console.log(ev.clientX,'X it is ');
+      console.log(ev.clientY,'Y it is ');
+    }
+    const mouseUp = ev => {
+      console.log(ev.clientX,'X it is ');
+      console.log(ev.clientY,'Y it is ');
+    }
+    
 
     return (
       <Grid container className="canvas-container" style={{ flexWrap: 'nowrap !important'}}>
@@ -97,11 +150,15 @@ class Invoice extends Component {
             <Grid item container style = {{ flexBasis: '85%'}}>
               <Grid item sm={12}>
               <InvoiceForm 
+                showModal = {this.showModal}
                 imageId={selectedImageID} 
                 selectedUserId={selectedUserId} 
                 isUserIdRequired={true}
                 isJournalEntryPassed={false}
                 journalEntry={null}
+                selectedImagePath={selectedImagePath}
+                selectedImageFileType={selectedImageFileType}
+                
                 onSubmit={() => {
                   this.setState({apiCallInProgress: false, apiCallType: 'none'});
                   this.props.history.push("/workspace/invoice")}
@@ -144,6 +201,8 @@ class Invoice extends Component {
                 documentType={selectedImageFileType}
                 documentPath={selectedImagePath}
                 selectedImageId={selectedImageID}
+                mouseDown={mouseDown}
+                mouseUp={mouseUp}
               />
                  <InvoiceDocumentModal 
                     documentType={selectedImageFileType}
@@ -176,10 +235,22 @@ class Invoice extends Component {
             </div>
               </Grid>
           </Grid>
-        {/* <Grid item sm={6}>
-        </Grid> */}
+        <Grid item sm={6}>
+        </Grid>
+
+        <Grid>
+          <ImageCrop
+          show={this.state.show}
+          hideModal={this.hideModal}
+          cropImage={this.cropImage}
+          
+          />
+        </Grid>
+
       </Grid>
+      
     );
+
   }
 }
 

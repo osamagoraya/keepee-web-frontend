@@ -1,3 +1,11 @@
 .bottom-spacer {
   margin-bottom: 3%;
 }
+
+.pull-right {
+  float: right !important;
+}
+
+.width {
+  width: 200% !important;
+}

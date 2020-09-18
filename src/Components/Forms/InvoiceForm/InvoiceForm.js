@@ -9,12 +9,15 @@ import TextField from '../../Common/TextField';
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
 import swal from 'sweetalert';
 import {withRouter} from 'react-router-dom';
+import { Button } from '@material-ui/core';
+import InvoiceDocumentModal from './drawPop';
 
 class InvoiceForm extends Component {
     
   constructor(props){
     super(props);
     this.state = {
+      showModal: this.props.showModal,
       selectedImageID: this.props.imageId,
       selectedUserId: this.props.selectedUserId,
       loggedInUser: this.props.loggedInUser,
@@ -128,7 +131,7 @@ class InvoiceForm extends Component {
   // }
   
   render(){
-    const {bindSubmitForm, onValidationFailed} = this.props;
+    const {bindSubmitForm, onValidationFailed, selectedImageFileType, selectedImagePath} = this.props;
     const { categories, selectedImageID} = this.state;
 
     const validationSchema = Yup.object().shape({
@@ -177,6 +180,31 @@ class InvoiceForm extends Component {
                   value={selectedImageID || ''}
                   variant="filled"
                 />
+              </div>
+              <div className="clearfix d-flex flex-row">
+                <div className="width">
+                <TextField
+                  type="text"
+                  placeholder="Vendor"
+                  name="vendorName"
+                  value={values.vendorName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  fullWidth={true} 
+                  containerClasses={commonTextfieldClasses}
+                  feedback={touched.vendorName && errors.vendorName ? errors.vendorName : null}
+                  />
+                  </div>
+                  <div className="pull-right mt-2">
+                  <InvoiceDocumentModal 
+                    documentType={selectedImageFileType}
+                    documentPath={selectedImagePath}
+                    selectedImageId={selectedImageID}
+                    uniqueKey={`invoicepopup${selectedImageID}`}
+                    type={'Vendor'}
+                  />
+                  </div>
+                  {/* <Button onClick={this.state.showModal} className="pull-right"><span>&#9997;</span></Button> */}
               </div>
               <div> 
                 <TextField
@@ -299,19 +327,8 @@ class InvoiceForm extends Component {
                   feedback={touched.details && errors.details ? errors.details : null}
                   />
               </div>
-              <div>
-                <TextField
-                  type="text"
-                  placeholder="Vendor"
-                  name="vendorName"
-                  value={values.vendorName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  fullWidth={true} 
-                  containerClasses={commonTextfieldClasses}
-                  feedback={touched.vendorName && errors.vendorName ? errors.vendorName : null}
-                  />
-              </div>
+              
+
             </form>
           )
         }}

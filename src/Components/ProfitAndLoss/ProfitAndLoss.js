@@ -292,8 +292,10 @@ class ProfitAndLoss extends Component {
                           item[1].map((entry) => (
                             <TableRow key={entry.name}>
                               
+                              
                               {Object.entries(entry).map(cell => (
                                 console.log(cell),
+                              
                               <TableCell align="right">{cell[1]}</TableCell>))}
                               
                               {/* <TableCell align="right">{entry.Dec}</TableCell>
