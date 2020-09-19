@@ -129,9 +129,11 @@ class InvoiceForm extends Component {
   // bindFormSubmitter(submitter) {
   //   this.formSubmitter = submitter ;
   // }
+
+  
   
   render(){
-    const {bindSubmitForm, onValidationFailed, selectedImageFileType, selectedImagePath} = this.props;
+    const {bindSubmitForm, onValidationFailed, selectedImageFileType, selectedImagePath, onSubmitCoord, response} = this.props;
     const { categories, selectedImageID} = this.state;
 
     const validationSchema = Yup.object().shape({
@@ -147,6 +149,9 @@ class InvoiceForm extends Component {
 
     const commonTextfieldClasses = "bottom-spacer";
     let { journalEntryPassed, journalEntry} = this.state;
+
+    
+
     return (
       <Formik
         initialValues={ journalEntryPassed ? { 
@@ -202,11 +207,13 @@ class InvoiceForm extends Component {
                     selectedImageId={selectedImageID}
                     uniqueKey={`invoicepopup${selectedImageID}`}
                     type={'Vendor'}
+                    onSubmitCoord={onSubmitCoord}
                   />
                   </div>
                   {/* <Button onClick={this.state.showModal} className="pull-right"><span>&#9997;</span></Button> */}
               </div>
-              <div> 
+              <div className="clearfix d-flex flex-row"> 
+              <div className="width">
                 <TextField
                   type="date"
                   placeholder="Date"
@@ -218,6 +225,70 @@ class InvoiceForm extends Component {
                   containerClasses={commonTextfieldClasses}
                   feedback={touched.jeDate && errors.jeDate ? errors.jeDate : null}
                   />
+                  </div>
+                  <div className={response === true ? 'd-none': "pull-right mt-2"}>
+                  <InvoiceDocumentModal 
+                    documentType={selectedImageFileType}
+                    documentPath={selectedImagePath}
+                    selectedImageId={selectedImageID}
+                    uniqueKey={`invoicepopup${selectedImageID}`}
+                    type={'Vendor'}
+                    onSubmitCoord={onSubmitCoord}
+                  />
+                  </div>
+              </div>
+              <div  className="clearfix d-flex flex-row">
+              <div className="width">
+                <TextField
+                  type="text"
+                  placeholder="Reference One"
+                  name="reference_1"
+                  value={values.reference_1}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  fullWidth={true}
+                  containerClasses={commonTextfieldClasses}
+                  feedback={touched.reference_1 && errors.reference_1 ? errors.reference_1 : null}
+                  />
+                  </div>
+                  <div className={response === true ? 'd-none': "pull-right mt-2"}>
+                  <InvoiceDocumentModal 
+                    documentType={selectedImageFileType}
+                    documentPath={selectedImagePath}
+                    selectedImageId={selectedImageID}
+                    uniqueKey={`invoicepopup${selectedImageID}`}
+                    type={'Vendor'}
+                    onSubmitCoord={onSubmitCoord}
+                  />
+                  </div>
+              </div>
+              <div className="clearfix d-flex flex-row">
+              <div className="width">
+                <TextField
+                  type="number"
+                  placeholder="Sum"
+                  name="sum"
+                  value={values.sum}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setFieldValue('vatAmount',Math.round(e.target.value*(1-1/(1+0.17))*(values.vat/100)));
+                  }}
+                  onBlur={handleBlur}
+                  fullWidth={true} 
+                  containerClasses={commonTextfieldClasses}
+                  feedback={touched.sum && errors.sum ? errors.sum : null}
+                  />
+                  </div>
+                  <div className={response === true ? 'd-none': "pull-right mt-2"}>
+                  <InvoiceDocumentModal 
+                    documentType={selectedImageFileType}
+                    documentPath={selectedImagePath}
+                    selectedImageId={selectedImageID}
+                    uniqueKey={`invoicepopup${selectedImageID}`}
+                    type={'Vendor'}
+                    onSubmitCoord={onSubmitCoord}
+                  />
+                  </div>
               </div>
               <div>
                 <Select
@@ -238,19 +309,7 @@ class InvoiceForm extends Component {
                   feedback={touched.categoryId && errors.categoryId ? errors.categoryId : null}
                 />
               </div>
-              <div>
-                <TextField
-                  type="text"
-                  placeholder="Reference One"
-                  name="reference_1"
-                  value={values.reference_1}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  fullWidth={true}
-                  containerClasses={commonTextfieldClasses}
-                  feedback={touched.reference_1 && errors.reference_1 ? errors.reference_1 : null}
-                  />
-              </div>
+              
               <div>
                 <TextField
                   type="text"
@@ -264,22 +323,7 @@ class InvoiceForm extends Component {
                   feedback={touched.reference_2 && errors.reference_2 ? errors.reference_2 : null}
                   />
               </div>
-              <div>
-                <TextField
-                  type="number"
-                  placeholder="Sum"
-                  name="sum"
-                  value={values.sum}
-                  onChange={(e) => {
-                    handleChange(e);
-                    setFieldValue('vatAmount',Math.round(e.target.value*(1-1/(1+0.17))*(values.vat/100)));
-                  }}
-                  onBlur={handleBlur}
-                  fullWidth={true} 
-                  containerClasses={commonTextfieldClasses}
-                  feedback={touched.sum && errors.sum ? errors.sum : null}
-                  />
-              </div>
+              
               <div>
                 <TextField
                   type="text"

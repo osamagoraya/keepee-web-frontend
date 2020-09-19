@@ -20,6 +20,7 @@ class DismissableDialog extends React.Component {
   };
 
   render() {
+      
     return (
       <div>
         {
@@ -44,7 +45,7 @@ class DismissableDialog extends React.Component {
             <Button onClick={this.handleClose} variant="grey">
               Cancel
             </Button>
-            <Button onClick={this.handleClose} variant="grey">
+            <Button onClick={this.props.onSubmitCoord} variant="grey">
               Select
             </Button>
           </DialogActions>

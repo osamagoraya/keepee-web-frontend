@@ -2,28 +2,28 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 import { Rect } from "react-konva";
 
+
+
 const verticallyCenteredImage = {
   display: "inline-block",
   height: "100%",
   verticalAlign: "middle",
 }
-const mouseDown = ev => {
-  console.log(ev.clientX,'X it is ');
-  console.log(ev.clientY,'Y it is ');
-}
-const mouseUp = ev => {
-  console.log(ev.clientX,'X it is ');
-  console.log(ev.clientY,'Y it is ');
-}
-const preventDragHandler = (e) => {
-  e.preventDefault();
-}
+
+
+
+
 
 
 
 class InvoiceDocumentCard extends React.Component {
   render () {
-    const {cardClassNames,cardMediaStyle,documentType,documentPath,selectedImageId } = this.props;
+    const {cardClassNames,cardMediaStyle,documentType,documentPath,selectedImageId, mouseUp, mouseDown } = this.props;
+
+
+const preventDragHandler = (e) => {
+  e.preventDefault();
+}
     
     return (
       <Card className={cardClassNames} style={{ overflow: "hidden"}}>
@@ -32,7 +32,7 @@ class InvoiceDocumentCard extends React.Component {
         { selectedImageId && documentType === "image" 
         ? 
       <div>
-            <img className="img-responsive" onDragStart={preventDragHandler} draggable={false} onMouseDown={mouseDown} onMouseUp={mouseUp} style={cardMediaStyle} src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg" alt="beautiful"/>  
+            <img id='img-id' className="img-responsive" onDragStart={preventDragHandler} draggable={false} onMouseDown={mouseDown} onMouseUp={mouseUp} style={cardMediaStyle} src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg" alt="beautiful"/>  
           </div>
         
         : selectedImageId && documentType === "pdf" 

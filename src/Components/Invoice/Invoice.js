@@ -24,6 +24,8 @@ class Invoice extends Component {
   constructor(props){
     super(props);
     this.state = {
+      p1:'',
+      p2:'',
       show: false,
       selectedImageID: this.props.match.params.imageId,
       selectedImageStamp: this.props.match.params.imageStamp,
@@ -91,42 +93,10 @@ class Invoice extends Component {
   bindSubmitForm(submitter) {
     this.formSubmitter = submitter ;
   }
-  showModal = () => {
-    this.setState({ show: true });
-  };
-
-  hideModal = () => {
-    this.setState({ show: false });
-  };
-
-  cropImage = () => {
-    this.setState({ show: false });
-  };
-
-  mouseMove = ev => {
-    console.log(ev.clientX,'X')
-    console.log(ev.clientY,'Y')
-  }
+  
 
   preventDragHandler = (e) => {
     e.preventDefault();
-  }
-  onSubmitCoordinates = e => {
-      sendAuthenticatedAsyncRequest(
-        "http://localhost:5000/invoice",
-        "POST", 
-        {p1: this.state.p1, p2: this.state.p2},
-        (r) => {
-          var response = JSON.parse(r.data.body);
-          // this.props.history.push('/workspace/invoice');
-          // var path = `/workspace/invoice/${nextImage.imageId}/${nextImage.imageType}/${this.imageStamp(nextImage.imageLink)}`;
-          // this.props.history.push(path);
-        },
-        (r) => {
-          console.log("Failing");
-        }
-      );
-    
   }
 
   
@@ -134,14 +104,82 @@ class Invoice extends Component {
       
     const { selectedImageID , selectedImageFileType, selectedImageStamp, apiCallInProgress, apiCallType, selectedUserId, loggedInUser} = this.state;
     const selectedImagePath = BASE_URL + selectedImageStamp;
-    const mouseDown = ev => {
-      console.log(ev.clientX,'X it is ');
-      console.log(ev.clientY,'Y it is ');
+    const FindPosition =(oElement) =>
+{
+  if(typeof( oElement.offsetParent ) != "undefined")
+  {
+    for(var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent)
+    {
+      posX += oElement.offsetLeft;
+      posY += oElement.offsetTop;
     }
-    const mouseUp = ev => {
-      console.log(ev.clientX,'X it is ');
-      console.log(ev.clientY,'Y it is ');
+      return [ posX, posY ];
     }
+    else
+    {
+      return [ oElement.x, oElement.y ];
+    }
+}
+
+const GetCoordinates = (e, p) =>
+{
+  var PosX = 0;
+  var PosY = 0;
+  var ImgPos;
+  ImgPos = FindPosition(e.target);
+  if (e.pageX || e.pageY)
+  {
+    PosX = e.pageX;
+    PosY = e.pageY;
+  }
+  else if (e.clientX || e.clientY)
+    {
+      PosX = e.clientX + document.body.scrollLeft
+        + document.documentElement.scrollLeft;
+      PosY = e.clientY + document.body.scrollTop
+        + document.documentElement.scrollTop;
+    }
+  PosX = PosX - ImgPos[0];
+  PosY = PosY - ImgPos[1];
+  this.setState({[p]: [PosX, PosY]});
+}
+
+const mouseDown = ev => {
+  GetCoordinates(ev,'p1');
+}
+const mouseUp = ev => {
+  GetCoordinates(ev,'p2');
+}
+
+const onSubmitCoord = () => {
+  sendAuthenticatedAsyncRequest(
+    "http://localhost:5000/invoice",
+    "POST", 
+    {p1: this.state.p1, p2: this.state.p2},
+    (r) => {
+      var response = JSON.parse(r.data.body);
+      console.log(response,'response');
+    //   "uploadId": 13,
+    // "vendorName": "",
+    // "fieldName": "title",
+    // "p1": [
+    //     2282,
+    //     724
+    // ],
+    // "p2": [
+    //     2726,
+    //     846
+    // ]
+      // this.props.history.push('/workspace/invoice');
+      // var path = `/workspace/invoice/${nextImage.imageId}/${nextImage.imageType}/${this.imageStamp(nextImage.imageLink)}`;
+      // this.props.history.push(path);
+    },
+    (r) => {
+      console.log("Failing");
+    }
+  );
+  console.log("Function Submitted");
+}
     
 
     return (
@@ -158,6 +196,8 @@ class Invoice extends Component {
                 journalEntry={null}
                 selectedImagePath={selectedImagePath}
                 selectedImageFileType={selectedImageFileType}
+                onSubmitCoord={onSubmitCoord}
+                response={true}
                 
                 onSubmit={() => {
                   this.setState({apiCallInProgress: false, apiCallType: 'none'});
