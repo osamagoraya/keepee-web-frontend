@@ -9,7 +9,6 @@ import TextField from '../../Common/TextField';
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
 import swal from 'sweetalert';
 import {withRouter} from 'react-router-dom';
-import { Button } from '@material-ui/core';
 import InvoiceDocumentModal from './drawPop';
 
 class InvoiceForm extends Component {
@@ -133,7 +132,7 @@ class InvoiceForm extends Component {
   
   
   render(){
-    const {bindSubmitForm, onValidationFailed, selectedImageFileType, selectedImagePath, onSubmitCoord, response} = this.props;
+    const {bindSubmitForm, onValidationFailed, selectedImageFileType, selectedImagePath, onSubmitCoord, response, setCoords} = this.props;
     const { categories, selectedImageID} = this.state;
 
     const validationSchema = Yup.object().shape({
@@ -192,7 +191,7 @@ class InvoiceForm extends Component {
                   type="text"
                   placeholder="Vendor"
                   name="vendorName"
-                  value={values.vendorName}
+                  value={response.title ? response.title : values.vendorName}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   fullWidth={true} 
@@ -208,9 +207,9 @@ class InvoiceForm extends Component {
                     uniqueKey={`invoicepopup${selectedImageID}`}
                     type={'Vendor'}
                     onSubmitCoord={onSubmitCoord}
+                    setCoords={setCoords}
                   />
                   </div>
-                  {/* <Button onClick={this.state.showModal} className="pull-right"><span>&#9997;</span></Button> */}
               </div>
               <div className="clearfix d-flex flex-row"> 
               <div className="width">
@@ -218,7 +217,7 @@ class InvoiceForm extends Component {
                   type="date"
                   placeholder="Date"
                   name="jeDate"
-                  value={values.jeDate}
+                  value={response.date ? response.date : values.jeDate}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   fullWidth={true}
@@ -226,7 +225,7 @@ class InvoiceForm extends Component {
                   feedback={touched.jeDate && errors.jeDate ? errors.jeDate : null}
                   />
                   </div>
-                  <div className={response === true ? 'd-none': "pull-right mt-2"}>
+                  <div className={response.date ? 'd-none': "pull-right mt-2"}>
                   <InvoiceDocumentModal 
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}
@@ -243,7 +242,7 @@ class InvoiceForm extends Component {
                   type="text"
                   placeholder="Reference One"
                   name="reference_1"
-                  value={values.reference_1}
+                  value={response.invoice ? response.invoice : values.reference_1}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   fullWidth={true}
@@ -251,7 +250,7 @@ class InvoiceForm extends Component {
                   feedback={touched.reference_1 && errors.reference_1 ? errors.reference_1 : null}
                   />
                   </div>
-                  <div className={response === true ? 'd-none': "pull-right mt-2"}>
+                  <div className={response.invoice ? 'd-none': "pull-right mt-2"}>
                   <InvoiceDocumentModal 
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}
@@ -268,7 +267,7 @@ class InvoiceForm extends Component {
                   type="number"
                   placeholder="Sum"
                   name="sum"
-                  value={values.sum}
+                  value={response.payment ? response.payment : values.sum}
                   onChange={(e) => {
                     handleChange(e);
                     setFieldValue('vatAmount',Math.round(e.target.value*(1-1/(1+0.17))*(values.vat/100)));
@@ -279,7 +278,7 @@ class InvoiceForm extends Component {
                   feedback={touched.sum && errors.sum ? errors.sum : null}
                   />
                   </div>
-                  <div className={response === true ? 'd-none': "pull-right mt-2"}>
+                  <div className={response.payment ? 'd-none': "pull-right mt-2"}>
                   <InvoiceDocumentModal 
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}

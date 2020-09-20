@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import {Grid} from '@material-ui/core';
-import { Modal } from 'react-bootstrap';
 import './Invoice.css';
 import iconRotate from '../../Assets/Images/Path_981.svg';
 import Button from '../Common/Button';
-import ReactCrop from 'react-image-crop';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
-import Crop from '../Invoice/crop';
 import Auth from '../../Services/Auth';
 import InvoiceForm from '../Forms/InvoiceForm/InvoiceForm';
 
@@ -15,7 +12,6 @@ import InvoiceForm from '../Forms/InvoiceForm/InvoiceForm';
 
 import InvoiceDocumentModal from './InvoiceDocumentModal';
 import InvoiceDocumentCard from './InvoiceDocumentCard';
-import ImageCrop from './imageCrop';
 
 const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
 
@@ -24,8 +20,12 @@ class Invoice extends Component {
   constructor(props){
     super(props);
     this.state = {
-      p1:'',
-      p2:'',
+      width: 0,
+      height: 0,
+      response: {},
+      uploadId: -1,
+      p1:[],
+      p2:[],
       show: false,
       selectedImageID: this.props.match.params.imageId,
       selectedImageStamp: this.props.match.params.imageStamp,
@@ -93,92 +93,61 @@ class Invoice extends Component {
   bindSubmitForm(submitter) {
     this.formSubmitter = submitter ;
   }
-  
 
-  preventDragHandler = (e) => {
-    e.preventDefault();
-  }
+
+  setCoords = (p,x,y, w, h) =>
+{
+  this.setState({[p]: [parseInt(x), parseInt(y)]});
+  this.setState({width: w});
+  this.setState({height: h});
+  
+};
+
+
+
 
   
   render(){
       
     const { selectedImageID , selectedImageFileType, selectedImageStamp, apiCallInProgress, apiCallType, selectedUserId, loggedInUser} = this.state;
     const selectedImagePath = BASE_URL + selectedImageStamp;
-    const FindPosition =(oElement) =>
-{
-  if(typeof( oElement.offsetParent ) != "undefined")
-  {
-    for(var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent)
-    {
-      posX += oElement.offsetLeft;
-      posY += oElement.offsetTop;
+    console.log(this.state.p1,'p111');
+    console.log(this.state.p2,'p2222');
+    const fetchUploadId = async () => {
+      const response = await fetch('http://3.16.125.66:8080/upload', {
+        method: 'POST',
+        body: JSON.stringify({imageAddress: "https://ocr-api-test-bucket.s3.us-east-2.amazonaws.com/466097.pdf"}),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const id = await response.json();
+      SubmitCordinates(id);
     }
-      return [ posX, posY ];
-    }
-    else
-    {
-      return [ oElement.x, oElement.y ];
-    }
-}
+    console.log(typeof(this.state.p1,'p1'));
+    console.log(typeof(this.state.p2,'p2'));
+    console.log(typeof(this.state.width,'w'));
+    console.log(typeof(this.state.height,'h'));
+    const SubmitCordinates = async (id) => {
+      const response = await fetch('http://3.16.125.66:8080/invoice', {
+        method: 'POST',
+        body: {"uploadId": parseInt(id), "vendorName": "", "fieldName": "title", "p1": this.state.p1, "p2": this.state.p2, "renderedWidth": parseInt(this.state.width), "renderedHeight": parseInt(this.state.height)},
+        
+        // headers: {
+        //   'Content-Type': 'application/json'
+        // }
+      });
+      const res = await response.json();
+      this.setState({response: res})
+      console.log(res,'response');
 
-const GetCoordinates = (e, p) =>
-{
-  var PosX = 0;
-  var PosY = 0;
-  var ImgPos;
-  ImgPos = FindPosition(e.target);
-  if (e.pageX || e.pageY)
-  {
-    PosX = e.pageX;
-    PosY = e.pageY;
-  }
-  else if (e.clientX || e.clientY)
-    {
-      PosX = e.clientX + document.body.scrollLeft
-        + document.documentElement.scrollLeft;
-      PosY = e.clientY + document.body.scrollTop
-        + document.documentElement.scrollTop;
+      
     }
-  PosX = PosX - ImgPos[0];
-  PosY = PosY - ImgPos[1];
-  this.setState({[p]: [PosX, PosY]});
-}
 
-const mouseDown = ev => {
-  GetCoordinates(ev,'p1');
-}
-const mouseUp = ev => {
-  GetCoordinates(ev,'p2');
-}
 
 const onSubmitCoord = () => {
-  sendAuthenticatedAsyncRequest(
-    "http://localhost:5000/invoice",
-    "POST", 
-    {p1: this.state.p1, p2: this.state.p2},
-    (r) => {
-      var response = JSON.parse(r.data.body);
-      console.log(response,'response');
-    //   "uploadId": 13,
-    // "vendorName": "",
-    // "fieldName": "title",
-    // "p1": [
-    //     2282,
-    //     724
-    // ],
-    // "p2": [
-    //     2726,
-    //     846
-    // ]
-      // this.props.history.push('/workspace/invoice');
-      // var path = `/workspace/invoice/${nextImage.imageId}/${nextImage.imageType}/${this.imageStamp(nextImage.imageLink)}`;
-      // this.props.history.push(path);
-    },
-    (r) => {
-      console.log("Failing");
-    }
-  );
-  console.log("Function Submitted");
+  fetchUploadId();
+  SubmitCordinates();
 }
     
 
@@ -197,7 +166,8 @@ const onSubmitCoord = () => {
                 selectedImagePath={selectedImagePath}
                 selectedImageFileType={selectedImageFileType}
                 onSubmitCoord={onSubmitCoord}
-                response={true}
+                setCoords={this.setCoords}
+                response={this.state.response}
                 
                 onSubmit={() => {
                   this.setState({apiCallInProgress: false, apiCallType: 'none'});
@@ -241,8 +211,7 @@ const onSubmitCoord = () => {
                 documentType={selectedImageFileType}
                 documentPath={selectedImagePath}
                 selectedImageId={selectedImageID}
-                mouseDown={mouseDown}
-                mouseUp={mouseUp}
+                setCoords={this.setCoords}
               />
                  <InvoiceDocumentModal 
                     documentType={selectedImageFileType}
@@ -277,16 +246,6 @@ const onSubmitCoord = () => {
           </Grid>
         <Grid item sm={6}>
         </Grid>
-
-        <Grid>
-          <ImageCrop
-          show={this.state.show}
-          hideModal={this.hideModal}
-          cropImage={this.cropImage}
-          
-          />
-        </Grid>
-
       </Grid>
       
     );
