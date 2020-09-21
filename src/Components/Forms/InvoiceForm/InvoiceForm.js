@@ -132,7 +132,7 @@ class InvoiceForm extends Component {
   
   
   render(){
-    const {bindSubmitForm, onValidationFailed, selectedImageFileType, selectedImagePath, onSubmitCoord, response, setCoords} = this.props;
+    const {bindSubmitForm, onValidationFailed, selectedImageFileType, selectedImagePath, onSubmitCoord, response, setCoords, setType} = this.props;
     const { categories, selectedImageID} = this.state;
 
     const validationSchema = Yup.object().shape({
@@ -199,17 +199,17 @@ class InvoiceForm extends Component {
                   feedback={touched.vendorName && errors.vendorName ? errors.vendorName : null}
                   />
                   </div>
-                  <div className="pull-right mt-2">
-                  <InvoiceDocumentModal 
+                  { response.title === null && ( <div className="pull-right mt-2">
+                  <InvoiceDocumentModal
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}
                     selectedImageId={selectedImageID}
                     uniqueKey={`invoicepopup${selectedImageID}`}
-                    type={'Vendor'}
+                    onChange={setType('title')}
                     onSubmitCoord={onSubmitCoord}
                     setCoords={setCoords}
                   />
-                  </div>
+                  </div>)}
               </div>
               <div className="clearfix d-flex flex-row"> 
               <div className="width">
@@ -225,16 +225,16 @@ class InvoiceForm extends Component {
                   feedback={touched.jeDate && errors.jeDate ? errors.jeDate : null}
                   />
                   </div>
-                  <div className={response.date ? 'd-none': "pull-right mt-2"}>
+                  {response.title && response.date === null && ( <div className={response.date ? 'd-none': "pull-right mt-2"}>
                   <InvoiceDocumentModal 
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}
                     selectedImageId={selectedImageID}
                     uniqueKey={`invoicepopup${selectedImageID}`}
-                    type={'Vendor'}
+                    onChange={setType('date')}
                     onSubmitCoord={onSubmitCoord}
                   />
-                  </div>
+                  </div>)}
               </div>
               <div  className="clearfix d-flex flex-row">
               <div className="width">
@@ -250,21 +250,21 @@ class InvoiceForm extends Component {
                   feedback={touched.reference_1 && errors.reference_1 ? errors.reference_1 : null}
                   />
                   </div>
-                  <div className={response.invoice ? 'd-none': "pull-right mt-2"}>
+                  { response.title && response.invoice === null && ( <div className={response.invoice ? 'd-none': "pull-right mt-2"}>
                   <InvoiceDocumentModal 
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}
                     selectedImageId={selectedImageID}
                     uniqueKey={`invoicepopup${selectedImageID}`}
-                    type={'Vendor'}
+                    type={'invoice'}
                     onSubmitCoord={onSubmitCoord}
                   />
-                  </div>
+                  </div>)}
               </div>
               <div className="clearfix d-flex flex-row">
               <div className="width">
                 <TextField
-                  type="number"
+                  // type="number"
                   placeholder="Sum"
                   name="sum"
                   value={response.payment ? response.payment : values.sum}
@@ -278,16 +278,16 @@ class InvoiceForm extends Component {
                   feedback={touched.sum && errors.sum ? errors.sum : null}
                   />
                   </div>
-                  <div className={response.payment ? 'd-none': "pull-right mt-2"}>
+                  { response.title && response.payment === null && (<div className={response.payment ? 'd-none': "pull-right mt-2"}>
                   <InvoiceDocumentModal 
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}
                     selectedImageId={selectedImageID}
                     uniqueKey={`invoicepopup${selectedImageID}`}
-                    type={'Vendor'}
+                    // type={'payment'}
                     onSubmitCoord={onSubmitCoord}
                   />
-                  </div>
+                  </div>)}
               </div>
               <div>
                 <Select

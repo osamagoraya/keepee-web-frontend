@@ -62,7 +62,6 @@ const GetCoordinates = (e, p, width, height) =>
   PosY = PosY - ImgPos[1];
   console.log(PosX,'xxx', PosY, 'yyy');
   setCoords(p,PosX,PosY, width, height);
-  // this.setState({[p]: [PosX, PosY]});
 }
 
 const mouseDown = ev => {

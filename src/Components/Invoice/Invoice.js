@@ -20,9 +20,10 @@ class Invoice extends Component {
   constructor(props){
     super(props);
     this.state = {
+      type: 'title',
       width: 0,
       height: 0,
-      response: {},
+      response: {title: null, date:null, payment: null, invoice:null},
       uploadId: -1,
       p1:[],
       p2:[],
@@ -97,16 +98,15 @@ class Invoice extends Component {
 
   setCoords = (p,x,y, w, h) =>
 {
-  this.setState({[p]: [parseInt(x), parseInt(y)]});
+  this.setState({[p]: []});
+    var temp = [];
+    temp.push(x);
+    temp.push(y);
+  this.setState({[p]: temp});
   this.setState({width: w});
   this.setState({height: h});
   
 };
-
-
-
-
-  
   render(){
       
     const { selectedImageID , selectedImageFileType, selectedImageStamp, apiCallInProgress, apiCallType, selectedUserId, loggedInUser} = this.state;
@@ -116,7 +116,7 @@ class Invoice extends Component {
     const fetchUploadId = async () => {
       const response = await fetch('http://3.16.125.66:8080/upload', {
         method: 'POST',
-        body: JSON.stringify({imageAddress: "https://ocr-api-test-bucket.s3.us-east-2.amazonaws.com/466097.pdf"}),
+        body: JSON.stringify({imageAddress: selectedImagePath}),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -124,18 +124,14 @@ class Invoice extends Component {
       const id = await response.json();
       SubmitCordinates(id);
     }
-    console.log(typeof(this.state.p1,'p1'));
-    console.log(typeof(this.state.p2,'p2'));
-    console.log(typeof(this.state.width,'w'));
-    console.log(typeof(this.state.height,'h'));
-    const SubmitCordinates = async (id) => {
+    const SubmitCordinates = async (id, type) => {
       const response = await fetch('http://3.16.125.66:8080/invoice', {
         method: 'POST',
-        body: {"uploadId": parseInt(id), "vendorName": "", "fieldName": "title", "p1": this.state.p1, "p2": this.state.p2, "renderedWidth": parseInt(this.state.width), "renderedHeight": parseInt(this.state.height)},
+        body: JSON.stringify({"uploadId": parseInt(id), "vendorName": "", "fieldName": this.props.type, "p1": this.state.p1, "p2": this.state.p2, "renderedWidth": parseInt(this.state.width), "renderedHeight": parseInt(this.state.height)}),
         
-        // headers: {
-        //   'Content-Type': 'application/json'
-        // }
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       const res = await response.json();
       this.setState({response: res})
@@ -144,10 +140,13 @@ class Invoice extends Component {
       
     }
 
+    const setType = x => {
+      this.setState({type: x});
+    };
+
 
 const onSubmitCoord = () => {
   fetchUploadId();
-  SubmitCordinates();
 }
     
 

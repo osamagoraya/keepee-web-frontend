@@ -9,7 +9,7 @@ import '../../Invoice/Invoice.css';
 class InvoiceDocumentModal extends React.Component {
 
   render () {
-    const {documentType,uniqueKey,onSubmitCoord } = this.props;
+    const {documentType,uniqueKey,onSubmitCoord} = this.props;
 
     const button = (
       <span style={{cursor: 'pointer'}}>
@@ -30,6 +30,7 @@ class InvoiceDocumentModal extends React.Component {
           className:"document-modal-size"
         }}
         onSubmitCoord={onSubmitCoord}
+        
       >
         <InvoiceDocumentCard { ...this.props} cardClassNames={"document-modal-content"}/>
       </DismissableDialog>
