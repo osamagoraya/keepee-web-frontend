@@ -105,14 +105,20 @@ class Invoice extends Component {
   this.setState({[p]: temp});
   this.setState({width: w});
   this.setState({height: h});
-  
 };
+
+setType = (x) => {
+  this.setState({type: x});
+};
+
+
   render(){
       
     const { selectedImageID , selectedImageFileType, selectedImageStamp, apiCallInProgress, apiCallType, selectedUserId, loggedInUser} = this.state;
     const selectedImagePath = BASE_URL + selectedImageStamp;
     console.log(this.state.p1,'p111');
     console.log(this.state.p2,'p2222');
+    console.log(this.state.type,'typeeee');
     const fetchUploadId = async () => {
       const response = await fetch('http://3.16.125.66:8080/upload', {
         method: 'POST',
@@ -124,10 +130,10 @@ class Invoice extends Component {
       const id = await response.json();
       SubmitCordinates(id);
     }
-    const SubmitCordinates = async (id, type) => {
+    const SubmitCordinates = async (id) => {
       const response = await fetch('http://3.16.125.66:8080/invoice', {
         method: 'POST',
-        body: JSON.stringify({"uploadId": parseInt(id), "vendorName": "", "fieldName": this.props.type, "p1": this.state.p1, "p2": this.state.p2, "renderedWidth": parseInt(this.state.width), "renderedHeight": parseInt(this.state.height)}),
+        body: JSON.stringify({"uploadId": parseInt(id), "vendorName": "", "fieldName": this.state.type, "p1": this.state.p1, "p2": this.state.p2, "renderedWidth": parseInt(this.state.width), "renderedHeight": parseInt(this.state.height)}),
         
         headers: {
           'Content-Type': 'application/json'
@@ -135,15 +141,8 @@ class Invoice extends Component {
       });
       const res = await response.json();
       this.setState({response: res})
-      console.log(res,'response');
-
-      
+      console.log(res,'response');      
     }
-
-    const setType = x => {
-      this.setState({type: x});
-    };
-
 
 const onSubmitCoord = () => {
   fetchUploadId();
@@ -167,6 +166,7 @@ const onSubmitCoord = () => {
                 onSubmitCoord={onSubmitCoord}
                 setCoords={this.setCoords}
                 response={this.state.response}
+                setType={this.setType}
                 
                 onSubmit={() => {
                   this.setState({apiCallInProgress: false, apiCallType: 'none'});

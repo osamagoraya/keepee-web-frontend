@@ -9,7 +9,7 @@ import '../../Invoice/Invoice.css';
 class InvoiceDocumentModal extends React.Component {
 
   render () {
-    const {documentType,uniqueKey,onSubmitCoord} = this.props;
+    const {documentType,uniqueKey,onSubmitCoord, type} = this.props;
 
     const button = (
       <span style={{cursor: 'pointer'}}>

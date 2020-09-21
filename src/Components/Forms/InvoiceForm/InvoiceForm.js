@@ -135,6 +135,21 @@ class InvoiceForm extends Component {
     const {bindSubmitForm, onValidationFailed, selectedImageFileType, selectedImagePath, onSubmitCoord, response, setCoords, setType} = this.props;
     const { categories, selectedImageID} = this.state;
 
+    const titleFunc = () => {
+      setType("title");
+    };
+    const amountFunc = () => {
+      setType("payment");
+    };
+    const invoiceFunc = () => {
+      setType("invoice");
+    };
+    const dateFunc = () => {
+      setType("date");
+    };
+
+
+
     const validationSchema = Yup.object().shape({
       reference_1: Yup.string().required("נדרש"),
       reference_2: Yup.string(),
@@ -200,15 +215,15 @@ class InvoiceForm extends Component {
                   />
                   </div>
                   { response.title === null && ( <div className="pull-right mt-2">
-                  <InvoiceDocumentModal
+                  <a onClick={titleFunc}><InvoiceDocumentModal
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}
                     selectedImageId={selectedImageID}
                     uniqueKey={`invoicepopup${selectedImageID}`}
-                    
                     onSubmitCoord={onSubmitCoord}
                     setCoords={setCoords}
-                  />
+                    
+                  /></a>
                   </div>)}
               </div>
               <div className="clearfix d-flex flex-row"> 
@@ -226,14 +241,14 @@ class InvoiceForm extends Component {
                   />
                   </div>
                   {response.title && response.date === null && ( <div className={response.date ? 'd-none': "pull-right mt-2"}>
-                  <InvoiceDocumentModal 
+                  <a onClick={dateFunc}><InvoiceDocumentModal 
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}
                     selectedImageId={selectedImageID}
                     uniqueKey={`invoicepopup${selectedImageID}`}
-                    onChange={setType('date')}
                     onSubmitCoord={onSubmitCoord}
-                  />
+                    setCoords={setCoords}
+                  /></a>
                   </div>)}
               </div>
               <div  className="clearfix d-flex flex-row">
@@ -251,14 +266,15 @@ class InvoiceForm extends Component {
                   />
                   </div>
                   { response.title && response.invoice === null && ( <div className={response.invoice ? 'd-none': "pull-right mt-2"}>
-                  <InvoiceDocumentModal 
+                  <a onClick={invoiceFunc}><InvoiceDocumentModal 
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}
                     selectedImageId={selectedImageID}
                     uniqueKey={`invoicepopup${selectedImageID}`}
                     type={'invoice'}
                     onSubmitCoord={onSubmitCoord}
-                  />
+                    setCoords={setCoords}
+                  /></a>
                   </div>)}
               </div>
               <div className="clearfix d-flex flex-row">
@@ -279,14 +295,14 @@ class InvoiceForm extends Component {
                   />
                   </div>
                   { response.title && response.payment === null && (<div className={response.payment ? 'd-none': "pull-right mt-2"}>
-                  <InvoiceDocumentModal 
+                  <a onClick={amountFunc}><InvoiceDocumentModal 
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}
                     selectedImageId={selectedImageID}
                     uniqueKey={`invoicepopup${selectedImageID}`}
-                    // type={'payment'}
                     onSubmitCoord={onSubmitCoord}
-                  />
+                    setCoords={setCoords}
+                  /></a>
                   </div>)}
               </div>
               <div>
