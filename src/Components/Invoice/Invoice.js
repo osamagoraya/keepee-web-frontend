@@ -16,14 +16,16 @@ import InvoiceDocumentCard from './InvoiceDocumentCard';
 const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
 
 class Invoice extends Component {
-    
+    uploadID = -1;
+    vendorName = '';
+    // response = {title: null, date:null, payment: null, invoice:null};
   constructor(props){
     super(props);
     this.state = {
       type: 'title',
+      response: {title: null, date:null, payment: null, invoice:null},
       width: 0,
       height: 0,
-      response: {title: null, date:null, payment: null, invoice:null},
       uploadId: -1,
       p1:[],
       p2:[],
@@ -39,7 +41,51 @@ class Invoice extends Component {
       categories: []
     }
   }
+  fetchUploadId = async () => {
+    
 
+    const response = await fetch('http://3.16.125.66:8080/upload', {
+      method: 'POST',
+      body: JSON.stringify({imageAddress: BASE_URL + this.state.selectedImageStamp}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const id = await response.json();
+    this.uploadID = id;
+    console.log(this.uploadID,'gghjgjhgjhg');
+  }
+
+   SubmitCordinates = async () => {
+    const respons = await fetch('http://3.16.125.66:8080/invoice', {
+      method: 'POST',
+      body: JSON.stringify({"uploadId": this.uploadID, "vendorName": this.vendorName, "fieldName": this.state.type, "p1": this.state.p1, "p2": this.state.p2, "renderedWidth": parseInt(this.state.width), "renderedHeight": parseInt(this.state.height)}),
+      
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const res = await respons.json();
+    this.vendorName = res.title != null ? res.title : this.vendorName;
+    var obj = this.state.response;
+    if (this.state.type !== "title"){
+    obj[this.state.type]= res[this.state.type];
+    this.setState({response: obj});
+    }
+    else {
+      this.setState({response: res});
+    }
+    console.log(this.state.response,'response');
+    console.log(obj,'object');
+  }
+
+onSubmitCoord = () => {
+  this.SubmitCordinates();
+}
+
+  componentDidMount() {
+    this.fetchUploadId();
+  }
   
 
   componentWillReceiveProps(nextProps,nextContext) {
@@ -119,34 +165,7 @@ setType = (x) => {
     console.log(this.state.p1,'p111');
     console.log(this.state.p2,'p2222');
     console.log(this.state.type,'typeeee');
-    const fetchUploadId = async () => {
-      const response = await fetch('http://3.16.125.66:8080/upload', {
-        method: 'POST',
-        body: JSON.stringify({imageAddress: selectedImagePath}),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      const id = await response.json();
-      SubmitCordinates(id);
-    }
-    const SubmitCordinates = async (id) => {
-      const response = await fetch('http://3.16.125.66:8080/invoice', {
-        method: 'POST',
-        body: JSON.stringify({"uploadId": parseInt(id), "vendorName": "", "fieldName": this.state.type, "p1": this.state.p1, "p2": this.state.p2, "renderedWidth": parseInt(this.state.width), "renderedHeight": parseInt(this.state.height)}),
-        
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      const res = await response.json();
-      this.setState({response: res})
-      console.log(res,'response');      
-    }
-
-const onSubmitCoord = () => {
-  fetchUploadId();
-}
+    
     
 
     return (
@@ -163,7 +182,7 @@ const onSubmitCoord = () => {
                 journalEntry={null}
                 selectedImagePath={selectedImagePath}
                 selectedImageFileType={selectedImageFileType}
-                onSubmitCoord={onSubmitCoord}
+                onSubmitCoord={this.onSubmitCoord}
                 setCoords={this.setCoords}
                 response={this.state.response}
                 setType={this.setType}

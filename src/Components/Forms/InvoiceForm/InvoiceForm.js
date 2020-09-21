@@ -10,6 +10,7 @@ import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestServi
 import swal from 'sweetalert';
 import {withRouter} from 'react-router-dom';
 import InvoiceDocumentModal from './drawPop';
+import moment from 'moment';
 
 class InvoiceForm extends Component {
     
@@ -232,7 +233,7 @@ class InvoiceForm extends Component {
                   type="date"
                   placeholder="Date"
                   name="jeDate"
-                  value={response.date ? response.date : values.jeDate}
+                  value={response.date ? moment(response.date).format('YYYY-DD-MM') : values.jeDate}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   fullWidth={true}
