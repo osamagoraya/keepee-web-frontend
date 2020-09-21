@@ -9,16 +9,27 @@ import Auth from '../../Services/Auth';
 import InvoiceForm from '../Forms/InvoiceForm/InvoiceForm';
 
 
+
 import InvoiceDocumentModal from './InvoiceDocumentModal';
 import InvoiceDocumentCard from './InvoiceDocumentCard';
 
 const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
 
 class Invoice extends Component {
-    
+    uploadID = -1;
+    vendorName = '';
+    // response = {title: null, date:null, payment: null, invoice:null};
   constructor(props){
     super(props);
     this.state = {
+      type: 'title',
+      response: {title: null, date:null, payment: null, invoice:null},
+      width: 0,
+      height: 0,
+      uploadId: -1,
+      p1:[],
+      p2:[],
+      show: false,
       selectedImageID: this.props.match.params.imageId,
       selectedImageStamp: this.props.match.params.imageStamp,
       selectedImageFileType: this.props.match.params.imageType,
@@ -30,8 +41,53 @@ class Invoice extends Component {
       categories: []
     }
   }
+  fetchUploadId = async () => {
+    
 
+    const response = await fetch('http://3.16.125.66:8080/upload', {
+      method: 'POST',
+      body: JSON.stringify({imageAddress: BASE_URL + this.state.selectedImageStamp}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const id = await response.json();
+    this.uploadID = id;
+    console.log(this.uploadID,'gghjgjhgjhg');
+  }
+
+   SubmitCordinates = async () => {
+    const respons = await fetch('http://3.16.125.66:8080/invoice', {
+      method: 'POST',
+      body: JSON.stringify({"uploadId": this.uploadID, "vendorName": this.vendorName, "fieldName": this.state.type, "p1": this.state.p1, "p2": this.state.p2, "renderedWidth": parseInt(this.state.width), "renderedHeight": parseInt(this.state.height)}),
+      
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const res = await respons.json();
+    this.vendorName = res.title != null ? res.title : this.vendorName;
+    var obj = this.state.response;
+    if (this.state.type !== "title"){
+    obj[this.state.type]= res[this.state.type];
+    this.setState({response: obj});
+    }
+    else {
+      this.setState({response: res});
+    }
+    console.log(this.state.response,'response');
+    console.log(obj,'object');
+  }
+
+onSubmitCoord = () => {
+  this.SubmitCordinates();
+}
+
+  componentDidMount() {
+    this.fetchUploadId();
+  }
   
+
   componentWillReceiveProps(nextProps,nextContext) {
     const oldImageId = this.state.selectedImageID;
     const { imageId, imageType, imageStamp } = nextProps.match.params;
@@ -84,12 +140,33 @@ class Invoice extends Component {
   bindSubmitForm(submitter) {
     this.formSubmitter = submitter ;
   }
-  
+
+
+  setCoords = (p,x,y, w, h) =>
+{
+  this.setState({[p]: []});
+    var temp = [];
+    temp.push(x);
+    temp.push(y);
+  this.setState({[p]: temp});
+  this.setState({width: w});
+  this.setState({height: h});
+};
+
+setType = (x) => {
+  this.setState({type: x});
+};
+
+
   render(){
       
     const { selectedImageID , selectedImageFileType, selectedImageStamp, apiCallInProgress, apiCallType, selectedUserId, loggedInUser} = this.state;
     const selectedImagePath = BASE_URL + selectedImageStamp;
-
+    console.log(this.state.p1,'p111');
+    console.log(this.state.p2,'p2222');
+    console.log(this.state.type,'typeeee');
+    
+    
 
     return (
       <Grid container className="canvas-container" style={{ flexWrap: 'nowrap !important'}}>
@@ -97,11 +174,19 @@ class Invoice extends Component {
             <Grid item container style = {{ flexBasis: '85%'}}>
               <Grid item sm={12}>
               <InvoiceForm 
+                showModal = {this.showModal}
                 imageId={selectedImageID} 
                 selectedUserId={selectedUserId} 
                 isUserIdRequired={true}
                 isJournalEntryPassed={false}
                 journalEntry={null}
+                selectedImagePath={selectedImagePath}
+                selectedImageFileType={selectedImageFileType}
+                onSubmitCoord={this.onSubmitCoord}
+                setCoords={this.setCoords}
+                response={this.state.response}
+                setType={this.setType}
+                
                 onSubmit={() => {
                   this.setState({apiCallInProgress: false, apiCallType: 'none'});
                   this.props.history.push("/workspace/invoice")}
@@ -144,6 +229,7 @@ class Invoice extends Component {
                 documentType={selectedImageFileType}
                 documentPath={selectedImagePath}
                 selectedImageId={selectedImageID}
+                setCoords={this.setCoords}
               />
                  <InvoiceDocumentModal 
                     documentType={selectedImageFileType}
@@ -176,10 +262,12 @@ class Invoice extends Component {
             </div>
               </Grid>
           </Grid>
-        {/* <Grid item sm={6}>
-        </Grid> */}
+        <Grid item sm={6}>
+        </Grid>
       </Grid>
+      
     );
+
   }
 }
 
