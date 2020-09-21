@@ -205,7 +205,7 @@ class InvoiceForm extends Component {
                     documentPath={selectedImagePath}
                     selectedImageId={selectedImageID}
                     uniqueKey={`invoicepopup${selectedImageID}`}
-                    onChange={setType('title')}
+                    
                     onSubmitCoord={onSubmitCoord}
                     setCoords={setCoords}
                   />
