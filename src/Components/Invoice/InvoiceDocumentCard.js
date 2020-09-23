@@ -1,10 +1,5 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
-// var pdf2image = require('pdf2image');
- 
-//converts all the pages of the given pdf using the default options 
-// pdf2image.convertPDF('/Users/zainulabideen/Resume.pdf');
-    
 
 
 const verticallyCenteredImage = {
@@ -19,7 +14,7 @@ const verticallyCenteredImage = {
 class InvoiceDocumentCard extends React.Component {
   render () {
     const {cardClassNames,cardMediaStyle,documentType,documentPath,selectedImageId, setCoords} = this.props;
-    
+    console.log("Modal Type",this.props.modalType);
 
 
     const FindPosition =(oElement) =>
@@ -96,8 +91,9 @@ const preventDragHandler = (e) => {
           </div>
         
         : selectedImageId && documentType === "pdf" 
-        ? <img id='img-id' className="img-responsive" onDragStart={preventDragHandler} draggable={false} onMouseDown={mouseDown} onMouseUp={mouseUp} src={documentPath+ ".jpg"} alt="beautiful"/>
-          // ? <embed src="https://ocr-api-test-bucket.s3.us-east-2.amazonaws.com/466097.pdf" type="application/pdf" onDragStart={preventDragHandler} draggable={false} onMouseDown={mouseDown} onMouseUp={mouseUp} style={{width: "100%", height: "100%"}}  />  
+          ? this.props.modalType == "ocr"
+            ? <img id='img-id' className="img-responsive" onDragStart={preventDragHandler} draggable={false} onMouseDown={mouseDown} onMouseUp={mouseUp} src={documentPath+ ".jpg"} alt="beautiful"/>
+            :<embed src={documentPath} type="application/pdf" draggable={false} style={{width: "100%", height: "100%"}}  />  
           : <div>בחר תמונה</div>
         }
         {/* force re render pdf when component received new props*/}

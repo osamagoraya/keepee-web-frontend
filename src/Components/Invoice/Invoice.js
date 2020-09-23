@@ -162,9 +162,6 @@ setType = (x) => {
       
     const { selectedImageID , selectedImageFileType, selectedImageStamp, apiCallInProgress, apiCallType, selectedUserId, loggedInUser} = this.state;
     const selectedImagePath = BASE_URL + selectedImageStamp;
-    console.log(this.state.p1,'p111');
-    console.log(this.state.p2,'p2222');
-    console.log(this.state.type,'typeeee');
     
     
 
