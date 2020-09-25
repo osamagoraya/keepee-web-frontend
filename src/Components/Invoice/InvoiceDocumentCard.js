@@ -19,8 +19,6 @@ const verticallyCenteredImage = {
 class InvoiceDocumentCard extends React.Component {
   render () {
     const {cardClassNames,cardMediaStyle,documentType,documentPath,selectedImageId, setCoords} = this.props;
-    
-
 
     const FindPosition =(oElement) =>
 {
@@ -71,10 +69,6 @@ const mouseUp = ev => {
   GetCoordinates(ev,'p2',ev.target.width,ev.target.height);
 }
 
-// var img = document.getElementById('img-id'); 
-// var width = img.clientWidth;
-// var height = img.clientHeight;
-// console.log(width, height, 'wxh');
 
 
 

@@ -18,18 +18,16 @@ const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
 class Invoice extends Component {
     uploadID = -1;
     vendorName = '';
-    // response = {title: null, date:null, payment: null, invoice:null};
+    width= 0;
+    height= 0;
+    p1= [];
+    p2= [];
+    type= 'title';
   constructor(props){
     super(props);
     this.state = {
-      type: 'title',
+      
       response: {title: null, date:null, payment: null, invoice:null},
-      width: 0,
-      height: 0,
-      uploadId: -1,
-      p1:[],
-      p2:[],
-      show: false,
       selectedImageID: this.props.match.params.imageId,
       selectedImageStamp: this.props.match.params.imageStamp,
       selectedImageFileType: this.props.match.params.imageType,
@@ -42,8 +40,6 @@ class Invoice extends Component {
     }
   }
   fetchUploadId = async () => {
-    
-
     const response = await fetch('http://3.16.125.66:8080/upload', {
       method: 'POST',
       body: JSON.stringify({imageAddress: BASE_URL + this.state.selectedImageStamp}),
@@ -53,13 +49,12 @@ class Invoice extends Component {
     });
     const id = await response.json();
     this.uploadID = id;
-    console.log(this.uploadID,'gghjgjhgjhg');
   }
 
    SubmitCordinates = async () => {
     const respons = await fetch('http://3.16.125.66:8080/invoice', {
       method: 'POST',
-      body: JSON.stringify({"uploadId": this.uploadID, "vendorName": this.vendorName, "fieldName": this.state.type, "p1": this.state.p1, "p2": this.state.p2, "renderedWidth": parseInt(this.state.width), "renderedHeight": parseInt(this.state.height)}),
+      body: JSON.stringify({"uploadId": this.uploadID, "vendorName": this.vendorName, "fieldName": this.state.type, "p1": this.p1, "p2": this.p2, "renderedWidth": parseInt(this.width), "renderedHeight": parseInt(this.height)}),
       
       headers: {
         'Content-Type': 'application/json'
@@ -68,15 +63,13 @@ class Invoice extends Component {
     const res = await respons.json();
     this.vendorName = res.title != null ? res.title : this.vendorName;
     var obj = this.state.response;
-    if (this.state.type !== "title"){
-    obj[this.state.type]= res[this.state.type];
+    if (this.type !== "title"){
+    obj[this.type]= res[this.type];
     this.setState({response: obj});
     }
     else {
       this.setState({response: res});
     }
-    console.log(this.state.response,'response');
-    console.log(obj,'object');
   }
 
 onSubmitCoord = () => {
@@ -144,13 +137,13 @@ onSubmitCoord = () => {
 
   setCoords = (p,x,y, w, h) =>
 {
-  this.setState({[p]: []});
+  this.[p]= [];
     var temp = [];
     temp.push(x);
     temp.push(y);
-  this.setState({[p]: temp});
-  this.setState({width: w});
-  this.setState({height: h});
+  this.[p] = temp;
+  this.width = w;
+  this.height= h;
 };
 
 setType = (x) => {
@@ -162,11 +155,6 @@ setType = (x) => {
       
     const { selectedImageID , selectedImageFileType, selectedImageStamp, apiCallInProgress, apiCallType, selectedUserId, loggedInUser} = this.state;
     const selectedImagePath = BASE_URL + selectedImageStamp;
-    console.log(this.state.p1,'p111');
-    console.log(this.state.p2,'p2222');
-    console.log(this.state.type,'typeeee');
-    
-    
 
     return (
       <Grid container className="canvas-container" style={{ flexWrap: 'nowrap !important'}}>
@@ -174,7 +162,6 @@ setType = (x) => {
             <Grid item container style = {{ flexBasis: '85%'}}>
               <Grid item sm={12}>
               <InvoiceForm 
-                showModal = {this.showModal}
                 imageId={selectedImageID} 
                 selectedUserId={selectedUserId} 
                 isUserIdRequired={true}

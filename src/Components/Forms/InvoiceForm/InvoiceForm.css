@@ -9,3 +9,13 @@
 .width {
   width: 200% !important;
 }
+
+.pop-button {
+  height: 72%;
+    float: right;
+    padding: 1px;
+    background-color: white;
+    color: black;
+    margin-top: -3px !important;
+    margin-left: 1px !important;
+}

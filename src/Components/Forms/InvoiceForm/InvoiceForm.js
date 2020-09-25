@@ -11,13 +11,13 @@ import swal from 'sweetalert';
 import {withRouter} from 'react-router-dom';
 import InvoiceDocumentModal from './drawPop';
 import moment from 'moment';
+import { Button } from 'react-bootstrap';
 
 class InvoiceForm extends Component {
     
   constructor(props){
     super(props);
     this.state = {
-      showModal: this.props.showModal,
       selectedImageID: this.props.imageId,
       selectedUserId: this.props.selectedUserId,
       loggedInUser: this.props.loggedInUser,
@@ -138,6 +138,7 @@ class InvoiceForm extends Component {
 
     const titleFunc = () => {
       setType("title");
+      console.log('title','titleee');
     };
     const amountFunc = () => {
       setType("payment");
@@ -216,7 +217,7 @@ class InvoiceForm extends Component {
                   />
                   </div>
                   { response.title === null && ( <div className="pull-right mt-2">
-                  <a onClick={titleFunc}><InvoiceDocumentModal
+                  <Button className='pop-button' onClick={titleFunc}><InvoiceDocumentModal
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}
                     selectedImageId={selectedImageID}
@@ -224,7 +225,7 @@ class InvoiceForm extends Component {
                     onSubmitCoord={onSubmitCoord}
                     setCoords={setCoords}
                     
-                  /></a>
+                  /></Button>
                   </div>)}
               </div>
               <div className="clearfix d-flex flex-row"> 
@@ -233,7 +234,7 @@ class InvoiceForm extends Component {
                   type="date"
                   placeholder="Date"
                   name="jeDate"
-                  value={response.date ? moment(response.date).format('YYYY-DD-MM') : values.jeDate}
+                  value={response.date ? moment(response.date).format('YYYY-MM-MM') : values.jeDate}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   fullWidth={true}
