@@ -34,8 +34,8 @@ class ProfitAndLoss extends Component {
   }
   
   componentDidMount() {
-    this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
-    this.fetchPnlMonthlyReport(this.state.defaultMonths, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
+    // this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
+    // this.fetchPnlMonthlyReport(this.state.defaultMonths, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
   }
   
   componentWillReceiveProps(nextProps) {
@@ -147,22 +147,19 @@ class ProfitAndLoss extends Component {
     } else if (!selectedUserId) {
       return (<Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Selecting a user is mandatory </Caption>);
     }
-    else if (!report){
-      return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> No report data </Caption>);
-    }
+    // else if (!report){
+    //   return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> No report data </Caption>);
+    // }
     const selectType = e => {
-      console.log('ev',e.target.value)
       this.setState({type:e.target.value});
     }
     const selectYear = e => {
-      console.log('ev',e.target.value)
       this.setState({selectedPnlYear:e.target.value});
       if (type === "Yearly"){
-      this.fetchPnlReport(e.target.value, selectedUserId, this.state.selectedUserName, this.state.selectedUserNID)
+      // this.fetchPnlReport(e.target.value, selectedUserId, this.state.selectedUserName, this.state.selectedUserNID)
       }
     }
     const onSelect = ev => {
-      console.log('onselect event',ev);
       let i = 0;
       let temp = [];
       for (i = 0; i < ev.length; i++) {
@@ -173,13 +170,16 @@ class ProfitAndLoss extends Component {
       
     }
     const onSubmit = () => {
+      if (this.state.type === "Yearly"){
+      this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
+      }
+      else {
       this.fetchPnlMonthlyReport(this.state.selectedMonths, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID)
     }
-    console.log(this.state.selectedMonths,'selected months');
+    }
     const onRemove = ev => {
       onSelect(ev)
     }
-    console.log(this.type)
 
     // console.log(this.state.reportM,'report');
     
@@ -214,24 +214,24 @@ class ProfitAndLoss extends Component {
           </Grid>
           <Grid className={type === "Yearly" && selectedPnlYear !== '' ? '' : 'd-none'} item container md={10} >
             <Grid item md={12}>
-            
-            <Divider />
-              <Caption style={{paddingLeft: 20}}>
-                {selectedPnlYear} {this.state.type}
-                <PdfAndExcelDownloader 
-                    onPdf={() => this.prepareAndDownloadPdf()}
-                    excelData={this.state.report}
-                    year={this.state.selectedPnlYear}
-                    user={this.state.selectedUserName}
-                    niD={this.state.selectedUserNID}
-                    type="pnl"
-                />
-              </Caption>
+              <Divider />
+                <Caption style={{paddingLeft: 20}}>
+                  {selectedPnlYear} {this.state.type}
+                  <PdfAndExcelDownloader 
+                      onPdf={() => this.prepareAndDownloadPdf()}
+                      excelData={this.state.report}
+                      year={this.state.selectedPnlYear}
+                      user={this.state.selectedUserName}
+                      niD={this.state.selectedUserNID}
+                      type="pnl"
+                  />
+                </Caption>
               <Divider />
             </Grid>
-            <Grid item md={2}></Grid>
+
+            {report && (
             <Grid item md={8}>
-              {Object.keys(report.groupedData).map((groupKey, i) => (
+              {report.groupedData && Object.keys(report.groupedData).map((groupKey, i) => (
                   <ExpansionPanel key={i}>
                     <ExpansionPanelSummary>
                       <ColoredHeader rightLabel={groupKey.substring(0,1).toUpperCase() + groupKey.substring(1)} />
@@ -258,15 +258,13 @@ class ProfitAndLoss extends Component {
                 ))
               }
               <ColoredHeader leftLabel={Math.abs(report.totalCreditSum-report.totalDebitSum)} rightLabel="Total" variant="grey" style={{marginTop: "12px"}}/>
-            </Grid>
+            </Grid>)}
           </Grid>
-
           <Grid className={type === "Monthly" ? '' : 'd-none'} item container md={10} >
             <Grid item md={12}>
-            
             <Divider />
               <Caption style={{paddingLeft: 20}}>
-               Year: {selectedPnlYear} Months: {this.state.selectedMonths+' '}
+               Year: {selectedPnlYear} Months: {this.state.selectedMonths.map(month => moment(month).format('MMM')+' ')}
                 <PdfAndExcelDownloader 
                     onPdf={() => this.prepareAndDownloadPdf()}
                     excelData={this.state.report}
@@ -278,8 +276,8 @@ class ProfitAndLoss extends Component {
               </Caption>
               <Divider />
             </Grid>
-            <Grid item md={2}></Grid>
-            <Grid item md={10}> 
+            {this.state.reportM && (
+            <Grid  item md={10}> 
               {this.state.reportM && Object.entries(this.state.reportM).map(item => (
                 <ExpansionPanel key={item[0]}>
                     <ExpansionPanelSummary>
@@ -315,7 +313,7 @@ class ProfitAndLoss extends Component {
               ))}
               
               <ColoredHeader rightLabel="Total" variant="grey" style={{marginTop: "12px"}}/>
-            </Grid>
+            </Grid>)}
           </Grid>
           <Grid item md={1}></Grid>
         </Grid>

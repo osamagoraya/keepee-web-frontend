@@ -11,6 +11,8 @@ import swal from 'sweetalert';
 import {withRouter} from 'react-router-dom';
 import InvoiceDocumentModal from './drawPop';
 import moment from 'moment';
+import { Button } from 'react-bootstrap';
+
 
 class InvoiceForm extends Component {
     
@@ -129,8 +131,6 @@ class InvoiceForm extends Component {
   // bindFormSubmitter(submitter) {
   //   this.formSubmitter = submitter ;
   // }
-
-  
   
   render(){
     const {bindSubmitForm, onValidationFailed, selectedImageFileType, selectedImagePath, onSubmitCoord, response, setCoords, setType} = this.props;
@@ -216,7 +216,7 @@ class InvoiceForm extends Component {
                   />
                   </div>
                   { response.title === null && ( <div className="pull-right mt-2">
-                  <a onClick={titleFunc}><InvoiceDocumentModal
+                  <Button className='pop-button' onClick={titleFunc}><InvoiceDocumentModal
                     documentType={selectedImageFileType}
                     documentPath={selectedImagePath}
                     selectedImageId={selectedImageID}
@@ -224,7 +224,7 @@ class InvoiceForm extends Component {
                     onSubmitCoord={onSubmitCoord}
                     setCoords={setCoords}
                     modalType="ocr"
-                  /></a>
+                  /></Button>
                   </div>)}
               </div>
               <div className="clearfix d-flex flex-row"> 
@@ -242,17 +242,15 @@ class InvoiceForm extends Component {
                   />
                   </div>
                   {response.title && response.date === null && ( <div className={response.date ? 'd-none': "pull-right mt-2"}>
-                  <a onClick={dateFunc}>
-                    <InvoiceDocumentModal 
-                      documentType={selectedImageFileType}
-                      documentPath={selectedImagePath}
-                      selectedImageId={selectedImageID}
-                      uniqueKey={`invoicepopup${selectedImageID}`}
-                      onSubmitCoord={onSubmitCoord}
-                      setCoords={setCoords}
-                      modalType="ocr"
-                    />
-                  </a>
+                  <Button className='pop-button' onClick={dateFunc}><InvoiceDocumentModal 
+                    documentType={selectedImageFileType}
+                    documentPath={selectedImagePath}
+                    selectedImageId={selectedImageID}
+                    uniqueKey={`invoicepopup${selectedImageID}`}
+                    onSubmitCoord={onSubmitCoord}
+                    setCoords={setCoords}
+                    modalType="ocr"
+                  /></Button>
                   </div>)}
               </div>
               <div  className="clearfix d-flex flex-row">
@@ -270,18 +268,16 @@ class InvoiceForm extends Component {
                   />
                   </div>
                   { response.title && response.invoice === null && ( <div className={response.invoice ? 'd-none': "pull-right mt-2"}>
-                  <a onClick={invoiceFunc}>
-                    <InvoiceDocumentModal 
-                      documentType={selectedImageFileType}
-                      documentPath={selectedImagePath}
-                      selectedImageId={selectedImageID}
-                      uniqueKey={`invoicepopup${selectedImageID}`}
-                      type={'invoice'}
-                      onSubmitCoord={onSubmitCoord}
-                      setCoords={setCoords}
-                      modalType="ocr"
-                    />
-                   </a>
+                  <Button className='pop-button' onClick={invoiceFunc}><InvoiceDocumentModal 
+                    documentType={selectedImageFileType}
+                    documentPath={selectedImagePath}
+                    selectedImageId={selectedImageID}
+                    uniqueKey={`invoicepopup${selectedImageID}`}
+                    type={'invoice'}
+                    onSubmitCoord={onSubmitCoord}
+                    setCoords={setCoords}
+                    modalType="ocr"
+                  /></Button>
                   </div>)}
               </div>
               <div className="clearfix d-flex flex-row">
@@ -301,17 +297,15 @@ class InvoiceForm extends Component {
                   />
                   </div>
                   { response.title && response.payment === null && (<div className={response.payment ? 'd-none': "pull-right mt-2"}>
-                  <a onClick={amountFunc}>
-                    <InvoiceDocumentModal 
-                      documentType={selectedImageFileType}
-                      documentPath={selectedImagePath}
-                      selectedImageId={selectedImageID}
-                      uniqueKey={`invoicepopup${selectedImageID}`}
-                      onSubmitCoord={onSubmitCoord}
-                      setCoords={setCoords}
-                      modalType="ocr"
-                    />
-                  </a>
+                  <Button className='pop-button' onClick={amountFunc}><InvoiceDocumentModal 
+                    documentType={selectedImageFileType}
+                    documentPath={selectedImagePath}
+                    selectedImageId={selectedImageID}
+                    uniqueKey={`invoicepopup${selectedImageID}`}
+                    onSubmitCoord={onSubmitCoord}
+                    setCoords={setCoords}
+                    modalType="ocr"
+                  /></Button>
                   </div>)}
               </div>
               <div>

@@ -7,9 +7,10 @@
 .dropdown {
   background-color: rgb(163,216,229);
     padding: 4px;
-    margin: 8px;
+    margin-right: 8px;
     border-radius: 6px;
     color: white;
+    height: 40px;
 }
 
 ._3vt7_Mh4hRCFbp__dFqBCI  {
@@ -19,11 +20,16 @@
 }
 .btn-primary {
   margin-left: 13px;
-    margin-top: 3px;
-    height: 80%;
+    /* margin-top: 3px; */
+    height: 40px;
 }
-
-/* .multi {
-  width: 80%;
-  float: right;
-} */
+.MuiGrid-grid-md-10-67 {
+  flex-grow: 0;
+  max-width: 100% !important;
+  flex-basis: 100% !important;
+}
+.MuiGrid-grid-md-8-65 {
+  flex-grow: 0;
+  max-width: 100% !important;
+  flex-basis: 100% !important;
+}
