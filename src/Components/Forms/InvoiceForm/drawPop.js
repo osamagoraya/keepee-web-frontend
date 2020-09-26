@@ -1,5 +1,6 @@
 import React from 'react';
 import InvoiceDocumentCard from '../../Invoice/InvoiceDocumentCard';
+import InvoiceCordinatesCard from '../../Invoice/InvoiceCordinatesCard';
 import DismissableDialog from './dismissableDialog';
 import FileIcon from '@material-ui/icons/Description';
 import CameraIcon from '@material-ui/icons/CameraAlt';
@@ -32,7 +33,11 @@ class InvoiceDocumentModal extends React.Component {
         onSubmitCoord={onSubmitCoord}
         
       >
-        <InvoiceDocumentCard { ...this.props} cardClassNames={"document-modal-content"}/>
+        {
+          this.props.modalType == "ocr"
+          ? <InvoiceCordinatesCard { ...this.props} cardClassNames={"document-modal-content"}/>
+          : <InvoiceDocumentCard { ...this.props} cardClassNames={"document-modal-content"}/>
+        }
       </DismissableDialog>
     );
   }
