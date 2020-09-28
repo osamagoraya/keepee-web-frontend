@@ -42,8 +42,6 @@ class Invoice extends Component {
     }
   }
   fetchUploadId = async () => {
-    
-
     const response = await fetch('http://3.16.125.66:8080/upload', {
       method: 'POST',
       body: JSON.stringify({imageAddress: BASE_URL + this.state.selectedImageStamp}),
@@ -53,7 +51,6 @@ class Invoice extends Component {
     });
     const id = await response.json();
     this.uploadID = id;
-    console.log(this.uploadID,'gghjgjhgjhg');
   }
 
    SubmitCordinates = async () => {

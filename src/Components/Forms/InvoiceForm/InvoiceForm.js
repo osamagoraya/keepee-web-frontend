@@ -22,14 +22,15 @@ class InvoiceForm extends Component {
       selectedUserId: this.props.selectedUserId,
       loggedInUser: this.props.loggedInUser,
       categories: [],
+      vendors: [],
       journalEntryPassed: this.props.isJournalEntryPassed, // EDIT MODE IF TRUE
       journalEntry: this.props.journalEntry
     }
   }
 
   componentDidMount() {
-    console.log("passed JE",this.state.journalEntry)
     this.fetchCategories();
+    this.fetchVendors();
   }
   
   componentWillReceiveProps(nextProps,nextContext) { 
@@ -59,6 +60,21 @@ class InvoiceForm extends Component {
 
   }
   
+  fetchVendors() {
+    if (this.state.vendors.length !== 0){
+      console.log("not fetching vendors, they exist", this.state.vendors);
+      return;
+    }
+
+    sendAuthenticatedAsyncRequest(
+      "/getCategoriesWithDetails",
+      "POST", 
+      { userId : this.state.selectedUserId},
+      (r) => this.setState({categories: JSON.parse(r.data.body)})
+    );
+
+  }
+
   imageStamp = (imageName) => {
     let parts = imageName.split('/');
     return parts[parts.length - 1];
