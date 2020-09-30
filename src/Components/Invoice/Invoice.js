@@ -42,7 +42,7 @@ class Invoice extends Component {
     }
   }
   fetchUploadId = async () => {
-    const response = await fetch('http://3.16.125.66:8080/upload', {
+    const response = await fetch('http://3.22.112.174:8080/upload', {
       method: 'POST',
       body: JSON.stringify({imageAddress: BASE_URL + this.state.selectedImageStamp}),
       headers: {
@@ -54,7 +54,7 @@ class Invoice extends Component {
   }
 
    SubmitCordinates = async () => {
-    const respons = await fetch('http://3.16.125.66:8080/invoice', {
+    const respons = await fetch('http://3.22.112.174:8080/invoice', {
       method: 'POST',
       body: JSON.stringify({"uploadId": this.uploadID, "vendorName": this.vendorName, "fieldName": this.state.type, "p1": this.state.p1, "p2": this.state.p2, "renderedWidth": parseInt(this.state.width), "renderedHeight": parseInt(this.state.height)}),
       

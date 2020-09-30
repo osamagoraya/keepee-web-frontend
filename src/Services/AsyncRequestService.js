@@ -4,6 +4,9 @@ import axios from 'axios';
 export const config = {apiRoot: 'http://54.245.6.3:8085'}
 // export const config = {apiRoot: 'http://localhost:8085'}
 
+export const ocrConfig = {apiRoot: 'http://3.22.112.174:8080'}
+//export const ocrConfig = {apiRoot: 'http://localhost:8080'}
+
 export function sendAsyncRequest(url, method, data, onSuccessCallback, onFailureCallback){
 	axios ({
 		method: method,
@@ -44,4 +47,19 @@ export function sendAuthenticatedAsyncRequest(uri, method, data, onSuccessCallba
 	}
 }
 
+export function sendAsyncRequestToOCR(url, method, data, onSuccessCallback, onFailureCallback){
+	axios ({
+		method: method,
+		url: ocrUrl(url),
+		data: data
+	})
+	.then(function (response) {
+   		onSuccessCallback(response);
+	})
+	.catch(function (error) {
+		onFailureCallback(error);
+	});
+}
 const url = (uri) => `${config.apiRoot}${uri}`;
+
+const ocrUrl = (uri) => `${ocrConfig.apiRoot}${uri}`;

@@ -7,6 +7,7 @@ import Select from '../../Common/Select';
 import TextField from '../../Common/TextField';
 
 import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
+import {sendAsyncRequestToOCR} from '../../../Services/AsyncRequestService';
 import swal from 'sweetalert';
 import {withRouter} from 'react-router-dom';
 import InvoiceDocumentModal from './drawPop';
@@ -49,7 +50,7 @@ class InvoiceForm extends Component {
     if (this.state.categories.length !== 0){
       console.log("not fetching categories, they exist", this.state.categories);
       return;
-    }
+  }
 
     sendAuthenticatedAsyncRequest(
       "/getCategoriesWithDetails",
@@ -66,13 +67,21 @@ class InvoiceForm extends Component {
       return;
     }
 
-    sendAuthenticatedAsyncRequest(
-      "/getCategoriesWithDetails",
-      "POST", 
-      { userId : this.state.selectedUserId},
-      (r) => this.setState({categories: JSON.parse(r.data.body)})
+    sendAsyncRequestToOCR(
+      "/invoice",
+      "GET", 
+      {},
+      (r) => {
+        r.data.vendorNames = [
+          {id:213, name: "חשבונית ירוקה",uploadId: 50},
+          {id:124, name: "העובונית ירוגןה",uploadId: 51}
+       ]
+        this.setState({vendors: r.data.vendorNames});
+      },
+      (r) => {
+        console.log("Error!","Unable to fetch vendors");
+      }
     );
-
   }
 
   imageStamp = (imageName) => {
@@ -150,7 +159,7 @@ class InvoiceForm extends Component {
   
   render(){
     const {bindSubmitForm, onValidationFailed, selectedImageFileType, selectedImagePath, onSubmitCoord, response, setCoords, setType} = this.props;
-    const { categories, selectedImageID} = this.state;
+    const { categories,vendors, selectedImageID} = this.state;
 
     const titleFunc = () => {
       setType("title");
@@ -165,9 +174,7 @@ class InvoiceForm extends Component {
       setType("date");
     };
 
-
-
-    const validationSchema = Yup.object().shape({
+  const validationSchema = Yup.object().shape({
       reference_1: Yup.string().required("נדרש"),
       reference_2: Yup.string(),
       jeDate: Yup.date().required("נדרש"),
@@ -203,7 +210,6 @@ class InvoiceForm extends Component {
           if (Object.keys(errors).length !== 0){
             onValidationFailed();
           }
-          let vatVal = 0;
           return (
             <form onSubmit={handleSubmit} style={this.props.formStyle}>
               {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
@@ -219,7 +225,21 @@ class InvoiceForm extends Component {
               </div>
               <div className="clearfix d-flex flex-row">
                 <div className="width">
-                <TextField
+                  <Select
+                    value={values.category}
+                    onChange={(selectedOption) => {
+                      
+                      setFieldValue('vendor',selectedOption)
+                    }}
+                    options={vendors}
+                    labelKey="name"
+                    valueKey="id"
+                    placeholder="Vendor"
+                    onBlur={handleBlur}
+                    containerClasses={commonTextfieldClasses}
+                    feedback={touched.vendorName && errors.vendorName ? errors.vendorName : null}
+                  />
+                {/* <TextField
                   type="text"
                   placeholder="Vendor"
                   name="vendorName"
@@ -229,19 +249,25 @@ class InvoiceForm extends Component {
                   fullWidth={true} 
                   containerClasses={commonTextfieldClasses}
                   feedback={touched.vendorName && errors.vendorName ? errors.vendorName : null}
-                  />
+                  /> */}
                   </div>
-                  { response.title === null && ( <div className="pull-right mt-2">
-                  <a onClick={titleFunc}><InvoiceDocumentModal
-                    documentType={selectedImageFileType}
-                    documentPath={selectedImagePath}
-                    selectedImageId={selectedImageID}
-                    uniqueKey={`invoicepopup${selectedImageID}`}
-                    onSubmitCoord={onSubmitCoord}
-                    setCoords={setCoords}
-                    modalType="ocr"
-                  /></a>
-                  </div>)}
+                  { 
+                    response.title === null && 
+                      ( <div className="pull-right mt-2">
+                          <a onClick={titleFunc}>
+                              <InvoiceDocumentModal
+                                documentType={selectedImageFileType}
+                                documentPath={selectedImagePath}
+                                selectedImageId={selectedImageID}
+                                uniqueKey={`invoicepopup${selectedImageID}`}
+                                onSubmitCoord={onSubmitCoord}
+                                setCoords={setCoords}
+                                modalType="ocr"
+                              />
+                          </a>
+                        </div>
+                      )
+                  }
               </div>
               <div className="clearfix d-flex flex-row"> 
               <div className="width">
