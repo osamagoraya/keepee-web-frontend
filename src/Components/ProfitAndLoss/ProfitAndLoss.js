@@ -34,8 +34,8 @@ class ProfitAndLoss extends Component {
   }
   
   componentDidMount() {
-    this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
-    this.fetchPnlMonthlyReport(this.state.defaultMonths, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
+    //this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
+    //this.fetchPnlMonthlyReport(this.state.defaultMonths, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
   }
   
   componentWillReceiveProps(nextProps) {
@@ -69,7 +69,7 @@ class ProfitAndLoss extends Component {
       "POST", 
       {userId: selectedUserId, months: pnlMonths},
       (r) => {
-        this.setState({reportM: JSON.parse(r.data.body), apiCallInProgress: false, apiCallType: 'none'})
+        this.setState({reportM: this.prepareMonthlyReport(JSON.parse(r.data.body)), apiCallInProgress: false, apiCallType: 'none'})
       },
       (r) => this.setState({apiCallInProgress: false, apiCallType: 'none'})
     );
@@ -125,6 +125,58 @@ class ProfitAndLoss extends Component {
     return {  totalSum, groupedData, totalCreditSum,totalDebitSum  };
   }
 
+  prepareMonthlyReport(reportData){
+    console.log("Report Prepare k waqt",reportData)
+    const groupedData = {};
+    let totalSum = [], totalCreditSum = [], totalDebitSum = [];
+    this.state.selectedMonths.forEach((month) => {
+      totalSum[moment(month).format('MMM')] = 0;
+      totalCreditSum[moment(month).format('MMM')] = 0;
+      totalDebitSum[moment(month).format('MMM')] = 0;
+    });
+
+   Object.keys(reportData).forEach(k => {
+      let sum = [], creditSum = [], debitSum = [];
+      this.state.selectedMonths.forEach((month) => {
+        sum[moment(month).format('MMM')] = 0;
+        creditSum[moment(month).format('MMM')] = 0;
+        debitSum[moment(month).format('MMM')] = 0;
+      });
+      
+      let sumType = "";
+      reportData[k].map(c => {
+        if(c.type == "credit") {
+          this.state.selectedMonths.forEach((month) => {
+                sum[moment(month).format('MMM')] += c[moment(month).format('MMM')] === undefined ? 0 : parseFloat(c[moment(month).format('MMM')],10);
+                creditSum[moment(month).format('MMM')] += c[moment(month).format('MMM')] === undefined ? 0 : parseFloat(c[moment(month).format('MMM')],10);
+                sumType = "credit"
+          });
+        }
+        else {
+          this.state.selectedMonths.forEach((month) => {
+            sum[moment(month).format('MMM')] += c[moment(month).format('MMM')] === undefined ? 0 : parseFloat(c[moment(month).format('MMM')],10);
+            debitSum[moment(month).format('MMM')] += c[moment(month).format('MMM')] === undefined ? 0 : parseFloat(c[moment(month).format('MMM')],10);
+            sumType = "debit"
+          });
+        }
+      });
+
+      this.state.selectedMonths.forEach((month) => {
+        totalSum[moment(month).format('MMM')] += sum[moment(month).format('MMM')] === undefined ? 0 : parseFloat(sum[moment(month).format('MMM')],10);
+        totalCreditSum[moment(month).format('MMM')] += creditSum[moment(month).format('MMM')] === undefined ? 0 : parseFloat(creditSum[moment(month).format('MMM')],10)
+        totalDebitSum[moment(month).format('MMM')] += debitSum[moment(month).format('MMM')]  === undefined ? 0 :  parseFloat(debitSum[moment(month).format('MMM')]);
+      });
+      
+      groupedData[k] = {
+        data: reportData[k],
+        sum: sum,
+        sumType: sumType
+      }
+    });
+    console.log(groupedData);
+    return {  totalSum, groupedData, totalCreditSum,totalDebitSum  };
+  }
+  
   prepareAndDownloadPdf() {
     axios.post(
       'http://54.245.6.3:8085/profitAndLossPdf',
@@ -137,19 +189,36 @@ class ProfitAndLoss extends Component {
     }).catch((err)=> console.log(err));
   }
 
+  prepareAndDownloadMonthlyPdf() {
+    // axios.post(
+    //   'http://localhost:8085/profitAndLossMonthlyPdf',
+    //   {report: this.state.reportM, selectedMonths:this.state.selectedMonths,reportYear: this.state.selectedPnlYear, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
+    // .then((r)=> {
+    //   console.log(r);
+    //     const pdfBlob = new Blob([r.data], { type: 'application/pdf' });
+    //     saveAs(pdfBlob, "("+this.state.selectedPnlYear+") ["+this.state.selectedUserNID+ " - " + this.state.selectedUserName+"] דוח רווח והפסד.pdf")
+    //     return;
+    // }).catch((err)=> console.log(err));
+  }
+
+  onSubmit = () => {
+    if(this.state.type == "Monthly")
+      this.fetchPnlMonthlyReport(this.state.selectedMonths, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID)
+    else if(this.state.type == "Yearly"){
+      this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
+    }
+  }
   
 
   render() {
-    const {apiCallInProgress, report, selectedUserId, selectedPnlYear, type } = this.state;
+    const {apiCallInProgress, report, selectedUserId, selectedPnlYear, type, reportM } = this.state;
 
     if (apiCallInProgress){
       return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Loading ... </Caption>);
     } else if (!selectedUserId) {
       return (<Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Selecting a user is mandatory </Caption>);
     }
-    else if (!report){
-      return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> No report data </Caption>);
-    }
+
     const selectType = e => {
       console.log('ev',e.target.value)
       this.setState({type:e.target.value});
@@ -172,16 +241,11 @@ class ProfitAndLoss extends Component {
       
       
     }
-    const onSubmit = () => {
-      this.fetchPnlMonthlyReport(this.state.selectedMonths, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID)
-    }
-    console.log(this.state.selectedMonths,'selected months');
+   
     const onRemove = ev => {
       onSelect(ev)
     }
-    console.log(this.type)
 
-    // console.log(this.state.reportM,'report');
     
     return (
      
@@ -189,134 +253,160 @@ class ProfitAndLoss extends Component {
         <Grid container>
           <Grid item md={1}></Grid>
           <Grid item md={12} className="d-flex flex-row">
-          <select className="dropdown" id="type" onChange={selectType} value={this.state.type}>
-                  <option value="select">Type</option>
+            <select className="dropdown" id="type" onChange={selectType} value={this.state.type}>
+                  <option value="select" disabled>Type</option>
                   <option value="Yearly">Yearly</option>
                   <option value="Monthly">Monthly</option>
             </select>
             <select disabled={type === "Select Type"} className="dropdown" id="year" onChange={selectYear} value={this.state.selectedPnlYear}>
-                  <option value="year">Year</option>
+                  <option value="year" disabled>Year</option>
                   <option value="2019">2019</option>
                   <option value="2020">2020</option>
             </select>
             <div className={type === "Monthly" ? '' : 'd-none'}>
-            <Multiselect
-              className='multi-select'
-              options={this.state.months} 
-              selectedValues={this.state.selectedValue} 
-              onSelect={onSelect}
-              onRemove={onRemove}
-              displayValue="name"
-            />
-            
+              <Multiselect
+                className='multi-select'
+                options={this.state.months} 
+                selectedValues={this.state.selectedValue} 
+                onSelect={onSelect}
+                onRemove={onRemove}
+                displayValue="name"
+              />
             </div>
-            <Button onClick={onSubmit}>Submit</Button>
+            <Button onClick={this.onSubmit}>Submit</Button>
           </Grid>
-          <Grid className={type === "Yearly" && selectedPnlYear !== '' ? '' : 'd-none'} item container md={10} >
-            <Grid item md={12}>
-            
-            <Divider />
-              <Caption style={{paddingLeft: 20}}>
-                {selectedPnlYear} {this.state.type}
-                <PdfAndExcelDownloader 
-                    onPdf={() => this.prepareAndDownloadPdf()}
-                    excelData={this.state.report}
-                    year={this.state.selectedPnlYear}
-                    user={this.state.selectedUserName}
-                    niD={this.state.selectedUserNID}
-                    type="pnl"
-                />
-              </Caption>
-              <Divider />
-            </Grid>
-            <Grid item md={2}></Grid>
-            <Grid item md={8}>
-              {Object.keys(report.groupedData).map((groupKey, i) => (
-                  <ExpansionPanel key={i}>
-                    <ExpansionPanelSummary>
-                      <ColoredHeader rightLabel={groupKey.substring(0,1).toUpperCase() + groupKey.substring(1)} />
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                      <InvisibleTable>
-                        <TableBody>
-                        {
-                          report.groupedData[groupKey].data.map((category, j) => (
-                            <TableRow key={j}>
-                              <TableCell align="right">{category.sum /* TODO: verify if sum is the key which has the sum for this category */}</TableCell>
-                              <TableCell align="right">{category.name}</TableCell>
-                            </TableRow>
-                          ))
-                        }
-                          <TableRow >
-                            <TableCell align="right">{report.groupedData[groupKey].sum}</TableCell>
-                            <TableCell align="right"><strong>Total {groupKey}</strong></TableCell>
-                          </TableRow>
-                        </TableBody>
-                      </InvisibleTable>
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-                ))
-              }
-              <ColoredHeader leftLabel={Math.abs(report.totalCreditSum-report.totalDebitSum)} rightLabel="Total" variant="grey" style={{marginTop: "12px"}}/>
-            </Grid>
-          </Grid>
-
-          <Grid className={type === "Monthly" ? '' : 'd-none'} item container md={10} >
-            <Grid item md={12}>
-            
-            <Divider />
-              <Caption style={{paddingLeft: 20}}>
-               Year: {selectedPnlYear} Months: {this.state.selectedMonths+' '}
-                <PdfAndExcelDownloader 
-                    onPdf={() => this.prepareAndDownloadPdf()}
-                    excelData={this.state.report}
-                    year={this.state.selectedPnlYear}
-                    user={this.state.selectedUserName}
-                    niD={this.state.selectedUserNID}
-                    type="pnl"
-                />
-              </Caption>
-              <Divider />
-            </Grid>
-            <Grid item md={2}></Grid>
-            <Grid item md={10}> 
-              {this.state.reportM && Object.entries(this.state.reportM).map(item => (
-                <ExpansionPanel key={item[0]}>
-                    <ExpansionPanelSummary>
-                      <div className={`k-header k-green-header`}>
-                        {this.state.selectedMonths ? this.state.selectedMonths.slice(0).reverse().map(month => (
-                          <div style={{ width: '20%', textAlign: 'center'}}>
-                            {moment(month).format('MMMM')}
-                          </div>
-                        )): ""
-                        }
-                        <div style={{ width: '20%', textAlign: 'center'}}>
-                          {item[0].toUpperCase()}
-                        </div>
-                      </div>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails style={{ padding: 'none !important'}}>
-                      <InvisibleTable>
-                        <TableBody>
-                        {
-                          item[1].map((entry,index) => (
-                            <TableRow key={index}>
-                              {this.state.selectedMonths.slice(0).reverse().map(month => (
-                                <TableCell style={{ width: '20%', textAlign: 'center',padding: '0'}}>{entry[moment(month).format('MMM')] === undefined ? '0' : entry[moment(month).format('MMM')]}</TableCell>  
-                              ))}
-                              <TableCell style={{ width: '20%', textAlign: 'center',padding: '0'}}>{entry.name}</TableCell>
-                            </TableRow>
-                          ))
-                        }
-                        </TableBody>
-                      </InvisibleTable>
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-              ))}
+          {report ?
+            <Grid className={type === "Yearly" && selectedPnlYear !== '' ? '' : 'd-none'} item container md={10} >
+              <Grid item md={12}>
+                <Divider />
+                  <Caption style={{paddingLeft: 20}}>
+                    {selectedPnlYear} {this.state.type}
+                    <PdfAndExcelDownloader 
+                        onPdf={() => this.prepareAndDownloadPdf()}
+                        excelData={this.state.report}
+                        year={this.state.selectedPnlYear}
+                        user={this.state.selectedUserName}
+                        niD={this.state.selectedUserNID}
+                        type="pnl"
+                        subType="yearly"
+                        selectedMonths=""
+                    />
+                  </Caption>
+                <Divider />
+              </Grid>
+              <Grid item md={2}></Grid>
               
-              <ColoredHeader rightLabel="Total" variant="grey" style={{marginTop: "12px"}}/>
+              <Grid item md={8}>
+                  {Object.keys(report.groupedData).map((groupKey, i) => (
+                      <ExpansionPanel key={i}>
+                        <ExpansionPanelSummary>
+                          <ColoredHeader rightLabel={groupKey.substring(0,1).toUpperCase() + groupKey.substring(1)} />
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <InvisibleTable>
+                            <TableBody>
+                            {
+                              report.groupedData[groupKey].data.map((category, j) => (
+                                <TableRow key={j}>
+                                  <TableCell align="right">{category.sum /* TODO: verify if sum is the key which has the sum for this category */}</TableCell>
+                                  <TableCell align="right">{category.name}</TableCell>
+                                </TableRow>
+                              ))
+                            }
+                              <TableRow >
+                                <TableCell align="right">{report.groupedData[groupKey].sum}</TableCell>
+                                <TableCell align="right"><strong>Total {groupKey}</strong></TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </InvisibleTable>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    ))
+                  }
+                  <ColoredHeader leftLabel={Math.abs(report.totalCreditSum-report.totalDebitSum)} rightLabel="Total" variant="grey" style={{marginTop: "12px"}}/>
+              </Grid>
             </Grid>
-          </Grid>
+            :""  
+          }
+          {reportM ? 
+            <Grid className={type === "Monthly" ? '' : 'd-none'} item container md={10} >
+              <Grid item md={12}>
+                <Divider />
+                <Caption style={{paddingLeft: 20}}>
+                  Year: {selectedPnlYear} Months: {this.state.selectedMonths+' '}
+                  <PdfAndExcelDownloader 
+                      onPdf={() => this.prepareAndDownloadMonthlyPdf()}
+                      excelData={this.state.reportM}
+                      year={this.state.selectedPnlYear}
+                      user={this.state.selectedUserName}
+                      niD={this.state.selectedUserNID}
+                      type="pnl"
+                      subType="monthly"
+                      selectedMonths={this.state.selectedMonths}
+                  />
+                </Caption>
+                <Divider />
+              </Grid>
+              <Grid item md={2}></Grid>
+              <Grid item md={10}> 
+                {Object.keys(reportM.groupedData).map((groupKey, i) => (
+                  <ExpansionPanel key={i}>
+                      <ExpansionPanelSummary>
+                        <div className={`k-header k-green-header`}>
+                          {this.state.selectedMonths ? this.state.selectedMonths.slice(0).reverse().map(month => (
+                            
+                            <div style={{ width: '20%', textAlign: 'center'}}>
+                              { i==0 ? moment(month).format('MMMM') : ''}
+                            </div>
+                          )): ""
+                          }
+                          <div style={{ width: '20%', textAlign: 'center'}}>
+                            {groupKey.substring(0,1).toUpperCase() + groupKey.substring(1)}
+                          </div>
+                        </div>
+                      </ExpansionPanelSummary>
+                      <ExpansionPanelDetails style={{ padding: 'none !important'}}>
+                        <InvisibleTable>
+                          <TableBody>
+                            {
+                              reportM.groupedData[groupKey].data.map((category, j) => (
+                                <TableRow key={j}>
+                                  {this.state.selectedMonths.slice(0).reverse().map(month => (
+                                    <TableCell style={{ width: '20%', textAlign: 'center',padding: '0'}}>{category[moment(month).format('MMM')] === undefined ? '0' : category[moment(month).format('MMM')]}</TableCell>  
+                                  ))}
+                                  <TableCell style={{ width: '20%', textAlign: 'center',padding: '0'}}>{category.name}</TableCell>
+                                </TableRow>
+                              ))
+                            }
+                            <TableRow >
+                                  {
+                                    this.state.selectedMonths.slice(0).reverse().map(month => (
+                                      <TableCell style={{ width: '20%', textAlign: 'center',padding: '0'}}>{reportM.groupedData[groupKey].sum[moment(month).format('MMM')] === undefined ? '0' : reportM.groupedData[groupKey].sum[moment(month).format('MMM')]}</TableCell>  
+                                    ))
+                                  }
+                                  <TableCell align="right"><strong>Total {groupKey}</strong></TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </InvisibleTable>
+                      </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                ))}
+                <div className={`k-header k-grey-header`}>
+                          {this.state.selectedMonths ? this.state.selectedMonths.slice(0).reverse().map(month => (
+                            <div style={{ width: '20%', textAlign: 'center'}}>
+                              {Math.abs(reportM.totalCreditSum[moment(month).format('MMM')]-reportM.totalDebitSum[moment(month).format('MMM')])}
+                            </div>
+                          )): ""
+                          }
+                          <div style={{ width: '20%', textAlign: 'center'}}>Total</div>
+                </div>
+              </Grid>
+            </Grid>
+            : ""  
+          }
+          {
+            !report && !reportM ? <Caption style={{ marginLeft: '60px', marginTop: '10px', }}>No Report Loaded!</Caption> : ""
+          }
           <Grid item md={1}></Grid>
         </Grid>
       </div>

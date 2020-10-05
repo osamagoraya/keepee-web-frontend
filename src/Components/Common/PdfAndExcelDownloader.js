@@ -20,6 +20,8 @@ export default class PdfAndExcelDownloader extends Component {
                         year={this.props.year} 
                         user={this.props.user} 
                         niD={this.props.niD} 
+                        type={this.props.subType}
+                        selectedMonths={this.props.selectedMonths}
                         hideElement={true} 
                         className="download-button" /> : 
                this.props.type === 'tb' ?

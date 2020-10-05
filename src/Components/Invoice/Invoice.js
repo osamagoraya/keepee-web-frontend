@@ -7,7 +7,7 @@ import Button from '../Common/Button';
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 import Auth from '../../Services/Auth';
 import InvoiceForm from '../Forms/InvoiceForm/InvoiceForm';
-
+import {sendAsyncRequestToOCR} from '../../Services/AsyncRequestService';
 
 
 import InvoiceDocumentModal from './InvoiceDocumentModal';
@@ -18,17 +18,17 @@ const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
 class Invoice extends Component {
     uploadID = -1;
     vendorName = '';
-    // response = {title: null, date:null, payment: null, invoice:null};
+    p1  = []
+    p2  = []
+    width = 0
+    height = 0
+  
   constructor(props){
     super(props);
     this.state = {
       type: 'title',
       response: {title: null, date:null, payment: null, invoice:null},
-      width: 0,
-      height: 0,
       uploadId: -1,
-      p1:[],
-      p2:[],
       show: false,
       selectedImageID: this.props.match.params.imageId,
       selectedImageStamp: this.props.match.params.imageStamp,
@@ -38,11 +38,13 @@ class Invoice extends Component {
       loggedInUser: Auth.getLoggedInUser(),
       apiCallInProgress: false,
       apiCallType: 'none',
-      categories: []
+      categories: [],
+      vendors: []
     }
   }
+
   fetchUploadId = async () => {
-    const response = await fetch('http://3.22.112.174:8080/upload', {
+    const response = await fetch('http://3.15.23.75:8080/upload', {
       method: 'POST',
       body: JSON.stringify({imageAddress: BASE_URL + this.state.selectedImageStamp}),
       headers: {
@@ -54,9 +56,10 @@ class Invoice extends Component {
   }
 
    SubmitCordinates = async () => {
-    const respons = await fetch('http://3.22.112.174:8080/invoice', {
+     console.log("SubmitCordinates Called")
+    const respons = await fetch('http://3.15.23.75:8080/invoice', {
       method: 'POST',
-      body: JSON.stringify({"uploadId": this.uploadID, "vendorName": this.vendorName, "fieldName": this.state.type, "p1": this.state.p1, "p2": this.state.p2, "renderedWidth": parseInt(this.state.width), "renderedHeight": parseInt(this.state.height)}),
+      body: JSON.stringify({"uploadId": this.uploadID, "vendorName": this.vendorName, "fieldName": this.state.type, "p1": this.p1, "p2": this.p2, "renderedWidth": parseInt(this.width), "renderedHeight": parseInt(this.height)}),
       
       headers: {
         'Content-Type': 'application/json'
@@ -66,22 +69,36 @@ class Invoice extends Component {
     this.vendorName = res.title != null ? res.title : this.vendorName;
     var obj = this.state.response;
     if (this.state.type !== "title"){
-    obj[this.state.type]= res[this.state.type];
-    this.setState({response: obj});
+      if(this.state.type === "date") {
+        if( res.date !== null && res.date !== undefined ) {
+          console.log("read karna seekho",res.date);
+            var dateTokens = res.date.split('/');
+            const formatedDate = dateTokens[2] + "-" + dateTokens[1] + "-" + dateTokens[0];
+            res.date = formatedDate;
+        }
+      } 
+      obj[this.state.type]= res[this.state.type];
+      this.setState({response: obj});
     }
     else {
+      if( res.date !== null && res.date !== undefined ) {
+        console.log("read karna seekho",res.date);
+        var dateTokens = res.date.split('/');
+        const formatedDate = dateTokens[2] + "-" + dateTokens[1] + "-" + dateTokens[0];
+        res.date = formatedDate;
+      }
       this.setState({response: res});
     }
-    console.log(this.state.response,'response');
-    console.log(obj,'object');
   }
 
-onSubmitCoord = () => {
+   onSubmitCoord = () => {
+  console.log("Submit button call");
   this.SubmitCordinates();
-}
+  }
 
   componentDidMount() {
     this.fetchUploadId();
+    this.fetchVendors();
   }
   
 
@@ -139,21 +156,39 @@ onSubmitCoord = () => {
   }
 
 
-  setCoords = (p,x,y, w, h) =>
-{
-  this.setState({[p]: []});
-    var temp = [];
-    temp.push(x);
-    temp.push(y);
-  this.setState({[p]: temp});
-  this.setState({width: w});
-  this.setState({height: h});
+setCoords = (p1,p2, w, h) => {
+  console.log("Set Cords Called");
+  console.log("p1-Set",p1);
+  console.log("p2-Set",p2);
+  this.p1 = p1;
+  this.p2 = p2;
+  this.width = w;
+  this.height = h;
+  
 };
 
 setType = (x) => {
   this.setState({type: x});
 };
 
+fetchVendors() {
+  if (this.state.vendors.length !== 0){
+    console.log("not fetching vendors, they exist", this.state.vendors);
+    return;
+  }
+
+  sendAsyncRequestToOCR(
+    "/invoice",
+    "GET", 
+    {},
+    (r) => {
+      this.setState({vendors: r.data.vendorNames});
+    },
+    (r) => {
+      console.log("Error!","Unable to fetch vendors");
+    }
+  );
+}
 
   render(){
       
@@ -180,7 +215,8 @@ setType = (x) => {
                 setCoords={this.setCoords}
                 response={this.state.response}
                 setType={this.setType}
-                
+                vendors={this.state.vendors}
+                ocrImageUploadedId={this.uploadID}
                 onSubmit={() => {
                   this.setState({apiCallInProgress: false, apiCallType: 'none'});
                   this.props.history.push("/workspace/invoice")}

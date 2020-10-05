@@ -46,7 +46,7 @@ class DismissableDialog extends React.Component {
               Cancel
             </Button>
             <Button onClick={this.props.onSubmitCoord} variant="grey">
-              Select
+              Set Cordinates
             </Button>
           </DialogActions>
         </Dialog>

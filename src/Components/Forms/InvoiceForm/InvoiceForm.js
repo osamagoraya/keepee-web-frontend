@@ -5,9 +5,8 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import Select from '../../Common/Select';
 import TextField from '../../Common/TextField';
-
-import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
 import {sendAsyncRequestToOCR} from '../../../Services/AsyncRequestService';
+import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestService';
 import swal from 'sweetalert';
 import {withRouter} from 'react-router-dom';
 import InvoiceDocumentModal from './drawPop';
@@ -23,7 +22,7 @@ class InvoiceForm extends Component {
       selectedUserId: this.props.selectedUserId,
       loggedInUser: this.props.loggedInUser,
       categories: [],
-      vendors: [],
+      vendors: this.props.vendors,
       journalEntryPassed: this.props.isJournalEntryPassed, // EDIT MODE IF TRUE
       journalEntry: this.props.journalEntry
     }
@@ -31,17 +30,20 @@ class InvoiceForm extends Component {
 
   componentDidMount() {
     this.fetchCategories();
-    this.fetchVendors();
   }
   
   componentWillReceiveProps(nextProps,nextContext) { 
-  if (nextProps.imageId !== this.state.selectedImageID || nextProps.journalEntry !== this.state.journalEntry){
+  if ( nextProps.imageId !== this.state.selectedImageID || 
+       nextProps.journalEntry !== this.state.journalEntry ||
+       nextProps.vendors != this.state.vendors
+       ) {
       this.setState({
         selectedImageID: nextProps.imageId,
         selectedUserId: nextProps.selectedUserId,
         loggedInUser: nextProps.loggedInUser,
         journalEntry: nextProps.journalEntry,
-        journalEntryPassed: nextProps.isJournalEntryPassed
+        journalEntryPassed: nextProps.isJournalEntryPassed,
+        vendors: nextProps.vendors
       });
     }
   }
@@ -50,7 +52,11 @@ class InvoiceForm extends Component {
     if (this.state.categories.length !== 0){
       console.log("not fetching categories, they exist", this.state.categories);
       return;
-  }
+    }
+    if (this.state.selectedUserId === null){
+      console.log("User is not selected to fetch categories!", this.state.selectedUserId);
+      return;
+    }
 
     sendAuthenticatedAsyncRequest(
       "/getCategoriesWithDetails",
@@ -59,29 +65,6 @@ class InvoiceForm extends Component {
       (r) => this.setState({categories: JSON.parse(r.data.body)})
     );
 
-  }
-  
-  fetchVendors() {
-    if (this.state.vendors.length !== 0){
-      console.log("not fetching vendors, they exist", this.state.vendors);
-      return;
-    }
-
-    sendAsyncRequestToOCR(
-      "/invoice",
-      "GET", 
-      {},
-      (r) => {
-        r.data.vendorNames = [
-          {id:213, name: "חשבונית ירוקה",uploadId: 50},
-          {id:124, name: "העובונית ירוגןה",uploadId: 51}
-       ]
-        this.setState({vendors: r.data.vendorNames});
-      },
-      (r) => {
-        console.log("Error!","Unable to fetch vendors");
-      }
-    );
   }
 
   imageStamp = (imageName) => {
@@ -149,12 +132,30 @@ class InvoiceForm extends Component {
       },
     );
   }
-  // To enable form submitting from outside form tag. Can't put this in state. Causes too many renders and depth exceeds
-  // formSubmitter = null;
-  // bindFormSubmitter(submitter) {
-  //   this.formSubmitter = submitter ;
-  // }
 
+  GetSelectedVendorData = async (selectedVendor) => {
+    var vendorData;
+  await sendAsyncRequestToOCR(
+      "/invoice",
+      "POST",
+      {
+        uploadId: this.props.ocrImageUploadedId,
+        vendorName: selectedVendor.name,
+        fieldName: "title",
+        renderedWidth:1,
+        renderedHeight: 1
+      },
+      (r) => {
+        console.log("Respose aya");
+        vendorData = r.data;
+      },
+      (r) => {
+        console.log("Error!","Unable to fetch vendor data");
+      }
+    );
+    console.log("Return",vendorData);
+    return vendorData;
+  }
   
   
   render(){
@@ -195,8 +196,8 @@ class InvoiceForm extends Component {
         initialValues={ journalEntryPassed ? { 
           id: journalEntry.id, jeId: journalEntry.jeId, reference_1: journalEntry.reference_1, reference_2: journalEntry.reference_2, jeDate: journalEntry.jeDate, details: journalEntry.details, categoryId: journalEntry.categoryId, 
           vat: journalEntry.vat, sum: journalEntry.sum, vatAmount: Math.round(journalEntry.sum*(1-1/(1+0.17))*(journalEntry.vat/100)), imageId: selectedImageID || '', vendorName: journalEntry.vendorName , category : { categoryLabel: journalEntry.categoryLabel, categoryId: journalEntry.categoryId}
-        } : { reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', 
-        vat: '', sum: '', imageId: selectedImageID || '', vendorName: '', vatAmount: '' }}
+        } : { reference_1: response.invoice ? response.invoice : '', reference_2: '', jeDate: response.date ? response.date: '', details: '', categoryId: '', 
+        vat: '', sum: response.payment ? response.payment : '', imageId: selectedImageID || '', vendor: response.title ? { name: response.title, value: response.id} : '', vatAmount: '' }}
         onSubmit={(values,  { setSubmitting }) => {
           journalEntryPassed ? this.updateInvoiceData(values) : this.uploadInvoice(values)
          setSubmitting(false);
@@ -226,10 +227,38 @@ class InvoiceForm extends Component {
               <div className="clearfix d-flex flex-row">
                 <div className="width">
                   <Select
-                    value={values.category}
+                    value={values.vendor}
                     onChange={(selectedOption) => {
+                        
+                        setFieldValue('vendor',selectedOption)
+                        sendAsyncRequestToOCR(
+                          "/invoice",
+                          "POST",
+                          {
+                            uploadId: this.props.ocrImageUploadedId,
+                            vendorName: selectedOption.name,
+                            fieldName: "title",
+                            renderedWidth:1,
+                            renderedHeight: 1
+                          },
+                          (r) => {
+                            if(r.data.payment !== undefined)
+                              setFieldValue('sum',r.data.payment)
+
+                            if(r.data.date !== undefined) {
+                              var dateTokens = r.data.date.split('/');
+                              const formatedDate = dateTokens[2] + "-" + dateTokens[1] + "-" + dateTokens[0];
+                              setFieldValue('jeDate',formatedDate)
+                            }
+                            if(r.data.invoice !== undefined)
+                              setFieldValue('reference_1',r.data.invoice)
+                          },
+                          (r) => {
+                            console.log("Error!","Unable to fetch vendor data");
+                          }
+                        );
+
                       
-                      setFieldValue('vendor',selectedOption)
                     }}
                     options={vendors}
                     labelKey="name"
@@ -239,17 +268,6 @@ class InvoiceForm extends Component {
                     containerClasses={commonTextfieldClasses}
                     feedback={touched.vendorName && errors.vendorName ? errors.vendorName : null}
                   />
-                {/* <TextField
-                  type="text"
-                  placeholder="Vendor"
-                  name="vendorName"
-                  value={response.title ? response.title : values.vendorName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  fullWidth={true} 
-                  containerClasses={commonTextfieldClasses}
-                  feedback={touched.vendorName && errors.vendorName ? errors.vendorName : null}
-                  /> */}
                   </div>
                   { 
                     response.title === null && 
@@ -275,7 +293,7 @@ class InvoiceForm extends Component {
                   type="date"
                   placeholder="Date"
                   name="jeDate"
-                  value={response.date ? moment(response.date).format('YYYY-DD-MM') : values.jeDate}
+                  value={values.jeDate}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   fullWidth={true}
@@ -303,7 +321,7 @@ class InvoiceForm extends Component {
                   type="text"
                   placeholder="Reference One"
                   name="reference_1"
-                  value={response.invoice ? response.invoice : values.reference_1}
+                  value={values.reference_1}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   fullWidth={true}
@@ -331,7 +349,7 @@ class InvoiceForm extends Component {
                 <TextField
                   placeholder="Sum"
                   name="sum"
-                  value={response.payment ? response.payment : values.sum}
+                  value={values.sum}
                   onChange={(e) => {
                     handleChange(e);
                     setFieldValue('vatAmount',Math.round(e.target.value*(1-1/(1+0.17))*(values.vat/100)));
@@ -340,6 +358,7 @@ class InvoiceForm extends Component {
                   fullWidth={true} 
                   containerClasses={commonTextfieldClasses}
                   feedback={touched.sum && errors.sum ? errors.sum : null}
+                  disabled={false}
                   />
                   </div>
                   { response.title && response.payment === null && (<div className={response.payment ? 'd-none': "pull-right mt-2"}>

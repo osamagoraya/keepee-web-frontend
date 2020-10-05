@@ -19,11 +19,18 @@ var cardStyles = {
 }
 
 class InvoiceCordinatesCard extends React.Component {
+    
+    // Class level params
+    gP1 = []; 
+    gP2 = [];
+    gWidth = 0;
+    gHeight = 0;
 
     constructor(props) {
         super(props);
         this.canvasRef = React.createRef();
     }
+    
   FindPosition =(oElement) => {
     
     if(typeof( oElement.offsetParent ) != "undefined") {
@@ -38,39 +45,11 @@ class InvoiceCordinatesCard extends React.Component {
     }
  }
 
- GetCoordinates = (e, p, width, height) => {
-  var PosX = 0;
-  var PosY = 0;
-  var ImgPos;
-  ImgPos = this.FindPosition(e.target);
-  if (e.pageX || e.pageY)
-  {
-    PosX = e.pageX;
-    PosY = e.pageY;
-  }
-  else if (e.clientX || e.clientY)
-    {
-      PosX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-      PosY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-    }
-  PosX = PosX - ImgPos[0];
-  PosY = PosY - ImgPos[1];
-  this.props.setCoords(p,PosX,PosY, width, height);
-}
-
-mouseDown = ev => {
-  this.GetCoordinates(ev,'p1',ev.target.width,ev.target.height);
-}
-mouseUp = ev => {
-  this.GetCoordinates(ev,'p2',ev.target.width,ev.target.height);
-}
-
 componentDidMount = () => {
     var canvas = this.canvasRef.current;
     const ctx = canvas.getContext("2d");
     var background = new Image();
-    background.src = this.props.documentPath + ".jpg";
-
+    background.src = this.props.documentPath + ".jpeg";
     cardStyles = this.cardStyles;
     background.onload = function(cardStyles) {
         
@@ -102,6 +81,12 @@ componentDidMount = () => {
 
 //Mouseup
 canvas.onmouseup = (e) => {
+    this.gP1    = [last_mousex,last_mousey]
+    this.gP2    = [mousex,mousey]
+    this.gWidth = canvas.width;
+    this.gHeight = canvas.height;
+    
+    this.props.setCoords(this.gP1,this.gP2,this.gWidth,this.gHeight);
     mousedown = false;
 };
 
@@ -135,18 +120,8 @@ canvas.onmouseup = (e) => {
     return (
       <Card id="canvas-wrapper" className={cardClassNames} style={{overflow: 'auto'}}>
         
-        { selectedImageId && documentType === "image" 
-        ? 
-        <div>
-            <img id='img-id' className="img-responsive" width="500" onDragStart={this.preventDragHandler} draggable={false} onMouseDown={this.mouseDown} onMouseUp={this.mouseUp} style={cardMediaStyle} src={documentPath} alt="beautiful"/>  
-        </div>
-        
-        : selectedImageId && documentType === "pdf" 
-          ? this.props.modalType == "ocr"
-            ? <canvas ref={this.canvasRef} onDragStart={this.preventDragHandler} draggable={false} onMouseDown={this.mouseDown} onMouseUp={this.mouseUp}>
-              </canvas>
-            :<embed src={documentPath} type="application/pdf" draggable={false} style={{width: "100%", height: "100%"}}  />  
-          : <div>בחר תמונה</div>
+        { 
+          <canvas ref={this.canvasRef} onDragStart={this.preventDragHandler} draggable={false}></canvas>
         }
       </Card>
     );
