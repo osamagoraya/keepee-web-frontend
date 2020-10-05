@@ -18,11 +18,10 @@ import moment from 'moment';
 
 class ProfitAndLoss extends Component {
   
+  
 
   state = {
     type: 'Select Type',
-    months: [{name: 'January', id:1}, {name: 'February', id:2},{name: 'March', id:3},{name: 'April', id:4},{name: 'May', id:5},{name: 'June', id:6},{name: 'July', id:7},{name: 'August', id:8},{name: 'September', id:9},{name: 'October', id:10},{name: 'November', id:11},{name: 'December', id:12}],
-    selectedValues: [],
     selectedPnlYear: '2019',
     defaultMonths: ["2019-01","2019-02","2019-03","2019-04","2019-05","2019-06","2019-07","2019-08","2019-09","2019-10","2019-11","2019-12"],
     selectedMonths: [],
@@ -32,10 +31,11 @@ class ProfitAndLoss extends Component {
     selectedUserName: this.props.selectedUserName,
     selectedUserNID: this.props.selectedUserNID
   }
-  
+  months = [{name: 'Jan', id:1}, {name: 'Feb', id:2},{name: 'Mar', id:3},{name: 'Apr', id:4},{name: 'May', id:5},{name: 'Jun', id:6},{name: 'Jul', id:7},{name: 'Aug', id:8},{name: 'Sep', id:9},{name: 'Oct', id:10},{name: 'Nov', id:11},{name: 'Dec', id:12}]
+  selectedValues= []
   componentDidMount() {
-    this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
-    this.fetchPnlMonthlyReport(this.state.defaultMonths, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
+    // this.fetchPnlReport(this.state.selectedPnlYear, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
+    // this.fetchPnlMonthlyReport(this.state.defaultMonths, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID);
   }
   
   componentWillReceiveProps(nextProps) {
@@ -147,22 +147,19 @@ class ProfitAndLoss extends Component {
     } else if (!selectedUserId) {
       return (<Caption style={{ marginLeft: '60px', marginTop: '10px', }}> Selecting a user is mandatory </Caption>);
     }
-    else if (!report){
-      return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> No report data </Caption>);
-    }
+    // else if (!report){
+    //   return ( <Caption style={{ marginLeft: '60px', marginTop: '10px', }}> No report data </Caption>);
+    // }
     const selectType = e => {
-      console.log('ev',e.target.value)
       this.setState({type:e.target.value});
     }
     const selectYear = e => {
-      console.log('ev',e.target.value)
       this.setState({selectedPnlYear:e.target.value});
       if (type === "Yearly"){
       this.fetchPnlReport(e.target.value, selectedUserId, this.state.selectedUserName, this.state.selectedUserNID)
       }
     }
     const onSelect = ev => {
-      console.log('onselect event',ev);
       let i = 0;
       let temp = [];
       for (i = 0; i < ev.length; i++) {
@@ -175,46 +172,45 @@ class ProfitAndLoss extends Component {
     const onSubmit = () => {
       this.fetchPnlMonthlyReport(this.state.selectedMonths, this.state.selectedUserId, this.state.selectedUserName, this.state.selectedUserNID)
     }
-    console.log(this.state.selectedMonths,'selected months');
     const onRemove = ev => {
       onSelect(ev)
     }
-    console.log(this.type)
-
-    // console.log(this.state.reportM,'report');
     
     return (
      
       <div className="canvas-container ita-container">
         <Grid container>
-          <Grid item md={1}></Grid>
-          <Grid item md={12} className="d-flex flex-row">
-          <select className="dropdown" id="type" onChange={selectType} value={this.state.type}>
-                  <option value="select">Type</option>
-                  <option value="Yearly">Yearly</option>
-                  <option value="Monthly">Monthly</option>
-            </select>
+          <Grid item md={12} className=" clearfix">
+          <Divider />
+          <div className="pull-left"><Button onClick={onSubmit}>Submit</Button></div>
+          <div className="pull-right d-flex flex-row">
+          <div className={type === "Monthly" ? '' : 'd-none'}>
+            <Multiselect
+              className='multi'
+              options={this.months} 
+              selectedValues={this.selectedValue} 
+              onSelect={onSelect}
+              onRemove={onRemove}
+              displayValue="name"
+            />
+            </div>
             <select disabled={type === "Select Type"} className="dropdown" id="year" onChange={selectYear} value={this.state.selectedPnlYear}>
                   <option value="year">Year</option>
                   <option value="2019">2019</option>
                   <option value="2020">2020</option>
             </select>
-            <div className={type === "Monthly" ? '' : 'd-none'}>
-            <Multiselect
-              className='multi-select'
-              options={this.state.months} 
-              selectedValues={this.state.selectedValue} 
-              onSelect={onSelect}
-              onRemove={onRemove}
-              displayValue="name"
-            />
+
+          <select className="dropdown" id="type" onChange={selectType} value={this.state.type}>
+                  <option value="select">Type</option>
+                  <option value="Yearly">Yearly</option>
+                  <option value="Monthly">Monthly</option>
+            </select>
             
             </div>
-            <Button onClick={onSubmit}>Submit</Button>
+            
           </Grid>
           <Grid className={type === "Yearly" && selectedPnlYear !== '' ? '' : 'd-none'} item container md={10} >
             <Grid item md={12}>
-            
             <Divider />
               <Caption style={{paddingLeft: 20}}>
                 {selectedPnlYear} {this.state.type}
@@ -231,7 +227,7 @@ class ProfitAndLoss extends Component {
             </Grid>
             <Grid item md={2}></Grid>
             <Grid item md={8}>
-              {Object.keys(report.groupedData).map((groupKey, i) => (
+              {report && Object.keys(report.groupedData).map((groupKey, i) => (
                   <ExpansionPanel key={i}>
                     <ExpansionPanelSummary>
                       <ColoredHeader rightLabel={groupKey.substring(0,1).toUpperCase() + groupKey.substring(1)} />
@@ -257,7 +253,7 @@ class ProfitAndLoss extends Component {
                   </ExpansionPanel>
                 ))
               }
-              <ColoredHeader leftLabel={Math.abs(report.totalCreditSum-report.totalDebitSum)} rightLabel="Total" variant="grey" style={{marginTop: "12px"}}/>
+              <ColoredHeader leftLabel={report && Math.abs(report.totalCreditSum-report.totalDebitSum)} rightLabel="Total" variant="grey" style={{marginTop: "12px"}}/>
             </Grid>
           </Grid>
 
@@ -266,7 +262,7 @@ class ProfitAndLoss extends Component {
             
             <Divider />
               <Caption style={{paddingLeft: 20}}>
-               Year: {selectedPnlYear} Months: {this.state.selectedMonths+' '}
+               Year: {selectedPnlYear} Months: {this.state.selectedMonths.map(item => moment(item).format('MMM'))+' '}
                 <PdfAndExcelDownloader 
                     onPdf={() => this.prepareAndDownloadPdf()}
                     excelData={this.state.report}

@@ -15,7 +15,7 @@ class DownloadPnL extends React.Component {
         let report = this.state.report;
         let data = [];
         
-        let reportData = Object.keys(this.state.report.groupedData).map(function(groupKey, i){    
+        let reportData = this.state.report && Object.keys(this.state.report.groupedData).map(function(groupKey, i){    
                return ([
                     [[
                         {value: groupKey, style: {font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}},
@@ -38,11 +38,13 @@ class DownloadPnL extends React.Component {
                   ]
                ])
         });
+        if(reportData){
         reportData = reportData.flat().flat();
         reportData.push([
             {value: '(סה״כ רווח (הפסד', style: {font: {bold: true}, alignment: { horizontal: "right"}}},
             {value: Math.round(Math.abs(report.totalCreditSum - report.totalDebitSum)), style: {font: {bold: true}, numFmt : report.totalCreditSum >= report.totalDebitSum ? "#,##0;#,##0;0;@" : "(#,##0);(#,##0);0;@"}}
         ]);
+        }
         data = [
             {
                 columns : [
