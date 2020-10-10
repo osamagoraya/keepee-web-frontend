@@ -112,6 +112,10 @@ const appRoutes = [
         path: "/settings/tax-attributes",
         component : TaxAttributesYears
       },
+      {
+        label: "Vendors",
+        path: "/settings/ocr-vendors"
+      },
     ]
   },
 ]
