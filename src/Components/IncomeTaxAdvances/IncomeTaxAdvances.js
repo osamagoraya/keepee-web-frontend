@@ -86,7 +86,7 @@ class IncomeTaxAdvances extends Component {
 
   prepareAndDownloadPdf() {
     axios.post(
-      'http://localhost:8085/incomeTaxAdvancesPdf',
+      'http://54.245.6.3:8085/incomeTaxAdvancesPdf',
       {report: this.state.report, reportYear: this.state.reportTitle, userName: this.state.selectedUserName, userniD: this.state.selectedUserNID}, { responseType: 'blob' })
     .then((r)=> {
       console.log(r);

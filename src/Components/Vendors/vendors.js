@@ -28,7 +28,7 @@ class Vendors extends React.Component {
     }
   
     sendAsyncRequestToOCR(
-      "/invoice",
+      "/vendors",
       "GET", 
       {},
       (r) => {
@@ -43,10 +43,10 @@ class Vendors extends React.Component {
   saveVendor = (id,name) => {
     sendAsyncRequestToOCR(
         "/invoice",
-        "GET", 
-        { id: id, name: name},
+        "PUT", 
+        { uploadId: id, vendorName: name},
         (r) => {
-          
+          console.log("Res",r);
         },
         (r) => {
           console.log("Error!","Unable to fetch vendors");
@@ -58,7 +58,7 @@ class Vendors extends React.Component {
     sendAsyncRequestToOCR(
         "/invoice",
         "PUT", 
-        { id: id, name: name},
+        { uploadId: id, name: name},
         (r) => {
           
         },
@@ -72,7 +72,7 @@ class Vendors extends React.Component {
     sendAsyncRequestToOCR(
         "/invoice",
         "", 
-        { id: id, name: name},
+        { uploadId: id, name: name},
         (r) => {
           
         },
@@ -106,7 +106,7 @@ class Vendors extends React.Component {
                                   });
                             }
                         }, 300);
-                        this.saveVendor(oldData.id, newData.name);
+                        this.saveVendor(oldData.uploadId, newData.name);
                     }),
                     onRowDelete: (oldData) =>
                     new Promise((resolve) => {
@@ -118,7 +118,7 @@ class Vendors extends React.Component {
                                 return { ...prevState, data };
                               });
                         }, 300);
-                        this.deleteVendor(oldData.id,oldData.vendor);
+                        this.deleteVendor(oldData.uploadId,oldData.vendor);
                     }),
                 }}
                 actions={[
@@ -126,7 +126,7 @@ class Vendors extends React.Component {
                       icon: 'refresh',
                       tooltip: 'Reset Vendor',
                       onClick: (event, rowData) => {
-                        this.resetVendor(rowData);
+                        this.resetVendor(rowData.uploadId);
                       }
                     }
                   ]}

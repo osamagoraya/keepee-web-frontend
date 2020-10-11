@@ -6,27 +6,46 @@ import moment from 'moment';
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 
+const hebrewMonths = {
+    'January' : 'ינואר',
+    'February' : 'פברואר',
+    'March' : 'מרץ',
+    'April'  :  'אפריל',
+    'May'   :  'מאי',
+    'June'  :    'יוני',
+    'July'  :    'יולי',
+    'August' : 'אוגוסט' , 
+    'September' : 'ספטמבר',
+    'October' : 'אוקטובר',
+    'November' : 'נובמבר',
+    'December' : 'דצמבר'  
+};
 
 class DownloadPnL extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { report: this.props.data, reportYear: this.props.year, userName: this.props.user, userNID: this.props.niD, reportType: this.props.type, selectedMonths: this.props.selectedMonths };
+        this.state = { report: this.props.data, reportYear: this.props.year, userName: this.props.user, userNID: this.props.niD, reportType: this.props.type, selectedMonths: this.props.selectedMonths,startDate: this.props.startDate, endDate: this.props.endDate };
       }
 
       componentWillReceiveProps(nextProps) {
+          
         const {report} = nextProps.data;
         const {reportYear} = nextProps.year;
         const {userName} = nextProps.user;
         const {userNID} = nextProps.niD;
         const {reportType} = nextProps.type;
         const {selectedMonths} = nextProps.selectedMonths;
+        const {startDate} = nextProps.startDate;
+        const {endDate} = nextProps.endDate;
         
         if ( report !== this.state.report ||
              reportYear !== this.state.reportYear || 
              userName !== this.state.userName || 
              userNID !== this.state.userNID || 
-             reportType !== this.state.reportType || 
+             reportType !== this.state.reportType ||
+             startDate  !== this.state.startDate ||
+             endDate  !== this.state.endDate||    
              selectedMonths !== this.state.selectedMonths) {
           
           this.setState({
@@ -44,8 +63,7 @@ class DownloadPnL extends React.Component {
         let report = this.state.report;
         let selectedMonths = this.state.selectedMonths;
         let data = [];
-        console.log("excel sy months",selectedMonths);
-        if(this.state.reportType === "yearly") {
+        if(this.state.reportType === "yearly" || this.state.reportType === "custom") {
                 let reportData = Object.keys(this.state.report.groupedData).map(function(groupKey, i){    
                     return ([
                         [[
@@ -93,7 +111,7 @@ class DownloadPnL extends React.Component {
                             {value: groupKey, style: {font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}},
                             selectedMonths.map((month) => {
                                 return (
-                                    {value: i == 0 ? moment(month).format('MMMM') : "", style: {font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}}
+                                    {value: i == 0 ? hebrewMonths[moment(month).format('MMMM')] : "", style: {font: {bold: true}, fill: {patternType: "solid", fgColor: {rgb: "6633CCCC"}}}}
                                 );
                             })
                             
@@ -124,7 +142,6 @@ class DownloadPnL extends React.Component {
                     ])
             });
                 reportData = reportData.flat().flat();
-        
                 // For months header with each group
                 reportData.forEach((row,index)=>{
                         if(typeof  reportData[index][1] !== 'undefined') {
@@ -152,10 +169,16 @@ class DownloadPnL extends React.Component {
                 });
                 reportData[reportData.length - 1].splice(1,1);
                 
-                data = [
+                var title = "";
+                if(this.state.reportType === "custom")
+                        title = this.state.endDate +" - "+this.state.startDate; 
+                else
+                        title = this.state.reportYear;
+
+                        data = [
                     {
                         columns : [
-                            {title: this.state.reportYear + ' דוח רווח והפסד שנת', width: {wch: 40}},//pixels width 
+                            {title: title + ' דוח רווח והפסד שנת', width: {wch: 40}},//pixels width 
                             {title: this.state.userName + " - " + this.state.userNID, width: {wch: 30}},//char width 
                         ],
                         data : reportData
@@ -164,9 +187,13 @@ class DownloadPnL extends React.Component {
             }
         }
         
-        
+        var title = "";
+                if(this.state.reportType === "custom")
+                        title = this.state.endDate +" - "+this.state.startDate; 
+                else
+                        title = this.state.reportYear;
 
-        let filename= "("+this.state.reportYear+") ["+this.state.userNID + " - " +this.state.userName +"] דוח רווח והפסד";
+        let filename= "("+title+") ["+this.state.userNID + " - " +this.state.userName +"] דוח רווח והפסד";
        
         return (
             <ExcelFile element={<Button className="download-button">Excel</Button>} filename={filename}>
