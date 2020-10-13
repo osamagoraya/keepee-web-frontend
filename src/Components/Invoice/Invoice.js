@@ -178,7 +178,7 @@ fetchVendors() {
   }
 
   sendAsyncRequestToOCR(
-    "/invoice",
+    "/vendors",
     "GET", 
     {},
     (r) => {
