@@ -2,6 +2,7 @@ import React from 'react';
 import MaterialTable from 'material-table';
 import Box from '@material-ui/core/Box';
 import {sendAsyncRequestToOCR} from '../../Services/AsyncRequestService';
+import swal from 'sweetalert';
 
 const boxStyles = { margin: '20px', marginTop: '5%'}
 const tableStyles = { 
@@ -96,17 +97,26 @@ class Vendors extends React.Component {
                     //onRowAdd: (newData) => new Promise(),
                     onRowUpdate: (newData, oldData) =>
                     new Promise((resolve) => {
-                        setTimeout(() => {
-                            resolve();
                             if (oldData) {
-                                this.setState((prevState) => {
-                                    const data = [...prevState.data];
-                                    data[data.indexOf(oldData)] = newData;
-                                    return { ...prevState, data };
-                                  });
+                                sendAsyncRequestToOCR(
+                                  "/vendors",
+                                  "PUT", 
+                                  { oldVendorName: oldData.name, newVendorName: newData.name},
+                                  (r) => {
+                                    this.setState((prevState) => {
+                                      const data = [...prevState.data];
+                                      data[data.indexOf(oldData)] = newData;
+                                      return { ...prevState, data };
+                                    });
+                                    resolve();
+                                  },
+                                  (r) => {
+                                    swal("Cannot Update! Already Exists!")
+                                    resolve();
+                                  }
+                              );
+                                
                             }
-                        }, 300);
-                        this.saveVendor(oldData.uploadId, newData.name);
                     }),
                     onRowDelete: (oldData) =>
                     new Promise((resolve) => {
@@ -121,15 +131,6 @@ class Vendors extends React.Component {
                         this.deleteVendor(oldData.uploadId,oldData.vendor);
                     }),
                 }}
-                actions={[
-                    {
-                      icon: 'refresh',
-                      tooltip: 'Reset Vendor',
-                      onClick: (event, rowData) => {
-                        this.resetVendor(rowData.uploadId);
-                      }
-                    }
-                  ]}
             />
       </Box>
     )

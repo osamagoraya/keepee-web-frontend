@@ -135,6 +135,7 @@ class ProfitAndLoss extends Component {
       let sum = 0, creditSum = 0, debitSum = 0;
       let sumType = "";
       reportData[k].map(c => {
+        c.name  = c.name.replace(/[0-9]/g, '');
         if(c.type == "credit") {
             sum += parseFloat(c.sum,10)
             creditSum += parseFloat(c.sum,10)
@@ -178,6 +179,7 @@ class ProfitAndLoss extends Component {
       
       let sumType = "";
       reportData[k].map(c => {
+        c.name  = c.name.replace(/[0-9]/g, '');
         if(c.type == "credit") {
           this.state.selectedMonths.forEach((month) => {
                 sum[moment(month).format('MMM')] += c[moment(month).format('MMM')] === undefined ? 0 : parseFloat(c[moment(month).format('MMM')],10);
@@ -370,7 +372,7 @@ class ProfitAndLoss extends Component {
                  <select className="dropdown" id="type" onChange={selectType}>
                         <option value="select" checked>סוּג</option>
                         <option value="Yearly">שְׁנָתִי</option>
-                        <option value="Monthly">יַרחוֹן</option>
+                        <option value="Monthly">חודשי</option>
                         <option value="custom">תַאֲרִיך</option>
                   </select>
               </Grid>
