@@ -13,10 +13,9 @@ import {sendAsyncRequestToOCR} from '../../Services/AsyncRequestService';
 import InvoiceDocumentModal from './InvoiceDocumentModal';
 import InvoiceDocumentCard from './InvoiceDocumentCard';
 
-const BASE_URL = "https://keepee-images.s3.us-west-2.amazonaws.com/";
+const BASE_URL = "https://keepee-images.s3-accelerate.amazonaws.com/";
 
 class Invoice extends Component {
-    uploadID = -1;
     vendorName = '';
     p1  = []
     p2  = []
@@ -28,7 +27,6 @@ class Invoice extends Component {
     this.state = {
       type: 'title',
       response: {title: null, date:null, payment: null, invoice:null},
-      uploadId: -1,
       show: false,
       selectedImageID: this.props.match.params.imageId,
       selectedImageStamp: this.props.match.params.imageStamp,
@@ -43,24 +41,21 @@ class Invoice extends Component {
     }
   }
 
-  fetchUploadId = async () => {
-    const response = await fetch('http://3.15.23.75:8080/upload', {
+  downloadInvoice = () => {
+    const response = fetch('http://3.15.23.75:8080/download-invoice', {
       method: 'POST',
-      body: JSON.stringify({imageAddress: BASE_URL + this.state.selectedImageStamp}),
+      body: JSON.stringify({imageAddress: BASE_URL + this.state.selectedImageStamp + ".jpeg"}),
       headers: {
         'Content-Type': 'application/json'
       }
     });
-    const id = await response.json();
-    this.uploadID = id;
+    console.log("download response",response);
   }
 
    SubmitCordinates = async () => {
-     console.log("SubmitCordinates Called")
     const respons = await fetch('http://3.15.23.75:8080/invoice', {
       method: 'POST',
-      body: JSON.stringify({"uploadId": this.uploadID, "vendorName": this.vendorName, "fieldName": this.state.type, "p1": this.p1, "p2": this.p2, "renderedWidth": parseInt(this.width), "renderedHeight": parseInt(this.height)}),
-      
+      body: JSON.stringify({"imageKey": this.state.selectedImageStamp,"vendorName": this.vendorName, "fieldName": this.state.type, "p1": this.p1, "p2": this.p2, "renderedWidth": parseInt(this.width), "renderedHeight": parseInt(this.height)}),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -70,8 +65,7 @@ class Invoice extends Component {
     var obj = this.state.response;
     if (this.state.type !== "title"){
       if(this.state.type === "date") {
-        if( res.date !== null && res.date !== undefined ) {
-          console.log("read karna seekho",res.date);
+        if( res.date ) {
             var dateTokens = res.date.split('/');
             const formatedDate = dateTokens[2] + "-" + dateTokens[1] + "-" + dateTokens[0];
             res.date = formatedDate;
@@ -81,8 +75,7 @@ class Invoice extends Component {
       this.setState({response: obj});
     }
     else {
-      if( res.date !== null && res.date !== undefined ) {
-        console.log("read karna seekho",res.date);
+      if( res.date ) {
         var dateTokens = res.date.split('/');
         const formatedDate = dateTokens[2] + "-" + dateTokens[1] + "-" + dateTokens[0];
         res.date = formatedDate;
@@ -97,7 +90,7 @@ class Invoice extends Component {
   }
 
   componentDidMount() {
-    this.fetchUploadId();
+    this.downloadInvoice();
     this.fetchVendors();
   }
   
@@ -190,6 +183,11 @@ fetchVendors() {
   );
 }
 
+updateResponse = (response) => {
+  this.vendorName = response.title;
+  this.setState({ response: response});
+}
+
   render(){
       
     const { selectedImageID , selectedImageFileType, selectedImageStamp, apiCallInProgress, apiCallType, selectedUserId, loggedInUser} = this.state;
@@ -210,13 +208,14 @@ fetchVendors() {
                 isJournalEntryPassed={false}
                 journalEntry={null}
                 selectedImagePath={selectedImagePath}
+                selectedImageKey={selectedImageStamp}
                 selectedImageFileType={selectedImageFileType}
                 onSubmitCoord={this.onSubmitCoord}
                 setCoords={this.setCoords}
                 response={this.state.response}
+                updateResponse={this.updateResponse}
                 setType={this.setType}
                 vendors={this.state.vendors}
-                ocrImageUploadedId={this.uploadID}
                 onSubmit={() => {
                   this.setState({apiCallInProgress: false, apiCallType: 'none'});
                   this.props.history.push("/workspace/invoice")}

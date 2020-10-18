@@ -10,10 +10,11 @@ import {sendAuthenticatedAsyncRequest} from '../../../Services/AsyncRequestServi
 import swal from 'sweetalert';
 import {withRouter} from 'react-router-dom';
 import InvoiceDocumentModal from './drawPop';
-import moment from 'moment';
+import Button from '../../Common/Button';
+
 
 class InvoiceForm extends Component {
-    
+  selectedVendorName = "";
   constructor(props){
     super(props);
     this.state = {
@@ -24,7 +25,9 @@ class InvoiceForm extends Component {
       categories: [],
       vendors: this.props.vendors,
       journalEntryPassed: this.props.isJournalEntryPassed, // EDIT MODE IF TRUE
-      journalEntry: this.props.journalEntry
+      journalEntry: this.props.journalEntry,
+      vendorSelected : false,
+    //  response: this.props.response
     }
   }
 
@@ -36,6 +39,7 @@ class InvoiceForm extends Component {
   if ( nextProps.imageId !== this.state.selectedImageID || 
        nextProps.journalEntry !== this.state.journalEntry ||
        nextProps.vendors != this.state.vendors
+     //  nextProps.response != this.state.response
        ) {
       this.setState({
         selectedImageID: nextProps.imageId,
@@ -44,6 +48,7 @@ class InvoiceForm extends Component {
         journalEntry: nextProps.journalEntry,
         journalEntryPassed: nextProps.isJournalEntryPassed,
         vendors: nextProps.vendors
+       // response: nextProps.response
       });
     }
   }
@@ -132,34 +137,35 @@ class InvoiceForm extends Component {
       },
     );
   }
+  
+  showResetButton = () => {
+    this.setState({ vendorSelected : true});
+  }
 
-  GetSelectedVendorData = async (selectedVendor) => {
-    var vendorData;
-  await sendAsyncRequestToOCR(
+  resetVendorCordinates = () => {
+    sendAsyncRequestToOCR(
       "/invoice",
-      "POST",
+      "PUT",
       {
-        uploadId: this.props.ocrImageUploadedId,
-        vendorName: selectedVendor.name,
-        fieldName: "title",
-        renderedWidth:1,
-        renderedHeight: 1
+        vendorName: this.selectedVendorName,
       },
       (r) => {
-        console.log("Respose aya");
-        vendorData = r.data;
+        this.props.updateResponse({ 
+          title: this.selectedVendorName,
+          date:  null,
+          invoice: null,
+          payment: null
+        });
       },
       (r) => {
-        console.log("Error!","Unable to fetch vendor data");
+        console.log(r);
+        console.log("Error!", "Unable to Clear vendor!");
       }
     );
-    console.log("Return",vendorData);
-    return vendorData;
   }
-  
-  
+
   render(){
-    const {bindSubmitForm, onValidationFailed, selectedImageFileType, selectedImagePath, onSubmitCoord, response, setCoords, setType} = this.props;
+    const {bindSubmitForm, onValidationFailed, selectedImageFileType, selectedImagePath, onSubmitCoord, setCoords, setType, response} = this.props;
     const { categories,vendors, selectedImageID} = this.state;
 
     const titleFunc = () => {
@@ -214,7 +220,17 @@ class InvoiceForm extends Component {
           return (
             <form onSubmit={handleSubmit} style={this.props.formStyle}>
               {this.state.visible ? <div class={`notification ${this.state.alertType}`}>{this.state.alertMessage}</div> : null}
-              <div> 
+              <div>
+                {
+                  this.state.vendorSelected ? 
+                  <div className="clearfix d-flex flex-row">
+                    <Button size="small" variant="blue" onClick={this.resetVendorCordinates}>
+                        Reset
+                    </Button>
+                  </div>
+                  : 
+                  ""
+                } 
                 <input
                   name="imageId"
                   type="hidden"
@@ -229,29 +245,27 @@ class InvoiceForm extends Component {
                   <Select
                     value={values.vendor}
                     onChange={(selectedOption) => {
-                        
+                      this.selectedVendorName = selectedOption.name;
+                        this.showResetButton();
                         setFieldValue('vendor',selectedOption)
                         sendAsyncRequestToOCR(
                           "/invoice",
                           "POST",
                           {
-                            uploadId: this.props.ocrImageUploadedId,
+                            imageKey: this.props.selectedImageKey,
                             vendorName: selectedOption.name,
                             fieldName: "title",
                             renderedWidth:1,
                             renderedHeight: 1
                           },
                           (r) => {
-                            if(r.data.payment !== undefined)
-                              setFieldValue('sum',r.data.payment)
-
-                            if(r.data.date !== undefined) {
+                            if( r.data.date ) {
                               var dateTokens = r.data.date.split('/');
                               const formatedDate = dateTokens[2] + "-" + dateTokens[1] + "-" + dateTokens[0];
-                              setFieldValue('jeDate',formatedDate)
+                              r.data.date = formatedDate;
                             }
-                            if(r.data.invoice !== undefined)
-                              setFieldValue('reference_1',r.data.invoice)
+                            this.props.updateResponse(r.data);
+                            this.setState({ response: r.data});
                           },
                           (r) => {
                             console.log("Error!","Unable to fetch vendor data");
@@ -329,20 +343,23 @@ class InvoiceForm extends Component {
                   feedback={touched.reference_1 && errors.reference_1 ? errors.reference_1 : null}
                   />
                   </div>
-                  { response.title && response.invoice === null && ( <div className={response.invoice ? 'd-none': "pull-right mt-2"}>
-                  <a onClick={invoiceFunc}>
-                    <InvoiceDocumentModal 
-                      documentType={selectedImageFileType}
-                      documentPath={selectedImagePath}
-                      selectedImageId={selectedImageID}
-                      uniqueKey={`invoicepopup${selectedImageID}`}
-                      type={'invoice'}
-                      onSubmitCoord={onSubmitCoord}
-                      setCoords={setCoords}
-                      modalType="ocr"
-                    />
-                   </a>
-                  </div>)}
+                  { response.title && response.invoice === null ? 
+                    ( 
+                      <div className={response.invoice ? 'd-none': "pull-right mt-2"}>
+                      <a onClick={invoiceFunc}>
+                        <InvoiceDocumentModal 
+                          documentType={selectedImageFileType}
+                          documentPath={selectedImagePath}
+                          selectedImageId={selectedImageID}
+                          uniqueKey={`invoicepopup${selectedImageID}`}
+                          type={'invoice'}
+                          onSubmitCoord={onSubmitCoord}
+                          setCoords={setCoords}
+                          modalType="ocr"
+                        />
+                      </a>
+                    </div>) : ""
+                  }
               </div>
               <div className="clearfix d-flex flex-row">
               <div className="width">
