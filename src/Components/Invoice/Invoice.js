@@ -60,6 +60,7 @@ class Invoice extends Component {
         'Content-Type': 'application/json'
       }
     });
+
     const res = await respons.json();
     this.vendorName = res.title != null ? res.title : this.vendorName;
     var obj = this.state.response;
@@ -85,7 +86,6 @@ class Invoice extends Component {
   }
 
    onSubmitCoord = () => {
-  console.log("Submit button call");
   this.SubmitCordinates();
   }
 

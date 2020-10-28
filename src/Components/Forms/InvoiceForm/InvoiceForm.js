@@ -12,6 +12,10 @@ import {withRouter} from 'react-router-dom';
 import InvoiceDocumentModal from './drawPop';
 import Button from '../../Common/Button';
 
+import SwalAdvance from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const Swal2 = withReactContent(SwalAdvance)
 
 class InvoiceForm extends Component {
   selectedVendorName = "";
@@ -85,15 +89,30 @@ class InvoiceForm extends Component {
     }
     values.userId = selectedUserId ? selectedUserId : 0;
     values.accountantId = loggedInUser.userId;
-    
+
     sendAuthenticatedAsyncRequest(
       "/saveInvoiceData",
       "POST", 
       {values: values},
       (r) => {
-        
-        if(r.data.body === '"Journal Entry Already Exists!"') {
-          swal ( "Oops" ,  "Journal Entry With this data Already Exists!" ,  "error" );
+        const response = JSON.parse(r.data.body);
+        if(response.message === "Journal Entry Already Exists!") {
+          var img = "";
+          let parts = response.imageLink.split('/');
+          const imageKey =  parts[parts.length - 1];
+          if(response.imageType == "pdf")
+            img = '<img src="'+"https://keepee-images.s3-accelerate.amazonaws.com/"+imageKey+'.jpeg'+'" />';
+          else
+            img = '<img src="'+"https://keepee-images.s3-accelerate.amazonaws.com/"+imageKey+'" />';
+
+          Swal2.fire({
+            width: 700,
+            height: 400,
+            title: 'Journal Entry Already Exists!',
+            html: img,
+            showCloseButton: true,
+            showConfirmButton: false
+          })
         }
         else if(r.data.body === '"No More JE!"') {
           swal ( "Done" ,  "Journal Entry Added! No More JE Left" ,  "info" );
@@ -107,6 +126,7 @@ class InvoiceForm extends Component {
           }
       },
       (r) => {
+        console.log("why:",r);
         swal("Oops", "System Error! Try Again","error");
       }
     );
