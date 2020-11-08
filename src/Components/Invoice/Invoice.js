@@ -67,7 +67,8 @@ class Invoice extends Component {
     if (this.state.type !== "title"){
       if(this.state.type === "date") {
         if( res.date ) {
-            var dateTokens = res.date.split('/');
+            
+            var dateTokens = res.date.includes('/') ? res.date.split('/') : res.date.split('.');
             const formatedDate = dateTokens[2] + "-" + dateTokens[1] + "-" + dateTokens[0];
             res.date = formatedDate;
         }
@@ -77,7 +78,7 @@ class Invoice extends Component {
     }
     else {
       if( res.date ) {
-        var dateTokens = res.date.split('/');
+        var dateTokens = res.date.includes('/') ? res.date.split('/') : res.date.split('.');
         const formatedDate = dateTokens[2] + "-" + dateTokens[1] + "-" + dateTokens[0];
         res.date = formatedDate;
       }
