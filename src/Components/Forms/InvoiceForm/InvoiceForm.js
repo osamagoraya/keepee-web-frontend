@@ -280,7 +280,7 @@ class InvoiceForm extends Component {
                           },
                           (r) => {
                             if( r.data.date ) {
-                              var dateTokens = r.data.date.split('/');
+                              var dateTokens = res.date.includes('/') ? res.date.split('/') : res.date.split('.');
                               const formatedDate = dateTokens[2] + "-" + dateTokens[1] + "-" + dateTokens[0];
                               r.data.date = formatedDate;
                             }
