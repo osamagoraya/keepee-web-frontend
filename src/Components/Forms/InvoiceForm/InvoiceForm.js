@@ -111,7 +111,27 @@ class InvoiceForm extends Component {
             title: 'Journal Entry Already Exists!',
             html: img,
             showCloseButton: true,
-            showConfirmButton: false
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: `Delete Duplicate!`
+          }).then((result) => {
+            if (result.isDenied) {
+              sendAuthenticatedAsyncRequest(
+                "/deleteDuplicateImage",
+                "POST", 
+                {imageId: this.state.selectedImageID},
+                (r) => {
+                  this.setState({apiCallInProgress: false, apiCallType: "declined"});
+                  var nextImage = JSON.parse(r.data.body);
+                  this.props.history.push('/workspace/invoice');
+                  var path = `/workspace/invoice/${nextImage.imageId}/${nextImage.imageType}/${this.imageStamp(nextImage.imageLink)}`;
+                  this.props.history.push(path);
+                },
+                (r) => {
+                  console.log("Failing");
+                }
+              );
+            }
           })
         }
         else if(r.data.body === '"No More JE!"') {
