@@ -241,7 +241,7 @@ class InvoiceForm extends Component {
       <Formik
         initialValues={ journalEntryPassed ? { 
           id: journalEntry.id, jeId: journalEntry.jeId, reference_1: journalEntry.reference_1, reference_2: journalEntry.reference_2, jeDate: journalEntry.jeDate, details: journalEntry.details, categoryId: journalEntry.categoryId, 
-          vat: journalEntry.vat, sum: journalEntry.sum, vatAmount: Math.round(journalEntry.sum*(1-1/(1+0.17))*(journalEntry.vat/100)), imageId: selectedImageID || '', vendorName: journalEntry.vendorName , category : { categoryLabel: journalEntry.categoryLabel, categoryId: journalEntry.categoryId}
+          vat: journalEntry.vat, sum: journalEntry.sum, vatAmount: Math.round(journalEntry.sum*(1-1/(1+0.17))*(journalEntry.vat/100)), imageId: selectedImageID || '', vendor: { name: response.title, id: response.id}  , category : { categoryLabel: journalEntry.categoryLabel, categoryId: journalEntry.categoryId}
         } : { reference_1: response.invoice ? response.invoice : '', reference_2: '', jeDate: response.date ? response.date: '', details: '', categoryId: '', 
         vat: '', sum: response.payment ? response.payment : '', imageId: selectedImageID || '', vendor: response.title ? { name: response.title, value: response.id} : '', vatAmount: '' }}
         onSubmit={(values,  { setSubmitting }) => {

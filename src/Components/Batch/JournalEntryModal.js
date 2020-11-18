@@ -76,6 +76,7 @@ render (){
                 isUserIdRequired={true}
                 isJournalEntryPassed={true}
                 journalEntry={journalEntry}
+                response={ journalEntry.selectedVendorObj ? { title: journalEntry.selectedVendorObj.name, value: journalEntry.selectedVendorObj.id} : { title: '', value: ''}}
                 setApiCallForBatchJEModal={this.setApiCallForBatchJEModal}
                 onSubmit={() => {
                   this.setState({apiCallInProgress: false, apiCallType: 'none'});

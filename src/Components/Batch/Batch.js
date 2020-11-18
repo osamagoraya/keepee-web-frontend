@@ -17,6 +17,7 @@ import swal from 'sweetalert';
 import FileIcon from '@material-ui/icons/Description';
 import CameraIcon from '@material-ui/icons/CameraAlt';
 
+import {sendAsyncRequestToOCR} from '../../Services/AsyncRequestService';
 import JournalEntryModal from './JournalEntryModal';
 
 class Batch extends Component {
@@ -28,6 +29,7 @@ class Batch extends Component {
     apiCallType: 'fetch',
     batch: null,
     categories: null,
+    vendors: [],
     selectedJournalEntry: null,
     openJournalEntryModal: false
   }
@@ -42,6 +44,7 @@ class Batch extends Component {
   componentDidMount() {
     this.fetchBatchDetails(this.state.selectedBatchId, this.state.selectedUserId);
     this.fetchCategories();
+    this.fetchVendors();
   }
   
   componentWillReceiveProps(nextProps) {
@@ -153,6 +156,7 @@ class Batch extends Component {
 
   updateJE(je) {
     console.log("Updating journal entry:", je);
+    je.vendor = { name: je.vendorName }
     if(je.vatPercent < 1) {
       je.vat = 0.00;
       swal("Info" , "Cannot Update vat amount for JE with vat% 0!","info");
@@ -242,7 +246,29 @@ class Batch extends Component {
       : null 
     );
   }
+
+  fetchVendors() {
+    if (this.state.vendors.length !== 0){
+      console.log("not fetching vendors, they exist", this.state.vendors);
+      return;
+    }
   
+    sendAsyncRequestToOCR(
+      "/vendors",
+      "GET", 
+      {},
+      (r) => {
+        this.setState({vendors: r.data.vendorNames});
+      },
+      (r) => {
+        console.log("Error!","Unable to fetch vendors");
+      }
+    );
+  }
+
+  getSelectedVendorObj() {
+
+  }
   render() {
     const {batch, apiCallInProgress, apiCallType, categories} = this.state;
     const columns = [
@@ -349,11 +375,26 @@ class Batch extends Component {
               <div className='k-force' style={{padding: "8px 10px"}}>
                 <span style={{cursor: 'pointer'}}>
                 {
+                  // for selecting vendor in JE Modal form
                   row.imageType === "image" 
                   ? <CameraIcon onClick={() => {
+                        if(this.state.vendors) {
+                          this.state.vendors.forEach((vendor, index) => {
+                            if( row.vendorName == vendor.name ){
+                              row.selectedVendorObj = vendor;
+                            }
+                          });
+                        }
                         this.setState({ selectedJournalEntry: row, openJournalEntryModal: true})
                   }}/> 
                   : row.imageType === "pdf" ? <FileIcon onClick={() => {
+                        if(this.state.vendors) {
+                          this.state.vendors.forEach((vendor, index) => {
+                            if( row.vendorName == vendor.name ){
+                              row.selectedVendorObj = vendor;
+                            }
+                          });
+                        }
                         this.setState({ selectedJournalEntry: row, openJournalEntryModal: true})
                   }}/> : "N/A"
                 }
@@ -442,6 +483,7 @@ class Batch extends Component {
             selectedUserId={this.state.selectedUserId}
             closeJournalEntryModal={this.closeJournalEntryModal}
             batchStatus={batch.batchStatus}
+            vendors={this.state.vendors}
       />
       : ''
       }
