@@ -185,7 +185,7 @@ class Batch extends Component {
       jeDate: Moment(je.jeDate).format("YYYY-MM-DD"), 
       details: je.details, 
       categoryId: parseInt(je.categoryId, 10), 
-      vat: parseInt(je.vat,10), 
+      vat: parseInt(je.vatPercent,10), 
       sum: parseInt(je.sum,10), 
       imageId: '', 
       vendorName: je.vendor,
@@ -214,9 +214,11 @@ class Batch extends Component {
 
   onJournalEntryUpdate = (oldValue, newValue, row, column) => {
     if (row.id === -1) {
-      if (row.categoryId)
-        row.vat = this.getCategoryAttribute(row.categoryId, 'vatpercent', this.state.categories || []) || "0";
-      if (!row.reference_1 || !row.jeDate || !row.details || !row.categoryId || !row.sum || !row.vat){
+      
+      // if (row.categoryId)
+      //   row.vat = this.getCategoryAttribute(row.categoryId, 'vatpercent', this.state.categories || []) || "0";
+      
+      if (!row.reference_1 || !row.jeDate || !row.details || !row.categoryId || !row.sum || !row.vatPercent){
         console.log("incomplete data, not adding JE : ", row);
       } else {
         this.addJE(row);
@@ -354,13 +356,13 @@ class Batch extends Component {
         editCellClasses: 'k-edit-cell',
       },
       {
-        dataField: 'vat',
+        dataField: 'vatPercent',
         text: 'Vat',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => {
           return (
-            <div className='k-force'>{row.vat}</div>
+            <div className='k-force'>{cell}</div>
           );
         },
         editCellClasses: 'k-edit-cell'
