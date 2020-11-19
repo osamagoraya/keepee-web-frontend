@@ -215,8 +215,8 @@ class Batch extends Component {
   onJournalEntryUpdate = (oldValue, newValue, row, column) => {
     if (row.id === -1) {
       
-      // if (row.categoryId)
-      //   row.vat = this.getCategoryAttribute(row.categoryId, 'vatpercent', this.state.categories || []) || "0";
+       if (row.categoryId)
+        row.vatPercent = this.getCategoryAttribute(row.categoryId, 'vatpercent', this.state.categories || []) || "0";
       
       if (!row.reference_1 || !row.jeDate || !row.details || !row.categoryId || !row.sum || !row.vatPercent){
         console.log("incomplete data, not adding JE : ", row);
@@ -234,7 +234,7 @@ class Batch extends Component {
       alert ("Please complete data for previously added JE");
     else {
       const emptyJE = {
-        id: -1, jeid: '', reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', vat: '', sum: '', imageType: '', vendorName: '' 
+        id: -1, jeid: '', reference_1: '', reference_2: '', jeDate: '', details: '', categoryId: '', vat: '', sum: '', imageType: '', vendorName: '',vatPercent:'' 
       }
       batch.journal_entries.push(emptyJE);
       this.setState({ batch });
