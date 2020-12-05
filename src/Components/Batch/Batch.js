@@ -157,9 +157,9 @@ class Batch extends Component {
   updateJE(je) {
     console.log("Updating journal entry:", je);
     je.vendor = { name: je.vendorName }
-    if(je.vatPercent < 1) {
+    if(je.vatPercent < 0) {
       je.vat = 0.00;
-      swal("Info" , "Cannot Update vat amount for JE with vat% 0!","info");
+      swal("Info" , "Cannot Update vat amount for JE with vat% less then 0!","info");
       return;
     }
       sendAuthenticatedAsyncRequest(  
@@ -167,7 +167,7 @@ class Batch extends Component {
       "POST", 
       je,
       (r) => {
-        console.log("JE updated", r);
+        swal ( "Success" ,  "Journal Entry Updated Successfully!" ,  "success" )
       },
       (r) => {
         console.log("JE update failed", r);
