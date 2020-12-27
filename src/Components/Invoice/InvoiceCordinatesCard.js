@@ -49,7 +49,7 @@ componentDidMount = () => {
     var canvas = this.canvasRef.current;
     const ctx = canvas.getContext("2d");
     var background = new Image();
-    background.src = this.props.documentPath + ".jpeg";
+    background.src = this.props.documentType == "image" ? this.props.documentPath : this.props.documentPath + ".jpeg";
     cardStyles = this.cardStyles;
     background.onload = function(cardStyles) {
         
@@ -119,7 +119,6 @@ canvas.onmouseup = (e) => {
 
     return (
       <Card id="canvas-wrapper" className={cardClassNames} style={{overflow: 'auto'}}>
-        
         { 
           <canvas ref={this.canvasRef} onDragStart={this.preventDragHandler} draggable={false}></canvas>
         }

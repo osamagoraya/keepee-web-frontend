@@ -4,7 +4,7 @@ import axios from 'axios';
 export const config = {apiRoot: 'http://54.245.6.3:8085'}
 //export const config = {apiRoot: 'http://localhost:8085'}
 
-export const ocrConfig = {apiRoot: 'http://3.15.23.75:8080'}
+export const ocrConfig = {apiRoot: 'http://34.214.241.242:8080'}
 //export const ocrConfig = {apiRoot: 'http://localhost:8080'}
 
 export function sendAsyncRequest(url, method, data, onSuccessCallback, onFailureCallback){
