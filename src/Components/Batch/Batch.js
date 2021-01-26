@@ -20,6 +20,11 @@ import CameraIcon from '@material-ui/icons/CameraAlt';
 import {sendAsyncRequestToOCR} from '../../Services/AsyncRequestService';
 import JournalEntryModal from './JournalEntryModal';
 
+import SwalAdvance from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const Swal2 = withReactContent(SwalAdvance)
+
 class Batch extends Component {
 
   state = {
@@ -179,6 +184,14 @@ class Batch extends Component {
 
   addJE(je) {
     console.log("Adding journal entry:", je);
+    Swal2.fire({
+     title: 'Please wait',
+     allowOutsideClick: false,
+     showCancelButton: false,
+     showCloseButton: false,
+     allowEscapeKey:false
+    });
+    Swal2.showLoading();
     const journalEntry = {
       reference_1: je.reference_1, 
       reference_2: je.reference_2, 
@@ -188,7 +201,7 @@ class Batch extends Component {
       vat: parseInt(je.vatPercent,10), 
       sum: parseInt(je.sum,10), 
       imageId: '', 
-      vendorName: je.vendor,
+      vendorName: je.vendorName,
       userId : this.state.selectedUserId,
       accountantId : ''
     }
@@ -198,16 +211,21 @@ class Batch extends Component {
       "POST", 
       {values: journalEntry},
       (r) => {
-        console.log("JE added", r);
+        console.log("JE added response", r);
         const {batch} = this.state;
         const response = JSON.parse(r.data.body);
+        console.log("Response Id",response.id);
         batch.journal_entries[batch.journal_entries.length-1].id = response.id;
         batch.journal_entries[batch.journal_entries.length-1].jeId = response.jeId;
         this.setState({batch: batch})
-        swal ( "Success" ,  "Journal Entry Added Successfully!" ,  "success" )
+        Swal2.fire(
+          'Success',
+          'Journal Entry Saved!',
+          'success'
+        )
       },
       (r) => {
-        swal ( "Oops" ,  "Journal Entry Exists Already!" ,  "error" )
+        Swal2.fire ( "Oops" ,  "Journal Entry Exists Already!" ,  "error" )
       },
     );
   }
