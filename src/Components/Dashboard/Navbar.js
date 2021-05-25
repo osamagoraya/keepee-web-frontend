@@ -7,13 +7,19 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import AppRoutes from '../../Routes/AppRoutes';
 
 import {withRouter} from 'react-router-dom';
-
+import Auth from '../../Services/Auth'
 
 class Navbar extends Component {
 
   handleClick = (path) => {
     console.log("navigating to", path);
-    this.props.history.push(path);
+    if(path === "/logout"){
+        Auth.logout(()=> {this.props.history.push("/login")});
+    }
+    else{
+      this.props.history.push(path);
+    }
+    
   }
 
 
@@ -26,8 +32,7 @@ class Navbar extends Component {
           AppRoutes.map((nav, idx) => (
             <MenuItem onClick={() => this.handleClick(nav.to)} key={idx}>
               <ListItemIcon>
-                {/* Add support for active icons */}
-                <img src={nav.icon} alt="NA"/>
+                {nav.icon == "logout" ? <i style={{ color: '#12495f'}} class="fa fa-sign-out" aria-hidden="true"></i> : <img src={nav.icon} alt="NA"/> }
               </ListItemIcon>
             </MenuItem>
           ))

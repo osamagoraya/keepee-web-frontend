@@ -13,6 +13,10 @@ import {sendAsyncRequestToOCR} from '../../Services/AsyncRequestService';
 import InvoiceDocumentModal from './InvoiceDocumentModal';
 import InvoiceDocumentCard from './InvoiceDocumentCard';
 
+import SwalAdvance from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const Swal2 = withReactContent(SwalAdvance)
+
 const BASE_URL = "https://keepee-images.s3-accelerate.amazonaws.com/";
 
 class Invoice extends Component {
@@ -118,12 +122,30 @@ class Invoice extends Component {
     return parts[parts.length - 1];
   }
 
-  updateImageStatus = (uri, apiCallType) => {
+  updateImageStatus = async (uri, apiCallType) =>  {
+
+    var text = '';
+    if(uri === "/commentOnPicture") {
+      
+      text = await Swal2.fire({
+        input: 'textarea',
+        inputLabel: 'Comment on Invoice',
+        inputPlaceholder: 'Please Type Your Comment',
+        inputAttributes: {
+          'aria-label': 'הקלד את הודעתך כאן'
+        },
+        showCancelButton: true
+      })
+    }
+
+    if(!text.isConfirmed)
+      return;
+      
     this.setState({apiCallInProgress: true, apiCallType: apiCallType});
     sendAuthenticatedAsyncRequest(
       uri,
       "POST", 
-      {imageId: this.state.selectedImageID, email: "not available"},
+      {imageId: this.state.selectedImageID, email: "not available", comment: text.isConfirmed ? text.value : ''},
       (r) => {
         this.setState({apiCallInProgress: false, apiCallType: apiCallType});
         var nextImage = JSON.parse(r.data.body);
@@ -284,6 +306,14 @@ updateResponse = (response) => {
                     ? "updating ..."
                     : "New Picture"
                   : "New Picture"
+                  }
+              </Button>
+              <Button size="small" variant="grey" className="doc-action-btns" disabled={apiCallInProgress} onClick={() => this.updateImageStatus('/commentOnPicture', 'commentOnPicture')}>
+                {apiCallInProgress 
+                  ? apiCallType === 'commentOnPicture' 
+                    ? "updating ..."
+                    : "Comment"
+                  : "Comment"
                   }
               </Button>  
               <Button fab onClick={this.transformImage} className="k-fab">

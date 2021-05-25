@@ -16,7 +16,7 @@ class App extends React.Component {
       <BrowserRouter>
             <Switch>
                 <Route
-                    path="/securelogin/token-id=r$3easd"
+                    path="/login"
                     exact
                     component={Login}
                 />

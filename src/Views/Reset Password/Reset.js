@@ -38,7 +38,7 @@ class Reset extends React.PureComponent {
                                         if(status === 200){
                                             this.setState({buttonLoading: ''})
                                             swal ( "Success" ,  "Password Updated Successfully!" ,  "success" );
-                                            this.props.history.push({pathname: "/securelogin/token-id=r$3easd"});
+                                            this.props.history.push({pathname: "/login"});
                                         }else{
                                             this.setState({buttonLoading: '',loginError: errorMessage})
                                         }

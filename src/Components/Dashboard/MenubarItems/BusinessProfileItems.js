@@ -48,7 +48,8 @@ class BusinessProfileItems extends React.Component {
     console.log("Users received",data);
     return data.map(b => ({
         label: b.name,
-        path: `${localPath}/${parseInt(b.userId,10)}`
+        path: `${localPath}/${parseInt(b.userId,10)}`,
+        rawLabel: b.name
       })
     );
   }

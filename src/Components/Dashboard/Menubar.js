@@ -15,7 +15,6 @@ const ExpansionPanel = withStyles({
     fontFamily: 'Source Sans Pro',
     fontSize: 13,
     fontWeight: 700,
-    // border: '1px solid rgba(0,0,0,.125)',
     minHeight: "40px !important",
     boxShadow: 'none',
     '&:not(:last-child)': {
@@ -126,15 +125,4 @@ class Menubar extends Component {
   }
 }
 
-
-// const Styles = {
-//   menubarItem : {
-//     height: 20,
-//     color: '#4d4f5c',
-//     fontFamily: 'Source Sans Pro',
-//     fontSize: 13,
-//     fontWeight: 700,
-//     lineHeight: 20,
-//   }
-// }
 export default (withRouter(Menubar));

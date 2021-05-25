@@ -43,9 +43,10 @@ class Auth {
     }
 
     logout(cb){
-
-        this.isAuthenticated = false
-        cb(true)
+        this.isAuthenticated = false;
+        let user = this.getUser();
+        localStorage.clear();
+        cb();
     }
 
     getLoggedInUser() {

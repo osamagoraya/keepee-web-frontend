@@ -105,7 +105,6 @@ const appRoutes = [
       {
         label: "Unified Form",
         path: "/settings/unified-form",
-        component : UnifiedFormItems
       },
       {
         label: "Tax Attributes",
@@ -116,8 +115,18 @@ const appRoutes = [
         label: "Vendors",
         path: "/settings/ocr-vendors"
       },
+      {
+        label: "User Management",
+        path: "/settings/user-management"
+      }
     ]
   },
+  {
+    to: "/logout",
+    menubarComponent: false,
+    icon: "logout",
+    menubarItems: []
+  }
 ]
 
 export default appRoutes;

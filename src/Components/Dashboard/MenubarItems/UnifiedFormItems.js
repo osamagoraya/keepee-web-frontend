@@ -19,42 +19,34 @@ class UnifiedFormItems extends React.Component {
       this.fetchListData(this.state.loggedInUser.userId);
   }
   
-  fetchListData(loggedInUserId) {
-    
-    if (!loggedInUserId){
-      console.log("not fetching business profiles, no loggedin user id found");
-      return;
-    } else if (this.state.loading) {
-      console.log("not fetching business profiles, request already sent");
-      return;
-    } else {
-      console.log("fetching business profiles for loggedin user", loggedInUserId);
-    }
-    this.setState({listData: [], loading: true});
+  getUsers = (user) => {
     sendAuthenticatedAsyncRequest(
       "/getUsers",
-      "POST",
-      {accountantId: loggedInUserId},
-      (r) => this.setState({
-        listData: this.UnifiedFormformatter(JSON.parse(r.data.body)),
-        loading: false
-      })
+      "POST", 
+      {accountantId: user.userId},
+      (r) => this.setState({ userList: JSON.parse(r.data.body), isLoadingUsers: false})
     );
   }
 
-  UnifiedFormformatter = (data) => {
-    if (!data) return [];
-  
-    console.log("Users received",data);
-    return data.map(b => ({
-        label: b.name,
-        path: `${localPath}/${parseInt(b.userId,10)}`
-      })
-    );
+  filterUsersForSelect = (list) => {
+    if(!list)
+      return;
+
+    return list.map(userRow => {
+      return {
+        value: parseInt(userRow.userId,10),
+        label: userRow.name,
+        userNID: userRow.nid ,
+        userEmail: userRow.email,
+        incomeTaxReportFrequency: userRow.incomeTaxReportFrequency,
+        vatReportFrequency : userRow.vatReportFrequency,
+        license: userRow.license,
+        incomeTaxAdvances: userRow.incomeTaxAdvances
+      }
+    });
   }
 
   render (){
-    // console.log("rendering InvoiceMenubarItems", this.state, this.props);
     const {listData, loading} = this.state;
     return ( 
       !loading 

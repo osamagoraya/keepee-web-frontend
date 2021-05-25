@@ -20,6 +20,7 @@ import TrialBalance from '../../Components/TrialBalance/TrialBalance';
 import UnifiedForm from '../../Components/UnifiedForm/UnifiedForm';
 import TaxAttributes from '../../Components/TaxAttributes/TaxAttributes';
 import Vendors from '../../Components/Vendors/vendors';
+import UserManagement from '../../Components/UserManagement/UserManagement';
 
 class Dashboard extends Component {
 
@@ -63,9 +64,10 @@ class Dashboard extends Component {
               <ProtectedRoute path="/profile/business/:profileId" component={BusinessProfile} exact/>
               <ProtectedRoute path="/profile/email-settings/:profileId"  component={EmailSetting} exact />
               <ProtectedRoute path="/settings/categories" component={Categories} exact/>
-              <ProtectedRoute path="/settings/unified-form/:clientId" component={UnifiedForm} exact/>
+              <ProtectedRoute path="/settings/unified-form" component={UnifiedForm} exact/>
               <ProtectedRoute path="/settings/tax-attributes/:year"  component={TaxAttributes} exact />
               <ProtectedRoute path="/settings/ocr-vendors" component={Vendors} exact/>
+              <ProtectedRoute path="/settings/user-management" component={UserManagement} exact />
             </Switch>
           </div>
         </div>
