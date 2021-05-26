@@ -21,6 +21,8 @@ import UnifiedForm from '../../Components/UnifiedForm/UnifiedForm';
 import TaxAttributes from '../../Components/TaxAttributes/TaxAttributes';
 import Vendors from '../../Components/Vendors/vendors';
 import UserManagement from '../../Components/UserManagement/UserManagement';
+import InvoiceSystem from '../../Components/InvoiceSystem/InvoiceSystem';
+import InvoiceItems from '../../Components/InvoiceItems/InvoiceItems';
 
 class Dashboard extends Component {
 
@@ -68,6 +70,8 @@ class Dashboard extends Component {
               <ProtectedRoute path="/settings/tax-attributes/:year"  component={TaxAttributes} exact />
               <ProtectedRoute path="/settings/ocr-vendors" component={Vendors} exact/>
               <ProtectedRoute path="/settings/user-management" component={UserManagement} exact />
+              <ProtectedRoute path="/invoices/invoice" component={InvoiceSystem} exact />
+              <ProtectedRoute path="/invoices/item" component={InvoiceItems} exact />
             </Switch>
           </div>
         </div>

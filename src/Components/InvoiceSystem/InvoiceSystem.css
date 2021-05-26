@@ -1,0 +1,72 @@
+.batch-container {
+    overflow: scroll;
+    padding: 3% 1% 2% 1%;
+  }
+  
+  .right-bottom-btn {
+    width: 150px;
+    float: right;
+    margin-right: 22px !important;
+  }
+  
+  .left-bottom-fab-btn {
+    width: 37px !important;
+    height: 30px !important;
+    float: left;
+    margin-left: 40px !important;
+  }
+  
+  .document-box {
+    height: 100%;
+    width: 95%;
+    max-height: 100%;
+  }
+  
+  .doc-action-btn-box {
+    display: block;
+    width: 100%;
+    height: 10%;
+  }
+  
+  /* .doc-action-btns {
+    width: 30%;
+    margin-right: 9% !important;
+    margin-left: 3% !important;
+  } */
+  
+  .k-fab {
+    width: 38px !important;
+    height: 38px !important;
+  }
+  
+  .k-fab-modal {
+    width: 38px !important;
+    height: 38px !important;
+    margin-left: 75% !important;
+  }
+  
+  .bottom-btn-container {
+     width: 100% !important;
+  }
+  
+  .image {
+      width: 100%;
+      object-fit: fill;
+      overflow: hidden;
+  }
+  
+  .document-modal-size {
+    height: 100%;
+    width: 80%;
+    max-width: 80% !important;
+    background-color: #f8f8f8 !important;
+  }
+  .document-modal-content {
+    height: 100%;
+    width: 100%;
+  }
+  
+  .modal-cancel-btn {
+    margin-left: 4% !important;
+  }
+  

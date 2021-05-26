@@ -67,10 +67,19 @@ const appRoutes = [
     menubarItems: []
   },
   {
-    to: "/projections",
+    to: "/invoices",
     menubarComponent: undefined,
     icon: logoDocument,
-    menubarItems: []
+    menubarItems: [
+      {
+        label: "Invoices",
+        path: "/invoices/invoice"
+      },
+      {
+        label: "Invoice-items",
+        path: "/invoices/item"
+      }
+    ]
   },
   {
     to: "/profile",
