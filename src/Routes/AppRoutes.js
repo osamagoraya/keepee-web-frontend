@@ -76,9 +76,21 @@ const appRoutes = [
         path: "/invoices/invoice"
       },
       {
-        label: "Invoice-items",
-        path: "/invoices/item"
-      }
+        label: "Invoice Items",
+        path: "/invoices/invoice-items"
+      },
+      {
+        label: "Customers",
+        path: "/invoices/customers"
+      },
+      {
+        label: "Suppliers",
+        path: "/invoices/suppliers"
+      },
+      {
+        label: "Items",
+        path: "/invoices/items"
+      },
     ]
   },
   {

@@ -23,13 +23,13 @@ const Swal2 = withReactContent(SwalAdvance)
 
 
 
-class InvoiceItems extends Component {
+class Customers extends Component {
 
   state = {
     batch: null,
     userList: [],
     invoiceList: [],
-    addInvoiceModal : false
+   // addInvoiceModal : false
   }
 
   componentWillMount() {
@@ -69,20 +69,6 @@ class InvoiceItems extends Component {
         label: userRow.name
       }
     });
-  }
-
-  fetchInvoices() {
-    if (this.state.categories && this.state.categories.length !== 0){
-      console.log("not fetching categories for batch, they exist", this.state.categories);
-      return;
-    }
-
-    sendAuthenticatedAsyncRequest(
-      "/getCategories",
-      "POST", 
-      null,
-      (r) => this.setState({categories: JSON.parse(r.data.body)})
-    );
   }
 
   deleteInvoice = (je) => {
@@ -149,7 +135,7 @@ class InvoiceItems extends Component {
     const columns = [
       {
         dataField: 'invoice_date',
-        text: 'Invoice ID/Number',
+        text: 'Display Name',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         style: {textAlign: 'center'},
@@ -157,21 +143,21 @@ class InvoiceItems extends Component {
         editable: false,
       }, {
         dataField: 'user_name',
-        text: 'Name',
+        text: 'Contact Name',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>צרכן</div>,
         editable: false
       }, {
-        dataField: 'status',
-        text: 'Quantity',
+        dataField: 'Phone',
+        text: 'Phone',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>לא משולם</div>,
         editable: false
       }, {
         dataField: 'paid_status',
-        text: 'Items',
+        text: 'Amount Due',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
@@ -236,4 +222,4 @@ class InvoiceItems extends Component {
 }
 
 
-export default InvoiceItems;
+export default Customers;

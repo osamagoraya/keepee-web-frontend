@@ -23,6 +23,9 @@ import Vendors from '../../Components/Vendors/vendors';
 import UserManagement from '../../Components/UserManagement/UserManagement';
 import InvoiceSystem from '../../Components/InvoiceSystem/InvoiceSystem';
 import InvoiceItems from '../../Components/InvoiceItems/InvoiceItems';
+import Customers from '../../Components/Customers/customers';
+import Suppliers from '../../Components/Suppliers/suppliers';
+import Items from '../../Components/Items/items';
 
 class Dashboard extends Component {
 
@@ -71,7 +74,10 @@ class Dashboard extends Component {
               <ProtectedRoute path="/settings/ocr-vendors" component={Vendors} exact/>
               <ProtectedRoute path="/settings/user-management" component={UserManagement} exact />
               <ProtectedRoute path="/invoices/invoice" component={InvoiceSystem} exact />
-              <ProtectedRoute path="/invoices/item" component={InvoiceItems} exact />
+              <ProtectedRoute path="/invoices/invoice-items" component={InvoiceItems} exact />
+              <ProtectedRoute path="/invoices/customers" component={Customers} exact />
+              <ProtectedRoute path="/invoices/suppliers" component={Suppliers} exact />
+              <ProtectedRoute path="/invoices/items" component={Items} exact />
             </Switch>
           </div>
         </div>

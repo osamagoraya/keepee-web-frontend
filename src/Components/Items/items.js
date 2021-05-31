@@ -17,13 +17,14 @@ import Button from '../Common/Button';
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 import swal from 'sweetalert';
 
+
 import SwalAdvance from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const Swal2 = withReactContent(SwalAdvance)
 
 
 
-class InvoiceItems extends Component {
+class Items extends Component {
 
   state = {
     batch: null,
@@ -34,7 +35,7 @@ class InvoiceItems extends Component {
 
   componentWillMount() {
      //this.getUsers();
-     //this.getInvoices(true);
+     this.getInvoices(true);
   }
   
 
@@ -149,7 +150,7 @@ class InvoiceItems extends Component {
     const columns = [
       {
         dataField: 'invoice_date',
-        text: 'Invoice ID/Number',
+        text: 'Name',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         style: {textAlign: 'center'},
@@ -157,21 +158,21 @@ class InvoiceItems extends Component {
         editable: false,
       }, {
         dataField: 'user_name',
-        text: 'Name',
+        text: 'Unit',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>צרכן</div>,
         editable: false
       }, {
         dataField: 'status',
-        text: 'Quantity',
+        text: 'Description',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>לא משולם</div>,
         editable: false
       }, {
         dataField: 'paid_status',
-        text: 'Items',
+        text: 'Added On',
         headerClasses: 'k-header-cell',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
@@ -236,4 +237,4 @@ class InvoiceItems extends Component {
 }
 
 
-export default InvoiceItems;
+export default Items;

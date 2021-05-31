@@ -7,29 +7,72 @@ import Caption from '../Common/Caption';
 import ClipIcon from '@material-ui/icons/AttachFile';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import SendIcon from '@material-ui/icons/Send';
+import EditIcon from '@material-ui/icons/Edit';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 import Button from '../Common/Button';
 
 import {sendAuthenticatedAsyncRequest} from '../../Services/AsyncRequestService';
 import swal from 'sweetalert';
 
-import FileIcon from '@material-ui/icons/Description';
-import CameraIcon from '@material-ui/icons/CameraAlt';
+import AddInvoiceModal from './AddInvoiceModal'
 
 import SwalAdvance from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const Swal2 = withReactContent(SwalAdvance)
 
+
+
 class InvoiceSystem extends Component {
 
   state = {
-    batch: null
+    batch: null,
+    userList: [],
+    invoiceList: [],
+    addInvoiceModal : false
   }
 
-  componentDidMount() {
-    
+  componentWillMount() {
+     //this.getUsers();
+     this.getInvoices(true);
   }
   
+
+  getUsers = (user) => {
+    sendAuthenticatedAsyncRequest(
+      "/getUsers",
+      "POST", 
+      {accountantId: 3},
+      (r) => this.setState({ userList: this.filterUsersForSelect(JSON.parse(r.data.body)) })
+    );
+  }
+
+  getInvoices = () => {
+    sendAuthenticatedAsyncRequest(
+      "/getInvoices",
+      "POST", 
+      {},
+      (r) => {
+        console.log("response",r);
+        this.setState({ invoiceList: JSON.parse(r.data.body), addInvoiceModal: false })
+      }
+    );
+  }
+
+  filterUsersForSelect = (list) => {
+    if(!list)
+      return;
+
+    return list.map(userRow => {
+      return {
+        value: parseInt(userRow.userId,10),
+        label: userRow.name
+      }
+    });
+  }
+
   fetchInvoices() {
     if (this.state.categories && this.state.categories.length !== 0){
       console.log("not fetching categories for batch, they exist", this.state.categories);
@@ -100,14 +143,16 @@ class InvoiceSystem extends Component {
     }
   }
 
+  OpenAddInvoiceModal = () => {
+    this.setState({ addInvoiceModal: true });
+  }
   render() {
-    const {batch, apiCallInProgress, apiCallType, categories} = this.state;
+    const {apiCallInProgress, apiCallType, categories} = this.state;
     const columns = [
       {
         dataField: 'invoice_date',
         text: 'Date',
         headerClasses: 'k-header-cell',
-        headerAlign: 'center',
         classes: 'k-body-cell',
         style: {textAlign: 'center'},
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
@@ -116,54 +161,52 @@ class InvoiceSystem extends Component {
         dataField: 'user_name',
         text: 'Customer',
         headerClasses: 'k-header-cell',
-        headerAlign: 'center',
         classes: 'k-body-cell',
-        formatter: (cell, row, index) => <div className='k-force'>{
-          categories
-          ? this.getCategoryAttribute(cell, 'categoryLabel', categories)
-          : row.categoryLabel
-        }</div>,
-        editCellClasses: 'k-edit-cell',
-        editor: {
-          type: Type.SELECT,
-          options: []
-        }
+        formatter: (cell, row, index) => <div className='k-force'>צרכן</div>,
+        editable: false
       }, {
         dataField: 'status',
         text: 'Status',
         headerClasses: 'k-header-cell',
-        headerAlign: 'center',
         classes: 'k-body-cell',
-        formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
-        editCellClasses: 'k-edit-cell',
+        formatter: (cell, row, index) => <div className='k-force'>לא משולם</div>,
+        editable: false
       }, {
         dataField: 'paid_status',
         text: 'Paid Status',
         headerClasses: 'k-header-cell',
-        headerAlign: 'center',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
-        editCellClasses: 'k-edit-cell',
+        editable: false
       },
       {
         dataField: 'invoice_number',
         text: 'Number',
         headerClasses: 'k-header-cell',
-        headerAlign: 'center',
         classes: 'k-body-cell',
-        formatter: (cell, row, index) => <div className='k-force'>{Moment(cell).format("DD.MM.YY")}</div>,
+        formatter: (cell, row, index) => <div className='k-force'>{"INV-0000"+index}</div>,
         editCellClasses: 'k-edit-cell',
-        editor: {
-          type: Type.DATE,
-        }
+        editable: false
       },{
         dataField: 'amount',
         text: 'Amount Due',
         headerClasses: 'k-header-cell',
-        headerAlign: 'center',
         classes: 'k-body-cell',
         formatter: (cell, row, index) => <div className='k-force'>{cell}</div>,
-        editCellClasses: 'k-edit-cell',
+        editable: false
+      },
+      {
+        dataField: '',
+        text: 'Actions',
+        formatter: (cell, row, index) => (
+          <div className='k-force' style={{padding: "8px 10px"}}>
+            <div style={{ display: 'flex'}}> <VisibilityIcon /> <SendIcon /> <EditIcon /> <FileCopyIcon /> <DeleteIcon  /> </div>
+          </div>
+        ),
+        headerClasses: 'k-header-cell',
+        classes: 'k-body-cell',
+        headerStyle: { width: '5%' },
+        editable: false,
       }
     ];  
   
@@ -189,7 +232,7 @@ class InvoiceSystem extends Component {
           <BootstrapTable 
             // caption={<CaptionElement className="a"/>} 
             keyField='id' 
-            data={[]} 
+            data={this.state.invoiceList} 
             columns={columns} 
             bordered={false}
             headerClasses="k-header-row"
@@ -197,12 +240,21 @@ class InvoiceSystem extends Component {
             cellEdit={cellEdit}
           />
           {
-            <Button className="left-bottom-fab-btn" fab onClick={this.addRow}>
+            <Button className="left-bottom-fab-btn" fab onClick={this.OpenAddInvoiceModal}>
                 <AddIcon />
             </Button> 
           }
           </span>
           
+      }
+      {
+        this.state.addInvoiceModal == true ?
+        <AddInvoiceModal 
+              open={true}
+              userList={this.state.userList}
+              getUpdatedInvoices={this.getInvoices}
+        />
+        : ""
       }
       </div>
     );
